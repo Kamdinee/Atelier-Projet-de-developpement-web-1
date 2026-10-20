@@ -19,8 +19,8 @@ export function toast(message, { erreur = false } = {}) {
     }, 4000);
 }
 
-// affiche une erreur de l'api avec un bouton "reessayer"
-export async function afficherErreur(element, erreur, reessayer) {
+// affiche une erreur de l'api avec un bouton d'action ("reessayer" par defaut)
+export async function afficherErreur(element, erreur, reessayer, libelle = 'Réessayer') {
     const details = erreur.details && typeof erreur.details === 'object'
         ? Object.values(erreur.details).join(' · ')
         : erreur.details;
@@ -30,6 +30,7 @@ export async function afficherErreur(element, erreur, reessayer) {
         message: erreur.message,
         details,
         reessayer: Boolean(reessayer),
+        libelle,
     });
 
     element.querySelector('[data-action="reessayer"]')?.addEventListener('click', reessayer);

@@ -36,9 +36,28 @@
             <p>14 soirées du 4 au 17 juin 2027 dans 4 lieux de Nancy. Un billet donne accès à tous les spectacles de la soirée.</p>
         </section>
 
+        <!-- filtres cumulables (F4, F5) : la grille se met a jour sans recharger la page -->
+        <form class="filtres" id="filtres" role="search" aria-label="Filtrer les spectacles">
+            <div class="filtres__champ">
+                <label for="filtre-date">Date</label>
+                <select id="filtre-date" name="date">
+                    <option value="">Toutes les dates</option>
+                </select>
+            </div>
+            <div class="filtres__champ">
+                <label for="filtre-style">Style de musique</label>
+                <select id="filtre-style" name="style">
+                    <option value="">Tous les styles</option>
+                </select>
+            </div>
+            <button class="btn btn--secondaire" type="reset">Réinitialiser</button>
+            <p class="filtres__resultat" id="compteur" aria-live="polite"></p>
+        </form>
+
         <section class="resultats" id="resultats" aria-labelledby="titre-resultats" tabindex="-1">
             <h2 class="sr-only" id="titre-resultats">Spectacles</h2>
-            <div id="grille" aria-live="polite" aria-busy="true"></div>
+            <div id="grille" aria-busy="true"></div>
+            <div id="pagination"></div>
         </section>
     </main>
 

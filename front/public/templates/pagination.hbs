@@ -1,0 +1,26 @@
+{{!-- pagination de la grille (E1) ; les liens portent les filtres en cours --}}
+{{#if plusieursPages}}
+<nav class="pagination" aria-label="Pages du programme">
+    {{#if precedent}}
+    <a class="btn btn--secondaire" href="{{precedent.href}}" data-page="{{precedent.numero}}" rel="prev">‹ Précédent</a>
+    {{else}}
+    <span class="btn btn--secondaire" aria-disabled="true">‹ Précédent</span>
+    {{/if}}
+
+    {{#each pages}}
+    {{#if ellipse}}
+    <span class="pagination__ellipse" aria-hidden="true">…</span>
+    {{else if courante}}
+    <a class="btn pagination__numero" href="{{href}}" data-page="{{numero}}" aria-current="page"><span class="sr-only">Page </span>{{numero}}</a>
+    {{else}}
+    <a class="btn btn--secondaire pagination__numero" href="{{href}}" data-page="{{numero}}"><span class="sr-only">Page </span>{{numero}}</a>
+    {{/if}}
+    {{/each}}
+
+    {{#if suivant}}
+    <a class="btn btn--secondaire" href="{{suivant.href}}" data-page="{{suivant.numero}}" rel="next">Suivant ›</a>
+    {{else}}
+    <span class="btn btn--secondaire" aria-disabled="true">Suivant ›</span>
+    {{/if}}
+</nav>
+{{/if}}

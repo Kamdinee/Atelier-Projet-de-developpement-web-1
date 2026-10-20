@@ -31,4 +31,8 @@
     padding: $espace-xl $espace-m;
     text-align: center;
     color: $couleur-texte-doux;
+
+    p + p {
+        margin-top: $espace-m;
+    }
 }
