@@ -19,10 +19,11 @@
 │   │   │   ├── Entity/         soiree, spectacle, commande, billet...
 │   │   │   ├── ValueObject/    montant, categorie tarif, token billet, carte...
 │   │   │   ├── Exception/      exceptions metier
+│   │   │   ├── Repository/     interfaces des depots (ports de sortie)
 │   │   │   └── Service/        calculateur panier (pass 3 jours)
 │   │   ├── Application/        cas d'usage
 │   │   │   ├── Port/In/        interfaces des use cases (appelees par les actions)
-│   │   │   ├── Port/Out/       interfaces des repositories et services externes
+│   │   │   ├── Port/Out/       interfaces des services externes (paiement, token...)
 │   │   │   ├── Dto/            objets d'entree / sortie
 │   │   │   └── UseCase/        implementations des use cases
 │   │   └── Infrastructure/     adaptateurs
