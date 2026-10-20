@@ -33,7 +33,10 @@ function uuid4(): string
 
 const TARIF_NORMAL = 3000;
 const TARIF_REDUIT = 2000;
-const REMISE_PASS = 3;
+// pass 3 jours : 3 soirees avec 3 % de remise
+const PASS_NB_SOIREES = 3;
+const PASS_NORMAL = 8730;  // round(3 x 3000 x 0.97)
+const PASS_REDUIT = 5820;  // round(3 x 2000 x 0.97)
 
 // ---------- donnees de reference ----------
 
@@ -103,7 +106,7 @@ $remplissage = [0.62, 0.48, 1.0, 0.71, 0.35, 0.55, 0.40, 0.73, 0.50, 0.66, null,
 // ---------- remise a zero ----------
 
 $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
-foreach (['billets', 'lignes_commande', 'commandes', 'utilisateurs', 'spectacle_images', 'spectacle_artiste', 'spectacles', 'soirees', 'artistes', 'styles', 'lieux'] as $table) {
+foreach (['billet_pass_soirees', 'billets', 'ligne_pass_soirees', 'lignes_commande', 'commandes', 'utilisateurs', 'pass', 'spectacle_images', 'spectacle_artiste', 'spectacles', 'soirees', 'artistes', 'styles', 'lieux'] as $table) {
     $pdo->exec("TRUNCATE TABLE {$table}");
 }
 $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
@@ -210,43 +213,69 @@ for ($i = 0; $i < 40; $i++) {
     $clients[] = ['id' => (int) $pdo->lastInsertId(), 'nom' => "{$prenom} {$nom}"];
 }
 
+// ---------- formule pass 3 jours ----------
+
+$pdo->prepare('INSERT INTO pass (libelle, nb_soirees, tarif_normal, tarif_reduit) VALUES (?, ?, ?, ?)')
+    ->execute(['Pass 3 jours', PASS_NB_SOIREES, PASS_NORMAL, PASS_REDUIT]);
+$passId = (int) $pdo->lastInsertId();
+
 // ---------- ventes simulees ----------
 
-$insCommande = $pdo->prepare('INSERT INTO commandes (id, utilisateur_id, statut, sous_total, remise, total, carte_fin, cree_le, payee_le) VALUES (?, ?, \'PAYEE\', ?, ?, ?, ?, ?, ?)');
-$insLigne = $pdo->prepare('INSERT INTO lignes_commande (commande_id, soiree_id, categorie, quantite, prix_unitaire, quantite_en_pass, remise_unitaire) VALUES (?, ?, ?, ?, ?, ?, ?)');
-$insBillet = $pdo->prepare('INSERT INTO billets (token, reference, commande_id, soiree_id, categorie, prix_paye, nom_acheteur, emis_le) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+$insCommande = $pdo->prepare('INSERT INTO commandes (id, utilisateur_id, statut, total, carte_fin, cree_le, payee_le) VALUES (?, ?, \'PAYEE\', ?, ?, ?, ?)');
+$insLigne = $pdo->prepare('INSERT INTO lignes_commande (commande_id, type, soiree_id, pass_id, categorie, quantite, prix_unitaire) VALUES (?, ?, ?, ?, ?, ?, ?)');
+$insLignePass = $pdo->prepare('INSERT INTO ligne_pass_soirees (ligne_id, soiree_id) VALUES (?, ?)');
+$insBillet = $pdo->prepare('INSERT INTO billets (token, reference, commande_id, type, soiree_id, pass_id, categorie, prix_paye, nom_acheteur, emis_le) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+$insBilletPass = $pdo->prepare('INSERT INTO billet_pass_soirees (billet_id, soiree_id) VALUES (?, ?)');
 $majVendues = $pdo->prepare('UPDATE soirees SET places_vendues = ? WHERE id = ?');
 
-$prix = ['NORMAL' => TARIF_NORMAL, 'REDUIT' => TARIF_REDUIT];
-$remiseUnitaire = static fn (int $p): int => (int) round($p * REMISE_PASS / 100);
+$prix = [
+    'SOIREE' => ['NORMAL' => TARIF_NORMAL, 'REDUIT' => TARIF_REDUIT],
+    'PASS' => ['NORMAL' => PASS_NORMAL, 'REDUIT' => PASS_REDUIT],
+];
 
-// cree une commande payee : $lignes = [[index soiree, categorie, quantite, quantite en pass], ...]
-$vendre = static function (array $lignes) use (&$soirees, $faker, $clients, $prix, $remiseUnitaire, $insCommande, $insLigne, $insBillet): void {
+// cree une commande payee
+// $lignes = [[type, [index soirees], categorie, quantite], ...] : 1 soiree pour SOIREE, 3 pour PASS
+$vendre = static function (array $lignes) use (&$soirees, $faker, $clients, $prix, $passId, $pdo, $insCommande, $insLigne, $insLignePass, $insBillet, $insBilletPass): void {
     $client = $faker->randomElement($clients);
     $commandeId = uuid4();
     $date = $faker->dateTimeBetween('2026-09-01', '2026-10-19')->format('Y-m-d H:i:s');
 
-    $sousTotal = 0;
-    $remise = 0;
-    foreach ($lignes as [, $categorie, $quantite, $enPass]) {
-        $sousTotal += $quantite * $prix[$categorie];
-        $remise += $enPass * $remiseUnitaire($prix[$categorie]);
+    $total = 0;
+    foreach ($lignes as [$type, , $categorie, $quantite]) {
+        $total += $quantite * $prix[$type][$categorie];
     }
-    $insCommande->execute([$commandeId, $client['id'], $sousTotal, $remise, $sousTotal - $remise, $faker->numerify('####'), $date, $date]);
+    $insCommande->execute([$commandeId, $client['id'], $total, $faker->numerify('####'), $date, $date]);
 
     $numero = 0;
-    foreach ($lignes as [$index, $categorie, $quantite, $enPass]) {
-        $p = $prix[$categorie];
-        $r = $enPass > 0 ? $remiseUnitaire($p) : 0;
-        $insLigne->execute([$commandeId, $soirees[$index]['id'], $categorie, $quantite, $p, $enPass, $r]);
+    foreach ($lignes as [$type, $indexes, $categorie, $quantite]) {
+        $p = $prix[$type][$categorie];
+        $soireeId = $type === 'SOIREE' ? $soirees[$indexes[0]]['id'] : null;
+        $lignePass = $type === 'PASS' ? $passId : null;
+
+        $insLigne->execute([$commandeId, $type, $soireeId, $lignePass, $categorie, $quantite, $p]);
+        $ligneId = (int) $pdo->lastInsertId();
+        if ($type === 'PASS') {
+            foreach ($indexes as $i) {
+                $insLignePass->execute([$ligneId, $soirees[$i]['id']]);
+            }
+        }
 
         for ($b = 0; $b < $quantite; $b++) {
             $numero++;
-            $prixPaye = $b < $enPass ? $p - $r : $p;
             $reference = sprintf('NRV-%s-%02d', strtoupper(substr($commandeId, 0, 8)), $numero);
-            $insBillet->execute([uuid4(), $reference, $commandeId, $soirees[$index]['id'], $categorie, $prixPaye, $client['nom'], $date]);
+            $insBillet->execute([uuid4(), $reference, $commandeId, $type, $soireeId, $lignePass, $categorie, $p, $client['nom'], $date]);
+            $billetId = (int) $pdo->lastInsertId();
+            if ($type === 'PASS') {
+                foreach ($indexes as $i) {
+                    $insBilletPass->execute([$billetId, $soirees[$i]['id']]);
+                }
+            }
         }
-        $soirees[$index]['vendues'] += $quantite;
+
+        // un billet pass prend une place dans chacune de ses soirees
+        foreach ($indexes as $i) {
+            $soirees[$i]['vendues'] += $quantite;
+        }
     }
 };
 
@@ -259,28 +288,30 @@ $reste = static function (int $i) use (&$objectifs, &$soirees): int {
     return $objectifs[$i] - $soirees[$i]['vendues'];
 };
 
-// quelques pass 3 jours (1 billet par soiree, meme categorie)
-for ($n = 0; $n < 60; $n++) {
-    $choix = $faker->randomElements(array_keys($soirees), 3);
-    $possibles = array_filter($choix, static fn (int $i) => $reste($i) >= 1);
-    if (count($possibles) < 3) {
+// des pass 3 jours : 3 soirees distinctes, 1 ou 2 pass par commande
+for ($n = 0; $n < 400; $n++) {
+    $choix = $faker->randomElements(array_keys($soirees), PASS_NB_SOIREES);
+    sort($choix);
+    $quantite = $faker->numberBetween(1, 2);
+    $ok = array_filter($choix, static fn (int $i) => $reste($i) >= $quantite);
+    if (count($ok) < PASS_NB_SOIREES) {
         continue;
     }
     $categorie = $faker->boolean(70) ? 'NORMAL' : 'REDUIT';
-    $vendre(array_map(static fn (int $i) => [$i, $categorie, 1, 1], $choix));
+    $vendre([['PASS', $choix, $categorie, $quantite]]);
 }
 
-// puis des commandes simples jusqu'a l'objectif
+// puis des billets soiree jusqu'a l'objectif
 foreach (array_keys($soirees) as $i) {
     while ($reste($i) > 0) {
         $quantite = min($reste($i), $faker->numberBetween(1, 6));
         $reduits = $faker->numberBetween(0, $quantite);
         $lignes = [];
         if ($quantite - $reduits > 0) {
-            $lignes[] = [$i, 'NORMAL', $quantite - $reduits, 0];
+            $lignes[] = ['SOIREE', [$i], 'NORMAL', $quantite - $reduits];
         }
         if ($reduits > 0) {
-            $lignes[] = [$i, 'REDUIT', $reduits, 0];
+            $lignes[] = ['SOIREE', [$i], 'REDUIT', $reduits];
         }
         $vendre($lignes);
     }
@@ -294,12 +325,13 @@ $pdo->commit();
 
 // ---------- resume ----------
 
-$nbBillets = (int) $pdo->query('SELECT COUNT(*) FROM billets')->fetchColumn();
+$nbBillets = (int) $pdo->query("SELECT COUNT(*) FROM billets WHERE type = 'SOIREE'")->fetchColumn();
+$nbPass = (int) $pdo->query("SELECT COUNT(*) FROM billets WHERE type = 'PASS'")->fetchColumn();
 $nbCommandes = (int) $pdo->query('SELECT COUNT(*) FROM commandes')->fetchColumn();
 $recette = (int) $pdo->query('SELECT COALESCE(SUM(prix_paye), 0) FROM billets')->fetchColumn();
 
 printf(
-    "seed ok : %d lieux, %d styles, %d soirees, %d spectacles, %d artistes, %d utilisateurs, %d commandes, %d billets, recette %.2f eur\n",
+    "seed ok : %d lieux, %d styles, %d soirees, %d spectacles, %d artistes, %d utilisateurs, %d commandes, %d billets soiree, %d pass 3 jours, recette %.2f eur\n",
     count($lieux),
     count($styles),
     count($soirees),
@@ -308,6 +340,7 @@ printf(
     count($clients) + 2,
     $nbCommandes,
     $nbBillets,
+    $nbPass,
     $recette / 100
 );
 echo "comptes de test : admin@nrv.net / admin12345 - client@nrv.net / client12345\n";
