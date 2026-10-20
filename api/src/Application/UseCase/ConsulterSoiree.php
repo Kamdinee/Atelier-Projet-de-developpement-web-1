@@ -6,8 +6,8 @@ namespace Nrv\Application\UseCase;
 
 use Nrv\Application\Dto\SoireeDto;
 use Nrv\Application\Port\In\ConsulterSoireeInterface;
+use Nrv\Application\Port\Out\SoireeRepositoryInterface;
 use Nrv\Domain\Exception\SoireeIntrouvableException;
-use Nrv\Domain\Repository\SoireeRepositoryInterface;
 
 final class ConsulterSoiree implements ConsulterSoireeInterface
 {

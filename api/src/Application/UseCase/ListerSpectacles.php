@@ -9,9 +9,9 @@ use Nrv\Application\Dto\FiltreSpectaclesDto;
 use Nrv\Application\Dto\PageSpectaclesDto;
 use Nrv\Application\Dto\SpectacleDto;
 use Nrv\Application\Port\In\ListerSpectaclesInterface;
+use Nrv\Application\Port\Out\SpectacleRepositoryInterface;
 use Nrv\Domain\Entity\Spectacle;
 use Nrv\Domain\Exception\DonneeInvalideException;
-use Nrv\Domain\Repository\SpectacleRepositoryInterface;
 use Nrv\Domain\ValueObject\CriteresSpectacles;
 
 final class ListerSpectacles implements ListerSpectaclesInterface

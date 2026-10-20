@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Nrv\Infrastructure\Persistence\Pdo;
 
 use DateTimeImmutable;
+use Nrv\Application\Port\Out\SoireeRepositoryInterface;
 use Nrv\Domain\Entity\Lieu;
 use Nrv\Domain\Entity\Soiree;
-use Nrv\Domain\Repository\SoireeRepositoryInterface;
 use Nrv\Domain\ValueObject\Tarifs;
 use PDO;
 

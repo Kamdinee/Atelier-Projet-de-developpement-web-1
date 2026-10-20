@@ -7,8 +7,8 @@ namespace Nrv\Application\UseCase;
 use DateTimeImmutable;
 use Nrv\Application\Dto\StyleDto;
 use Nrv\Application\Port\In\ListerFiltresProgrammeInterface;
+use Nrv\Application\Port\Out\SpectacleRepositoryInterface;
 use Nrv\Domain\Entity\Style;
-use Nrv\Domain\Repository\SpectacleRepositoryInterface;
 
 final class ListerFiltresProgramme implements ListerFiltresProgrammeInterface
 {

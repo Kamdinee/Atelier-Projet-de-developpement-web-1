@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Nrv\Infrastructure\Persistence\Pdo;
 
 use DateTimeImmutable;
+use Nrv\Application\Port\Out\SpectacleRepositoryInterface;
 use Nrv\Domain\Entity\Spectacle;
 use Nrv\Domain\Entity\Style;
-use Nrv\Domain\Repository\SpectacleRepositoryInterface;
 use Nrv\Domain\ValueObject\CriteresSpectacles;
 use Nrv\Domain\ValueObject\ResultatPagine;
 use PDO;

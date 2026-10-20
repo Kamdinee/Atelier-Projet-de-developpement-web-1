@@ -19,11 +19,10 @@
 │   │   │   ├── Entity/         soiree, spectacle, commande, billet...
 │   │   │   ├── ValueObject/    montant, categorie tarif, token billet, carte...
 │   │   │   ├── Exception/      exceptions metier
-│   │   │   ├── Repository/     interfaces des depots (ports de sortie)
 │   │   │   └── Service/        calculateur panier (pass 3 jours)
 │   │   ├── Application/        cas d'usage
-│   │   │   ├── Port/In/        interfaces des use cases (appelees par les actions)
-│   │   │   ├── Port/Out/       interfaces des services externes (paiement, token...)
+│   │   │   ├── Port/In/        ports d'entree : interfaces des use cases (appelees par les actions)
+│   │   │   ├── Port/Out/       ports de sortie : interfaces des depots et services externes
 │   │   │   ├── Dto/            objets d'entree / sortie
 │   │   │   └── UseCase/        implementations des use cases
 │   │   └── Infrastructure/     adaptateurs
@@ -41,5 +40,7 @@
     ├── src/scss/               abstracts (variables, mixins), base, layout, components, pages, print
     └── public/                 servi par nginx : html, css compile, js, templates handlebars, img
 ```
+
+noyau metier = Domain + Application (entites, use cases, ports). adaptateurs = Infrastructure.
 
 regle des dependances : `Infrastructure` -> `Application` -> `Domain`. le domaine ne depend de rien.

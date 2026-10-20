@@ -6,8 +6,8 @@ namespace Nrv\Application\UseCase;
 
 use Nrv\Application\Dto\SpectacleDto;
 use Nrv\Application\Port\In\ConsulterSpectacleInterface;
+use Nrv\Application\Port\Out\SpectacleRepositoryInterface;
 use Nrv\Domain\Exception\SpectacleIntrouvableException;
-use Nrv\Domain\Repository\SpectacleRepositoryInterface;
 
 final class ConsulterSpectacle implements ConsulterSpectacleInterface
 {
