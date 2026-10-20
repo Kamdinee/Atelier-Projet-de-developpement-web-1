@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- tests unitaires du domaine uniquement -->
+<!-- tests unitaires du noyau metier : domaine + cas d'usage (sans base de donnees) -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
-         cacheDirectory=".phpunit.cache">
+         cacheDirectory=".phpunit.cache"
+         failOnWarning="true"
+         failOnRisky="true"
+         beStrictAboutOutputDuringTests="true">
     <testsuites>
         <testsuite name="domaine">
             <directory>tests/Domain</directory>
+        </testsuite>
+        <testsuite name="cas-usage">
+            <directory>tests/Application</directory>
         </testsuite>
     </testsuites>
     <source>
         <include>
             <directory>src/Domain</directory>
+            <directory>src/Application</directory>
         </include>
     </source>
 </phpunit>
