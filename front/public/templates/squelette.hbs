@@ -1,0 +1,10 @@
+{{!-- cartes grises affichees pendant le premier chargement --}}
+<ul class="grille-spectacles" aria-hidden="true">
+    {{#each cartes}}
+    <li class="squelette">
+        <div class="squelette__image"></div>
+        <div class="squelette__ligne"></div>
+        <div class="squelette__ligne"></div>
+    </li>
+    {{/each}}
+</ul>

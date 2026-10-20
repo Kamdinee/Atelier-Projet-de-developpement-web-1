@@ -1,0 +1,11 @@
+{{!-- grille des spectacles (F1) ou message si aucun resultat --}}
+{{#if spectacles.length}}
+<ul class="grille-spectacles">
+    {{#each spectacles}}{{> carte-spectacle}}{{/each}}
+</ul>
+{{else}}
+<div class="message-vide">
+    <p>Aucun spectacle ne correspond à ces filtres.</p>
+    <p><button class="btn btn--secondaire" type="button" data-action="reinitialiser">Voir tout le programme</button></p>
+</div>
+{{/if}}

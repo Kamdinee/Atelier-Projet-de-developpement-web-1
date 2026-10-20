@@ -1,0 +1,7 @@
+{{!-- erreur renvoyee par l'api (problem+json) ou api injoignable --}}
+<div class="message-erreur" role="alert">
+    <p class="message-erreur__titre">{{titre}}</p>
+    <p>{{message}}</p>
+    {{#if details}}<p class="message-erreur__detail">{{details}}</p>{{/if}}
+    {{#if reessayer}}<button class="btn btn--secondaire" type="button" data-action="reessayer">Réessayer</button>{{/if}}
+</div>

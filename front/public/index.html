@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Programme - Nancy Rock Vibration 2027</title>
-    <meta name="description" content="Billetterie du festival Nancy Rock Vibration">
+    <meta name="description" content="Programme et billetterie du festival Nancy Rock Vibration, du 4 au 17 juin 2027 à Nancy">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="css/print.css" media="print">
 </head>
 <body>
+    <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
     <header class="site-header">
         <div class="site-header__inner">
             <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
@@ -29,34 +31,28 @@
     </header>
 
     <main id="contenu">
-        <h1>Programme du festival</h1>
-        <p>Du 4 au 17 juin 2027 à Nancy.</p>
+        <section class="intro" aria-labelledby="titre-programme">
+            <h1 id="titre-programme">Programme du festival</h1>
+            <p>14 soirées du 4 au 17 juin 2027 dans 4 lieux de Nancy. Un billet donne accès à tous les spectacles de la soirée.</p>
+        </section>
 
-        <!-- page provisoire : la grille sera remplie par fetch + handlebars a l'etape 3 -->
-        <p id="etat-api" class="message-vide">Vérification de l'API...</p>
+        <section class="resultats" id="resultats" aria-labelledby="titre-resultats" tabindex="-1">
+            <h2 class="sr-only" id="titre-resultats">Spectacles</h2>
+            <div id="grille" aria-live="polite" aria-busy="true"></div>
+        </section>
     </main>
 
     <footer class="site-footer">
         <div class="site-footer__inner">
-            <p>Nancy Rock Vibration 2027</p>
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
             <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
         </div>
     </footer>
 
     <div class="toast" role="status" aria-live="polite" hidden></div>
 
+    <script src="vendor/handlebars.min.js"></script>
     <script src="js/config.js"></script>
-    <script>
-        // test simple : l'api repond-elle ?
-        const api = window.NRV_CONFIG.apiUrl;
-        fetch(api + '/')
-            .then((reponse) => reponse.json())
-            .then((data) => {
-                document.getElementById('etat-api').textContent = 'API connectée : ' + data.nom + ' (' + api + ')';
-            })
-            .catch(() => {
-                document.getElementById('etat-api').textContent = "L'API ne répond pas sur " + api;
-            });
-    </script>
+    <script type="module" src="js/programme.js"></script>
 </body>
 </html>

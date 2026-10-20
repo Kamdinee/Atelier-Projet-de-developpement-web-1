@@ -1,0 +1,15 @@
+{{!-- une carte de la grille du programme ; toute la carte est un lien vers la soiree (F3) --}}
+<li>
+    <article class="carte-spectacle">
+        {{#if image}}
+        <img class="carte-spectacle__image" src="{{image}}" alt="{{titre}} sur scène" width="800" height="500" loading="lazy">
+        {{else}}
+        <div class="carte-spectacle__image" aria-hidden="true"></div>
+        {{/if}}
+        <div class="carte-spectacle__corps">
+            <span class="etiquette">{{style.libelle}}</span>
+            <h3 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html?id={{soireeId}}">{{titre}}</a></h3>
+            <p class="carte-spectacle__infos"><time datetime="{{date}}T{{horaire}}">{{dateCourte date}} · {{horaire}}</time></p>
+        </div>
+    </article>
+</li>
