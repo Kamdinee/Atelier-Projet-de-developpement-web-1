@@ -1,0 +1,14 @@
+@use '../abstracts' as *;
+
+.site-footer {
+    margin-top: $espace-xl;
+    background: $couleur-surface;
+    color: $couleur-texte-doux;
+    font-size: 0.9rem;
+
+    &__inner {
+        @include conteneur;
+        @include flex(space-between, flex-start, $espace-l, wrap);
+        padding-block: $espace-l;
+    }
+}

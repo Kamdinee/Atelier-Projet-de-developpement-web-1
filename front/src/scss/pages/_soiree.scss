@@ -1,0 +1,58 @@
+@use '../abstracts' as *;
+
+// grid 2 colonnes sur bureau : spectacles | encart d'achat
+.soiree {
+    display: grid;
+    gap: $espace-l;
+
+    @include mq(bureau) {
+        grid-template-columns: 2fr 1fr;
+        align-items: start;
+    }
+
+    &__entete {
+        grid-column: 1 / -1;
+    }
+
+    &__infos {
+        color: $couleur-texte-doux;
+    }
+}
+
+.spectacle-detail {
+    display: grid;
+    gap: $espace-m;
+    padding: $espace-m;
+    border-radius: $rayon;
+    background: $couleur-surface;
+
+    & + & {
+        margin-top: $espace-l;
+    }
+
+    iframe {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: 0;
+        border-radius: $rayon;
+    }
+}
+
+.achat {
+    display: flex;
+    flex-direction: column;
+    gap: $espace-m;
+    padding: $espace-l;
+    border: 2px solid $couleur-accent;
+    border-radius: $rayon;
+    background: $couleur-surface;
+
+    @include mq(bureau) {
+        position: sticky;
+        top: 5rem;
+    }
+
+    &__ligne {
+        @include flex(space-between, center);
+    }
+}

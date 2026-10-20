@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Programme - Nancy Rock Vibration 2027</title>
+    <meta name="description" content="Billetterie du festival Nancy Rock Vibration">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/print.css" media="print">
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste">
+                    <li><a class="nav__lien" href="index.html" aria-current="page">Programme</a></li>
+                    <li><a class="nav__lien" href="mes-billets.html">Mes billets</a></li>
+                    <li><a class="nav__lien" href="compte.html">Connexion</a></li>
+                </ul>
+            </nav>
+            <a class="badge-panier" href="panier.html">
+                Panier <span class="badge-panier__nombre" id="panier-nombre">0</span>
+            </a>
+        </div>
+    </header>
+
+    <main id="contenu">
+        <h1>Programme du festival</h1>
+        <p>Du 4 au 17 juin 2027 à Nancy.</p>
+
+        <!-- page provisoire : la grille sera remplie par fetch + handlebars a l'etape 3 -->
+        <p id="etat-api" class="message-vide">Vérification de l'API...</p>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration 2027</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+
+    <div class="toast" role="status" aria-live="polite" hidden></div>
+
+    <script>
+        // test simple : l'api repond-elle ?
+        fetch('http://localhost:8080/')
+            .then((reponse) => reponse.json())
+            .then((data) => {
+                document.getElementById('etat-api').textContent = 'API connectée : ' + data.nom;
+            })
+            .catch(() => {
+                document.getElementById('etat-api').textContent = "L'API ne répond pas sur http://localhost:8080";
+            });
+    </script>
+</body>
+</html>

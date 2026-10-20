@@ -1,0 +1,37 @@
+@use '../abstracts' as *;
+
+label {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: $espace-s $espace-m;
+    border: 1px solid $gris;
+    border-radius: $rayon;
+    background: $noir;
+    color: $couleur-texte;
+    @include focus-visible;
+
+    &[aria-invalid='true'] {
+        border-color: $couleur-accent;
+    }
+}
+
+.champ-erreur {
+    color: $couleur-accent;
+    font-size: 0.85rem;
+}
+
+// selecteur de quantite - [n] +
+.quantite {
+    @include flex(flex-start, center, $espace-xs);
+
+    input {
+        width: 3.5rem;
+        text-align: center;
+    }
+}

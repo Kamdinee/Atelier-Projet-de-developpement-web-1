@@ -1,0 +1,51 @@
+@use 'sass:map';
+@use 'variables' as *;
+
+// media query a partir d'un breakpoint : @include mq(tablette) { ... }
+@mixin mq($nom) {
+    @if not map.has-key($breakpoints, $nom) {
+        @error "breakpoint inconnu : #{$nom}";
+    }
+
+    @media (min-width: map.get($breakpoints, $nom)) {
+        @content;
+    }
+}
+
+// centre le contenu avec une largeur max
+@mixin conteneur {
+    width: 100%;
+    max-width: $largeur-max;
+    margin-inline: auto;
+    padding-inline: $espace-m;
+}
+
+// ligne flex
+@mixin flex($justify: flex-start, $align: center, $gap: $espace-m, $wrap: nowrap) {
+    display: flex;
+    justify-content: $justify;
+    align-items: $align;
+    gap: $gap;
+    flex-wrap: $wrap;
+}
+
+// texte cache mais lu par les lecteurs d'ecran
+@mixin visuellement-cache {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+// contour visible au clavier
+@mixin focus-visible {
+    &:focus-visible {
+        outline: 3px solid $couleur-alerte;
+        outline-offset: 2px;
+    }
+}

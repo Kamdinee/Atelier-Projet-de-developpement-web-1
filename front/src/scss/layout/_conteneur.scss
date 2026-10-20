@@ -1,0 +1,10 @@
+@use '../abstracts' as *;
+
+.conteneur {
+    @include conteneur;
+}
+
+main {
+    @include conteneur;
+    padding-block: $espace-l $espace-xl;
+}

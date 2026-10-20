@@ -1,0 +1,66 @@
+@use '../abstracts' as *;
+
+// grid des indicateurs : 1 colonne mobile, 3 sur tablette
+.kpi {
+    display: grid;
+    gap: $espace-m;
+    margin-block: $espace-l;
+
+    @include mq(tablette) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    &__carte {
+        padding: $espace-l;
+        border-radius: $rayon;
+        background: $couleur-surface;
+    }
+
+    &__valeur {
+        font-family: $police-titre;
+        font-size: 2.25rem;
+        color: $blanc;
+    }
+}
+
+// le tableau defile sur mobile
+.tableau-conteneur {
+    overflow-x: auto;
+}
+
+.tableau-jauges {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+        padding: $espace-s $espace-m;
+        border-bottom: 1px solid rgba($blanc, 0.1);
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    th button {
+        border: 0;
+        background: none;
+        color: inherit;
+        font-weight: 700;
+    }
+
+    // colonnes masquees sur mobile
+    .col-secondaire {
+        display: none;
+
+        @include mq(tablette) {
+            display: table-cell;
+        }
+    }
+
+    .complet td {
+        color: $couleur-accent;
+    }
+
+    meter {
+        width: 6rem;
+    }
+}

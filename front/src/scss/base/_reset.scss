@@ -1,0 +1,35 @@
+// reset leger
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+}
+
+img,
+picture,
+video,
+iframe {
+    display: block;
+    max-width: 100%;
+}
+
+input,
+button,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+ul[class],
+ol[class] {
+    padding: 0;
+    list-style: none;
+}

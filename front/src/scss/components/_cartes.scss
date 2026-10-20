@@ -1,0 +1,67 @@
+@use '../abstracts' as *;
+
+// grid pour la galerie des spectacles : 1 colonne mobile, 2 tablette, 3-4 bureau
+.grille-spectacles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: $espace-l;
+    padding: 0;
+    list-style: none;
+}
+
+.carte-spectacle {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: $rayon;
+    background: $couleur-surface;
+    box-shadow: $ombre;
+    transition: transform $transition;
+
+    &:hover,
+    &:focus-within {
+        transform: translateY(-4px);
+    }
+
+    &__image {
+        aspect-ratio: 16 / 10;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    &__corps {
+        display: flex;
+        flex-direction: column;
+        gap: $espace-xs;
+        padding: $espace-m;
+    }
+
+    // tout le bloc devient cliquable
+    &__lien {
+        color: $blanc;
+        text-decoration: none;
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+        }
+    }
+
+    &__infos {
+        color: $couleur-texte-doux;
+        font-size: 0.9rem;
+    }
+}
+
+.etiquette {
+    align-self: flex-start;
+    padding: 0 $espace-s;
+    border-radius: 999px;
+    background: rgba($couleur-accent, 0.15);
+    color: $couleur-accent;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}

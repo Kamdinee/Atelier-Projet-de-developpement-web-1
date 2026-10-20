@@ -1,0 +1,38 @@
+@use '../abstracts' as *;
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $espace-s;
+    padding: $espace-s $espace-l;
+    border: 2px solid $couleur-accent;
+    border-radius: $rayon;
+    background: $couleur-accent;
+    color: $blanc;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background $transition, border-color $transition;
+    @include focus-visible;
+
+    &:hover {
+        background: $couleur-accent-hover;
+        border-color: $couleur-accent-hover;
+        color: $blanc;
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &--secondaire {
+        background: transparent;
+        color: $couleur-texte;
+
+        &:hover {
+            background: rgba($blanc, 0.08);
+        }
+    }
+}

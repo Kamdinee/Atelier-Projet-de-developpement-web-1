@@ -1,0 +1,72 @@
+@use '../abstracts' as *;
+
+// flex : logo | navigation | panier
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba($noir, 0.95);
+    border-bottom: 2px solid $couleur-accent;
+
+    &__inner {
+        @include conteneur;
+        @include flex(space-between, center, $espace-m, wrap);
+        padding-block: $espace-s;
+    }
+
+    &__logo {
+        font-family: $police-titre;
+        font-size: 1.75rem;
+        color: $blanc;
+        text-decoration: none;
+
+        span {
+            color: $couleur-accent;
+        }
+    }
+}
+
+// sur mobile la nav passe sous le logo, sur tablette elle se met en ligne
+.nav {
+    order: 3;
+    width: 100%;
+
+    @include mq(tablette) {
+        order: 0;
+        width: auto;
+    }
+
+    &__liste {
+        @include flex(flex-start, center, $espace-m, wrap);
+    }
+
+    &__lien {
+        color: $couleur-texte;
+        text-decoration: none;
+        padding-block: $espace-xs;
+        border-bottom: 2px solid transparent;
+        @include focus-visible;
+
+        &:hover,
+        &[aria-current='page'] {
+            color: $blanc;
+            border-bottom-color: $couleur-accent;
+        }
+    }
+}
+
+.badge-panier {
+    @include flex(center, center, $espace-xs);
+    color: $blanc;
+    text-decoration: none;
+
+    &__nombre {
+        min-width: 1.5rem;
+        padding: 0 $espace-xs;
+        border-radius: 999px;
+        background: $couleur-accent;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+}

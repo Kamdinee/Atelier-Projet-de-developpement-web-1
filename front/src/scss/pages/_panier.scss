@@ -1,0 +1,61 @@
+@use '../abstracts' as *;
+
+.panier {
+    display: flex;
+    flex-direction: column;
+    gap: $espace-s;
+
+    // flex : libelle | quantite | prix | supprimer
+    &__ligne {
+        @include flex(space-between, center, $espace-m, wrap);
+        padding: $espace-m;
+        border-radius: $rayon;
+        background: $couleur-surface;
+    }
+
+    &__libelle {
+        flex: 1 1 100%;
+
+        @include mq(tablette) {
+            flex-basis: auto;
+        }
+    }
+
+    &__soirees-pass {
+        color: $couleur-texte-doux;
+        font-size: 0.85rem;
+    }
+}
+
+.recap {
+    display: flex;
+    flex-direction: column;
+    gap: $espace-s;
+    margin-top: $espace-l;
+    padding: $espace-l;
+    border-radius: $rayon;
+    background: $couleur-surface;
+
+    &__total {
+        @include flex(space-between, baseline);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $blanc;
+    }
+
+    // bouton principal a droite
+    &__actions {
+        @include flex(flex-start, center, $espace-m, wrap);
+        flex-direction: row-reverse;
+    }
+}
+
+// paiement : recap | formulaire carte
+.paiement {
+    display: grid;
+    gap: $espace-l;
+
+    @include mq(bureau) {
+        grid-template-columns: 1fr 1fr;
+    }
+}

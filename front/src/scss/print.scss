@@ -1,0 +1,69 @@
+// feuille d'impression du billet : compilee dans public/css/print.css
+// a charger avec <link rel="stylesheet" href="css/print.css" media="print">
+
+@media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+
+    // on ne garde que les billets
+    .site-header,
+    .site-footer,
+    .nav,
+    .btn,
+    .toast,
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+        color: #000;
+        font-size: 11pt;
+    }
+
+    main {
+        max-width: none;
+        padding: 0;
+    }
+
+    .billet {
+        display: grid;
+        grid-template-columns: 1fr 45mm;
+        max-width: none;
+        border: 1pt solid #000;
+        border-radius: 0;
+        background: #fff;
+        color: #000;
+        // un billet ne se coupe jamais entre deux pages
+        break-inside: avoid;
+        page-break-inside: avoid;
+
+        & + & {
+            margin-top: 10mm;
+        }
+
+        h2,
+        h3 {
+            color: #000;
+        }
+
+        &__talon {
+            border-top: 0;
+            border-left: 1pt dashed #000;
+        }
+    }
+
+    // affiche l'url du billet en clair
+    .billet__url::after {
+        content: ' ' attr(href);
+        font-size: 9pt;
+        word-break: break-all;
+    }
+
+    a {
+        color: #000;
+        text-decoration: none;
+    }
+}

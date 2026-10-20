@@ -1,0 +1,31 @@
+@use '../abstracts' as *;
+
+// flex wrap : les filtres s'empilent sur mobile et restent en ligne sur bureau
+.filtres {
+    @include flex(flex-start, flex-end, $espace-m, wrap);
+    margin-block: $espace-l;
+    padding: $espace-m;
+    border-radius: $rayon;
+    background: $couleur-surface;
+
+    &__champ {
+        display: flex;
+        flex-direction: column;
+        gap: $espace-xs;
+        flex: 1 1 12rem;
+
+        @include mq(bureau) {
+            flex: 0 1 14rem;
+        }
+    }
+
+    &__resultat {
+        margin-left: auto;
+        color: $couleur-texte-doux;
+    }
+}
+
+.pagination {
+    @include flex(center, center, $espace-s, wrap);
+    margin-top: $espace-xl;
+}
