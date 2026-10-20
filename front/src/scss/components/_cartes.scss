@@ -64,4 +64,24 @@
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
+
+    &--complet {
+        background: $couleur-accent;
+        color: $blanc;
+    }
+
+    &--alerte {
+        background: rgba($couleur-alerte, 0.15);
+        color: $couleur-alerte;
+    }
+
+    &--succes {
+        background: rgba($couleur-succes, 0.2);
+        color: #5fd08f;
+    }
+}
+
+.intro p {
+    max-width: 48rem;
+    color: $couleur-texte-doux;
 }

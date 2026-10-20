@@ -4,7 +4,14 @@
     @include conteneur;
 }
 
+// le pied de page reste en bas meme sur les pages courtes
+body {
+    display: flex;
+    flex-direction: column;
+}
+
 main {
     @include conteneur;
+    flex: 1;
     padding-block: $espace-l $espace-xl;
 }

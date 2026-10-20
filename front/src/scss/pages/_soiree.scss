@@ -14,11 +14,18 @@
         grid-column: 1 / -1;
     }
 
+    // flex wrap : thematique | date | lieu
     &__infos {
+        @include flex(flex-start, center, $espace-s $espace-m, wrap);
         color: $couleur-texte-doux;
+    }
+
+    &__spectacles > h2 {
+        margin-bottom: $espace-m;
     }
 }
 
+// image a gauche, texte a droite a partir de la tablette
 .spectacle-detail {
     display: grid;
     gap: $espace-m;
@@ -26,8 +33,37 @@
     border-radius: $rayon;
     background: $couleur-surface;
 
+    @include mq(tablette) {
+        grid-template-columns: minmax(12rem, 2fr) 3fr;
+        align-items: start;
+    }
+
     & + & {
-        margin-top: $espace-l;
+        margin-top: $espace-m;
+    }
+
+    &__image {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        object-fit: cover;
+        border-radius: $rayon;
+    }
+
+    &__corps {
+        display: flex;
+        flex-direction: column;
+        gap: $espace-s;
+    }
+
+    &__horaire {
+        @include flex(flex-start, center, $espace-s);
+        font-weight: 700;
+        color: $blanc;
+    }
+
+    &__artistes {
+        color: $couleur-texte-doux;
+        font-size: 0.9rem;
     }
 
     iframe {
@@ -35,6 +71,28 @@
         aspect-ratio: 16 / 9;
         border: 0;
         border-radius: $rayon;
+    }
+}
+
+// emplacement de la video youtube
+.video-vignette {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    max-width: 22rem;
+    aspect-ratio: 16 / 9;
+    border-radius: $rayon;
+    background: linear-gradient(135deg, #2a2530, $noir);
+
+    span {
+        display: grid;
+        place-items: center;
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        background: $couleur-accent;
+        color: $blanc;
+        font-size: 1.25rem;
     }
 }
 
@@ -52,7 +110,54 @@
         top: 5rem;
     }
 
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: $espace-m;
+    }
+
+    // flex : tarif | selecteur de quantite
     &__ligne {
-        @include flex(space-between, center);
+        @include flex(space-between, center, $espace-m);
+        padding-bottom: $espace-m;
+        border-bottom: 1px solid rgba($blanc, 0.08);
+
+        label {
+            display: flex;
+            flex-direction: column;
+            font-weight: 400;
+
+            strong {
+                color: $blanc;
+            }
+        }
+
+        small {
+            color: $couleur-texte-doux;
+            font-size: 0.8rem;
+        }
+    }
+
+    &__places strong {
+        color: $blanc;
+        font-size: 1.25rem;
+    }
+
+    &__total {
+        @include flex(space-between, baseline);
+
+        strong {
+            color: $blanc;
+            font-size: 1.25rem;
+        }
+    }
+
+    &__pass {
+        color: $couleur-texte-doux;
+        font-size: 0.9rem;
+    }
+
+    &--complet {
+        border-color: $gris;
     }
 }

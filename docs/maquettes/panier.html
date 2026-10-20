@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mon panier - Nancy Rock Vibration 2027</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
+    <link rel="stylesheet" href="../../front/public/css/main.css">
+    <link rel="stylesheet" href="../../front/public/css/print.css" media="print">
+</head>
+<body>
+    <!-- maquette statique panier.html : donnees reelles du seed, a remplacer par fetch + handlebars -->
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste"><li><a class="nav__lien" href="index.html">Programme</a></li><li><a class="nav__lien" href="confirmation.html">Mes billets</a></li><li><a class="nav__lien" href="compte.html">Marc D. · Déconnexion</a></li></ul>
+            </nav>
+            <a class="badge-panier" href="panier.html" aria-label="Panier, 3 articles">Panier <span class="badge-panier__nombre">3</span></a>
+        </div>
+    </header>
+
+    <main id="contenu">
+        <ol class="etapes" aria-label="Étapes de la commande"><li aria-current="step">Panier</li><li>Connexion</li><li>Paiement</li><li>Billets</li></ol>
+        <h1>Mon panier</h1>
+        <ul class="panier">
+            <li class="panier__ligne">
+                <div class="panier__libelle"><strong>Nuit métal · Tarif normal</strong><span class='panier__soirees-pass'>ven. 11/06 · Zénith de Nancy · 30,00 € l'unité</span></div>
+                <div class="quantite"><button class="btn btn--secondaire" type="button" aria-label="Retirer un">−</button><input type="number" value="2" min="0" max="10" aria-label="Quantité"><button class="btn btn--secondaire" type="button" aria-label="Ajouter un">+</button></div>
+                <p class="panier__prix">60,00 €</p>
+                <button class="panier__supprimer" type="button" aria-label="Supprimer la ligne">✕</button>
+            </li>
+            <li class="panier__ligne">
+                <div class="panier__libelle"><strong>Pass 3 jours · Tarif réduit</strong><span class='panier__soirees-pass'>ven. 11/06 Nuit métal · sam. 12/06 Rock en Lorraine · mar. 15/06 Hommage aux légendes · 58,20 € l'unité</span></div>
+                <div class="quantite"><button class="btn btn--secondaire" type="button" aria-label="Retirer un">−</button><input type="number" value="1" min="0" max="10" aria-label="Quantité"><button class="btn btn--secondaire" type="button" aria-label="Ajouter un">+</button></div>
+                <p class="panier__prix">58,20 €</p>
+                <button class="panier__supprimer" type="button" aria-label="Supprimer la ligne">✕</button>
+            </li>
+        </ul>
+
+        <section class="pass-encart" id="composer-pass" aria-labelledby="titre-pass">
+            <h2 id="titre-pass">Composer un Pass 3 jours</h2>
+            <p>3 soirées au choix, 3 % moins cher que 3 billets : <strong>87,30 €</strong> en tarif normal, <strong>58,20 €</strong> en tarif réduit.</p>
+            <form class="pass-encart__form">
+                <div class="filtres__champ"><label for="pass-1">Soirée 1</label><select id="pass-1"><option value="">Toutes les dates</option><option value="2027-06-04">ven. 04/06 · Ouverture électrique</option><option value="2027-06-05">sam. 05/06 · Blues de minuit</option><option value="2027-06-06">dim. 06/06 · Dimanche chanson</option><option value="2027-06-07">lun. 07/06 · Heavy night</option><option value="2027-06-08">mar. 08/06 · Reggae sous les arbres</option><option value="2027-06-09">mer. 09/06 · Punk à Stan</option><option value="2027-06-10">jeu. 10/06 · Folk et feux de camp</option><option value="2027-06-11" selected>ven. 11/06 · Nuit métal</option><option value="2027-06-12">sam. 12/06 · Rock en Lorraine</option><option value="2027-06-13">dim. 13/06 · Électro rock party</option><option value="2027-06-14">lun. 14/06 · Blues et soul</option><option value="2027-06-15">mar. 15/06 · Hommage aux légendes</option><option value="2027-06-16">mer. 16/06 · Reggae roots</option><option value="2027-06-17">jeu. 17/06 · Grand final</option></select></div>
+                <div class="filtres__champ"><label for="pass-2">Soirée 2</label><select id="pass-2"><option value="">Toutes les dates</option><option value="2027-06-04">ven. 04/06 · Ouverture électrique</option><option value="2027-06-05">sam. 05/06 · Blues de minuit</option><option value="2027-06-06">dim. 06/06 · Dimanche chanson</option><option value="2027-06-07">lun. 07/06 · Heavy night</option><option value="2027-06-08">mar. 08/06 · Reggae sous les arbres</option><option value="2027-06-09">mer. 09/06 · Punk à Stan</option><option value="2027-06-10">jeu. 10/06 · Folk et feux de camp</option><option value="2027-06-11">ven. 11/06 · Nuit métal</option><option value="2027-06-12" selected>sam. 12/06 · Rock en Lorraine</option><option value="2027-06-13">dim. 13/06 · Électro rock party</option><option value="2027-06-14">lun. 14/06 · Blues et soul</option><option value="2027-06-15">mar. 15/06 · Hommage aux légendes</option><option value="2027-06-16">mer. 16/06 · Reggae roots</option><option value="2027-06-17">jeu. 17/06 · Grand final</option></select></div>
+                <div class="filtres__champ"><label for="pass-3">Soirée 3</label><select id="pass-3"><option value="">Toutes les dates</option><option value="2027-06-04">ven. 04/06 · Ouverture électrique</option><option value="2027-06-05">sam. 05/06 · Blues de minuit</option><option value="2027-06-06">dim. 06/06 · Dimanche chanson</option><option value="2027-06-07">lun. 07/06 · Heavy night</option><option value="2027-06-08">mar. 08/06 · Reggae sous les arbres</option><option value="2027-06-09">mer. 09/06 · Punk à Stan</option><option value="2027-06-10">jeu. 10/06 · Folk et feux de camp</option><option value="2027-06-11">ven. 11/06 · Nuit métal</option><option value="2027-06-12">sam. 12/06 · Rock en Lorraine</option><option value="2027-06-13">dim. 13/06 · Électro rock party</option><option value="2027-06-14">lun. 14/06 · Blues et soul</option><option value="2027-06-15" selected>mar. 15/06 · Hommage aux légendes</option><option value="2027-06-16">mer. 16/06 · Reggae roots</option><option value="2027-06-17">jeu. 17/06 · Grand final</option></select></div>
+                <div class="filtres__champ"><label for="pass-cat">Tarif</label><select id="pass-cat"><option>Normal · 87,30 €</option><option selected>Réduit · 58,20 €</option></select></div>
+                <button class="btn" type="submit">Ajouter le pass</button>
+            </form>
+        </section>
+
+        <section class="recap" aria-label="Total de la commande">
+            <p class="recap__ligne"><span>2 billets soirée</span><span>60,00 €</span></p>
+            <p class="recap__ligne"><span>1 Pass 3 jours</span><span>58,20 €</span></p>
+            <p class="recap__total"><span>Total</span><span>118,20 €</span></p>
+            <div class="recap__actions">
+                <a class="btn" href="paiement.html">Valider le panier</a>
+                <button class="btn btn--secondaire" type="button">Vider le panier</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+</body>
+</html>

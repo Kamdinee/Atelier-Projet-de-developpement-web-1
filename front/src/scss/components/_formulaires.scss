@@ -21,17 +21,71 @@ textarea {
     }
 }
 
+// pas de fleches dans les champs nombre (on a les boutons - et +)
+input[type='number'] {
+    appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+        appearance: none;
+        margin: 0;
+    }
+}
+
 .champ-erreur {
     color: $couleur-accent;
     font-size: 0.85rem;
 }
 
+// formulaire en colonne (connexion, carte bancaire)
+.formulaire {
+    display: flex;
+    flex-direction: column;
+    gap: $espace-m;
+    padding: $espace-l;
+    border-radius: $rayon;
+    background: $couleur-surface;
+
+    &__note {
+        color: $couleur-texte-doux;
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        align-self: flex-start;
+    }
+}
+
+.champ {
+    display: flex;
+    flex-direction: column;
+    gap: $espace-xs;
+    flex: 1;
+}
+
+// deux champs cote a cote (expiration | code)
+.champ-groupe {
+    @include flex(flex-start, flex-start, $espace-m, wrap);
+
+    .champ {
+        flex: 1 1 8rem;
+    }
+}
+
 // selecteur de quantite - [n] +
 .quantite {
     @include flex(flex-start, center, $espace-xs);
+    flex-shrink: 0;
 
     input {
-        width: 3.5rem;
+        width: 3rem;
+        padding-inline: $espace-xs;
         text-align: center;
+    }
+
+    .btn {
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0;
     }
 }

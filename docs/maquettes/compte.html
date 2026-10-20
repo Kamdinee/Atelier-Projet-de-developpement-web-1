@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Connexion - Nancy Rock Vibration 2027</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
+    <link rel="stylesheet" href="../../front/public/css/main.css">
+    <link rel="stylesheet" href="../../front/public/css/print.css" media="print">
+</head>
+<body>
+    <!-- maquette statique compte.html : donnees reelles du seed, a remplacer par fetch + handlebars -->
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste"><li><a class="nav__lien" href="index.html">Programme</a></li><li><a class="nav__lien" href="confirmation.html">Mes billets</a></li><li><a class="nav__lien" href="compte.html" aria-current="page">Connexion</a></li></ul>
+            </nav>
+            <a class="badge-panier" href="panier.html" aria-label="Panier, 3 articles">Panier <span class="badge-panier__nombre">3</span></a>
+        </div>
+    </header>
+
+    <main id="contenu">
+        <ol class="etapes" aria-label="Étapes de la commande"><li class="etapes__faite">Panier</li><li aria-current="step">Connexion</li><li>Paiement</li><li>Billets</li></ol>
+        <section class="compte" aria-labelledby="titre-compte">
+            <h1 id="titre-compte">Connexion</h1>
+            <p>Un compte est nécessaire pour commander. Votre panier est conservé.</p>
+            <div class="onglets" role="tablist">
+                <button class="onglets__onglet" role="tab" aria-selected="true" type="button">J'ai un compte</button>
+                <button class="onglets__onglet" role="tab" aria-selected="false" type="button">Créer un compte</button>
+            </div>
+            <form class="formulaire">
+                <div class="champ"><label for="email">Adresse e-mail</label><input id="email" type="email" autocomplete="email" value="client@nrv.net"></div>
+                <div class="champ"><label for="mdp">Mot de passe</label><input id="mdp" type="password" autocomplete="current-password" value="client12345"></div>
+                <button class="btn" type="submit">Se connecter</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+</body>
+</html>

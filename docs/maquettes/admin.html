@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Backoffice - Nancy Rock Vibration 2027</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
+    <link rel="stylesheet" href="../../front/public/css/main.css">
+    <link rel="stylesheet" href="../../front/public/css/print.css" media="print">
+</head>
+<body>
+    <!-- maquette statique admin.html : donnees reelles du seed, a remplacer par fetch + handlebars -->
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste"><li><a class="nav__lien" href="index.html">Programme</a></li><li><a class="nav__lien" href="confirmation.html">Mes billets</a></li><li><a class="nav__lien" href="admin.html" aria-current="page">Backoffice</a></li><li><a class="nav__lien" href="compte.html">Sophie B. · Déconnexion</a></li></ul>
+            </nav>
+            <a class="badge-panier" href="panier.html" aria-label="Panier, 0 articles">Panier <span class="badge-panier__nombre">0</span></a>
+        </div>
+    </header>
+
+    <main id="contenu">
+        <h1>Suivi des jauges</h1>
+        <p>Données en direct de <code>GET /admin/jauges</code> · <button class="btn btn--secondaire" type="button">Actualiser</button></p>
+        <section class="kpi" aria-label="Synthèse du festival">
+            <div class="kpi__carte"><p>Places vendues</p><p class="kpi__valeur">20 028</p><p><small>sur 36 050 places</small></p></div>
+            <div class="kpi__carte"><p>Taux de remplissage</p><p class="kpi__valeur">56 %</p><p><small>1 soirée complète</small></p></div>
+            <div class="kpi__carte"><p>Recette</p><p class="kpi__valeur">500 877,00 €</p><p><small>billets et pass</small></p></div>
+        </section>
+        <div class="tableau-conteneur">
+            <table class="tableau-jauges">
+                <caption>Jauge et recette par soirée</caption>
+                <thead>
+                    <tr>
+                        <th scope="col"><button type="button">Date ▾</button></th>
+                        <th scope="col">Soirée</th>
+                        <th scope="col" class="col-secondaire">Lieu</th>
+                        <th scope="col" class="col-secondaire nombre">Jauge</th>
+                        <th scope="col" class="nombre"><button type="button">Vendues</button></th>
+                        <th scope="col" class="nombre">Restantes</th>
+                        <th scope="col"><button type="button">Remplissage</button></th>
+                        <th scope="col" class="nombre"><button type="button">Recette</button></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><time datetime="2027-06-04">ven. 04/06</time></td>
+                        <th scope="row">Ouverture électrique</th>
+                        <td class="col-secondaire col-lieu">Zénith de Nancy</td>
+                        <td class="col-secondaire nombre">5 000</td>
+                        <td class="nombre">3 100<br><small>2988 billets + 112 pass</small></td>
+                        <td class="nombre">1 900</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="62.0">62.0 %</meter> 62,0 %</td>
+                        <td class="nombre">77 208,20 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-05">sam. 05/06</time></td>
+                        <th scope="row">Blues de minuit</th>
+                        <td class="col-secondaire col-lieu">L&#x27;Autre Canal</td>
+                        <td class="col-secondaire nombre">1 200</td>
+                        <td class="nombre">576<br><small>440 billets + 136 pass</small></td>
+                        <td class="nombre">624</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="48.0">48.0 %</meter> 48,0 %</td>
+                        <td class="nombre">14 412,00 €</td>
+                    </tr>
+                    <tr class="complet">
+                        <td><time datetime="2027-06-06">dim. 06/06</time></td>
+                        <th scope="row">Dimanche chanson <span class="etiquette etiquette--complet">Complet</span></th>
+                        <td class="col-secondaire col-lieu">Salle Poirel</td>
+                        <td class="col-secondaire nombre">750</td>
+                        <td class="nombre">750<br><small>644 billets + 106 pass</small></td>
+                        <td class="nombre">0</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="100.0">100.0 %</meter> 100,0 %</td>
+                        <td class="nombre">18 513,90 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-07">lun. 07/06</time></td>
+                        <th scope="row">Heavy night</th>
+                        <td class="col-secondaire col-lieu">L&#x27;Autre Canal</td>
+                        <td class="col-secondaire nombre">1 200</td>
+                        <td class="nombre">852<br><small>732 billets + 120 pass</small></td>
+                        <td class="nombre">348</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="71.0">71.0 %</meter> 71,0 %</td>
+                        <td class="nombre">21 072,20 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-08">mar. 08/06</time></td>
+                        <th scope="row">Reggae sous les arbres</th>
+                        <td class="col-secondaire col-lieu">Parc de la Pépinière - grande scène</td>
+                        <td class="col-secondaire nombre">3 000</td>
+                        <td class="nombre">1 050<br><small>934 billets + 116 pass</small></td>
+                        <td class="nombre">1 950</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="35.0">35.0 %</meter> 35,0 %</td>
+                        <td class="nombre">26 486,10 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-09">mer. 09/06</time></td>
+                        <th scope="row">Punk à Stan</th>
+                        <td class="col-secondaire col-lieu">L&#x27;Autre Canal</td>
+                        <td class="col-secondaire nombre">1 200</td>
+                        <td class="nombre">660<br><small>528 billets + 132 pass</small></td>
+                        <td class="nombre">540</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="55.0">55.0 %</meter> 55,0 %</td>
+                        <td class="nombre">16 763,80 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-10">jeu. 10/06</time></td>
+                        <th scope="row">Folk et feux de camp</th>
+                        <td class="col-secondaire col-lieu">Salle Poirel</td>
+                        <td class="col-secondaire nombre">750</td>
+                        <td class="nombre">300<br><small>166 billets + 134 pass</small></td>
+                        <td class="nombre">450</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="40.0">40.0 %</meter> 40,0 %</td>
+                        <td class="nombre">7 629,90 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-11">ven. 11/06</time></td>
+                        <th scope="row">Nuit métal</th>
+                        <td class="col-secondaire col-lieu">Zénith de Nancy</td>
+                        <td class="col-secondaire nombre">5 000</td>
+                        <td class="nombre">3 650<br><small>3543 billets + 107 pass</small></td>
+                        <td class="nombre">1 350</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="73.0">73.0 %</meter> 73,0 %</td>
+                        <td class="nombre">91 454,20 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-12">sam. 12/06</time></td>
+                        <th scope="row">Rock en Lorraine</th>
+                        <td class="col-secondaire col-lieu">Parc de la Pépinière - grande scène</td>
+                        <td class="col-secondaire nombre">3 000</td>
+                        <td class="nombre">1 500<br><small>1371 billets + 129 pass</small></td>
+                        <td class="nombre">1 500</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="50.0">50.0 %</meter> 50,0 %</td>
+                        <td class="nombre">37 217,40 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-13">dim. 13/06</time></td>
+                        <th scope="row">Électro rock party</th>
+                        <td class="col-secondaire col-lieu">L&#x27;Autre Canal</td>
+                        <td class="col-secondaire nombre">1 200</td>
+                        <td class="nombre">792<br><small>647 billets + 145 pass</small></td>
+                        <td class="nombre">408</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="66.0">66.0 %</meter> 66,0 %</td>
+                        <td class="nombre">19 926,00 €</td>
+                    </tr>
+                    <tr class="presque">
+                        <td><time datetime="2027-06-14">lun. 14/06</time></td>
+                        <th scope="row">Blues et soul <span class="etiquette etiquette--alerte">Presque complet</span></th>
+                        <td class="col-secondaire col-lieu">Salle Poirel</td>
+                        <td class="col-secondaire nombre">750</td>
+                        <td class="nombre">748<br><small>614 billets + 134 pass</small></td>
+                        <td class="nombre">2</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="99.7">99.7 %</meter> 99,7 %</td>
+                        <td class="nombre">18 786,80 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-15">mar. 15/06</time></td>
+                        <th scope="row">Hommage aux légendes</th>
+                        <td class="col-secondaire col-lieu">Zénith de Nancy</td>
+                        <td class="col-secondaire nombre">5 000</td>
+                        <td class="nombre">2 900<br><small>2789 billets + 111 pass</small></td>
+                        <td class="nombre">2 100</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="58.0">58.0 %</meter> 58,0 %</td>
+                        <td class="nombre">72 869,70 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-16">mer. 16/06</time></td>
+                        <th scope="row">Reggae roots</th>
+                        <td class="col-secondaire col-lieu">Parc de la Pépinière - grande scène</td>
+                        <td class="col-secondaire nombre">3 000</td>
+                        <td class="nombre">900<br><small>767 billets + 133 pass</small></td>
+                        <td class="nombre">2 100</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="30.0">30.0 %</meter> 30,0 %</td>
+                        <td class="nombre">22 512,90 €</td>
+                    </tr>
+                    <tr>
+                        <td><time datetime="2027-06-17">jeu. 17/06</time></td>
+                        <th scope="row">Grand final</th>
+                        <td class="col-secondaire col-lieu">Zénith de Nancy</td>
+                        <td class="col-secondaire nombre">5 000</td>
+                        <td class="nombre">2 250<br><small>2104 billets + 146 pass</small></td>
+                        <td class="nombre">2 750</td>
+                        <td><meter min="0" max="100" low="60" high="90" optimum="50" value="45.0">45.0 %</meter> 45,0 %</td>
+                        <td class="nombre">56 023,90 €</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+</body>
+</html>

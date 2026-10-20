@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Paiement - Nancy Rock Vibration 2027</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
+    <link rel="stylesheet" href="../../front/public/css/main.css">
+    <link rel="stylesheet" href="../../front/public/css/print.css" media="print">
+</head>
+<body>
+    <!-- maquette statique paiement.html : donnees reelles du seed, a remplacer par fetch + handlebars -->
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste"><li><a class="nav__lien" href="index.html">Programme</a></li><li><a class="nav__lien" href="confirmation.html">Mes billets</a></li><li><a class="nav__lien" href="compte.html">Marc D. · Déconnexion</a></li></ul>
+            </nav>
+            <a class="badge-panier" href="panier.html" aria-label="Panier, 3 articles">Panier <span class="badge-panier__nombre">3</span></a>
+        </div>
+    </header>
+
+    <main id="contenu">
+        <ol class="etapes" aria-label="Étapes de la commande"><li class="etapes__faite">Panier</li><li class="etapes__faite">Connexion</li><li aria-current="step">Paiement</li><li>Billets</li></ol>
+        <h1>Paiement</h1>
+        <div class="paiement">
+            <section class="recap" aria-labelledby="titre-recap">
+                <h2 id="titre-recap">Commande NRV-3B0F6C2E</h2>
+                <p class="recap__ligne"><span>2 × Nuit métal · normal<br><small>ven. 11/06 · Zénith de Nancy</small></span><span>60,00 €</span></p>
+                <p class="recap__ligne"><span>1 × Pass 3 jours · réduit<br><small>ven. 11/06 Nuit métal · sam. 12/06 Rock en Lorraine · mar. 15/06 Hommage aux légendes</small></span><span>58,20 €</span></p>
+                <p class="recap__total"><span>Total</span><span>118,20 €</span></p>
+                <p class="recap__note">Les places sont vérifiées et réservées au moment du paiement.</p>
+            </section>
+
+            <form class="formulaire" aria-labelledby="titre-carte" novalidate>
+                <h2 id="titre-carte">Carte bancaire</h2>
+                <p class="formulaire__note">Paiement simulé : aucune somme n'est débitée.</p>
+                <div class="champ">
+                    <label for="carte-numero">Numéro de carte</label>
+                    <input id="carte-numero" name="numero" inputmode="numeric" autocomplete="cc-number" value="4970 1012 3456 7899">
+                </div>
+                <div class="champ-groupe">
+                    <div class="champ">
+                        <label for="carte-expiration">Expiration (MM/AA)</label>
+                        <input id="carte-expiration" name="expiration" autocomplete="cc-exp" value="09/24" aria-invalid="true" aria-describedby="erreur-expiration">
+                        <p class="champ-erreur" id="erreur-expiration">Carte expirée</p>
+                    </div>
+                    <div class="champ">
+                        <label for="carte-code">Code</label>
+                        <input id="carte-code" name="code" inputmode="numeric" autocomplete="cc-csc" value="123">
+                    </div>
+                </div>
+                <button class="btn" type="submit">Payer 118,20 €</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+</body>
+</html>

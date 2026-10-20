@@ -16,6 +16,10 @@
         background: $couleur-surface;
     }
 
+    &__carte p:first-child {
+        color: $couleur-texte-doux;
+    }
+
     &__valeur {
         font-family: $police-titre;
         font-size: 2.25rem;
@@ -32,9 +36,11 @@
     width: 100%;
     border-collapse: collapse;
 
+    font-size: 0.9rem;
+
     th,
     td {
-        padding: $espace-s $espace-m;
+        padding: $espace-s;
         border-bottom: 1px solid rgba($blanc, 0.1);
         text-align: left;
         white-space: nowrap;
@@ -56,11 +62,43 @@
         }
     }
 
-    .complet td {
-        color: $couleur-accent;
+    // alignement a droite des nombres
+    .nombre {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+    }
+
+    caption {
+        @include visuellement-cache;
+    }
+
+    small {
+        color: $couleur-texte-doux;
+    }
+
+    // le lieu peut passer a la ligne, pas le reste
+    .col-lieu {
+        white-space: normal;
+    }
+
+    th[scope='row'] {
+        color: $blanc;
+
+        .etiquette {
+            margin-left: $espace-xs;
+        }
+    }
+
+    .complet {
+        background: rgba($couleur-accent, 0.08);
+    }
+
+    .presque {
+        background: rgba($couleur-alerte, 0.06);
     }
 
     meter {
-        width: 6rem;
+        width: 4.5rem;
+        vertical-align: middle;
     }
 }

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nuit métal - Nancy Rock Vibration 2027</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
+    <link rel="stylesheet" href="../../front/public/css/main.css">
+    <link rel="stylesheet" href="../../front/public/css/print.css" media="print">
+</head>
+<body>
+    <!-- maquette statique soiree.html : donnees reelles du seed, a remplacer par fetch + handlebars -->
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste"><li><a class="nav__lien" href="index.html" aria-current="page">Programme</a></li><li><a class="nav__lien" href="confirmation.html">Mes billets</a></li><li><a class="nav__lien" href="compte.html">Connexion</a></li></ul>
+            </nav>
+            <a class="badge-panier" href="panier.html" aria-label="Panier, 0 articles">Panier <span class="badge-panier__nombre">0</span></a>
+        </div>
+    </header>
+
+    <main id="contenu">
+        <article class="soiree">
+            <header class="soiree__entete">
+                <p><a href="index.html">‹ Retour au programme</a></p>
+                <h1>Nuit métal</h1>
+                <p class="soiree__infos">
+                    <span class="etiquette">Soirée métal</span>
+                    <time datetime="2027-06-11T19:30">vendredi 11 juin 2027 · ouverture 19:30</time>
+                    <span>Zénith de Nancy, rue du Zénith, 54320 Maxéville</span>
+                </p>
+            </header>
+
+            <section class="soiree__spectacles" aria-labelledby="titre-spectacles">
+                <h2 id="titre-spectacles">3 spectacles au programme</h2>
+                <article class="spectacle-detail">
+                    <img class="spectacle-detail__image" src="img/spectacle-19.svg" alt="Abyssal Forge sur scène">
+                    <div class="spectacle-detail__corps">
+                        <p class="spectacle-detail__horaire"><time datetime="2027-06-11T20:00">20:00</time> <span class="etiquette">Métal</span></p>
+                        <h3>Abyssal Forge</h3>
+                        <p class="spectacle-detail__artistes">Avec Abyssal Forge</p>
+                        <p>Riffs massifs et double pédale : Abyssal Forge vient défendre son dernier album sur scène. Le groupe présentera aussi des titres inédits.</p>
+                        <div class="video-vignette" role="img" aria-label="Vidéo de Abyssal Forge (lecteur YouTube intégré)"><span aria-hidden="true">▶</span></div>
+                    </div>
+                </article>
+                <article class="spectacle-detail">
+                    <img class="spectacle-detail__image" src="img/spectacle-20.svg" alt="Nordic Anvil sur scène">
+                    <div class="spectacle-detail__corps">
+                        <p class="spectacle-detail__horaire"><time datetime="2027-06-11T21:20">21:20</time> <span class="etiquette">Métal</span></p>
+                        <h3>Nordic Anvil</h3>
+                        <p class="spectacle-detail__artistes">Avec Nordic Anvil, Franck Normand</p>
+                        <p>Né à Pons-les-Bains en 2001, Nordic Anvil est devenu une référence de la scène métal du Grand Est. Première venue à Nancy.</p>
+                        <div class="video-vignette" role="img" aria-label="Vidéo de Nordic Anvil (lecteur YouTube intégré)"><span aria-hidden="true">▶</span></div>
+                    </div>
+                </article>
+                <article class="spectacle-detail">
+                    <img class="spectacle-detail__image" src="img/spectacle-21.svg" alt="Marble Heads sur scène">
+                    <div class="spectacle-detail__corps">
+                        <p class="spectacle-detail__horaire"><time datetime="2027-06-11T22:40">22:40</time> <span class="etiquette">Classic rock</span></p>
+                        <h3>Marble Heads</h3>
+                        <p class="spectacle-detail__artistes">Avec Marble Heads, Maryse Boyer</p>
+                        <p>Formé à Parent en 2009, Marble Heads enchaîne les tournées avec un son taillé pour la scène. Le groupe présentera aussi des titres inédits.</p>
+                        <div class="video-vignette" role="img" aria-label="Vidéo de Marble Heads (lecteur YouTube intégré)"><span aria-hidden="true">▶</span></div>
+                    </div>
+                </article>
+            </section>
+
+            <aside class="achat" aria-labelledby="titre-achat">
+                <h2 id="titre-achat">Billets</h2>
+                <p class="achat__places"><strong>1 350</strong> places restantes sur 5 000</p>
+                <form class="achat__form">
+                    <div class="achat__ligne">
+                        <label for="qte-normal">Tarif normal <strong>30,00 €</strong></label>
+                        <div class="quantite"><button class="btn btn--secondaire" type="button" aria-label="Retirer un billet normal">−</button><input id="qte-normal" type="number" min="0" max="10" value="2" inputmode="numeric"><button class="btn btn--secondaire" type="button" aria-label="Ajouter un billet normal">+</button></div>
+                    </div>
+                    <div class="achat__ligne">
+                        <label for="qte-reduit">Tarif réduit <strong>20,00 €</strong><small>étudiants, demandeurs d'emploi, situation de handicap</small></label>
+                        <div class="quantite"><button class="btn btn--secondaire" type="button" aria-label="Retirer un billet réduit">−</button><input id="qte-reduit" type="number" min="0" max="10" value="0" inputmode="numeric"><button class="btn btn--secondaire" type="button" aria-label="Ajouter un billet réduit">+</button></div>
+                    </div>
+                    <p class="achat__total">Sous-total <strong>60,00 €</strong></p>
+                    <button class="btn" type="submit">Ajouter au panier</button>
+                </form>
+                <p class="achat__pass">Vous venez 3 soirs ? Le <a href="panier.html#composer-pass">Pass 3 jours</a> coûte 3 % de moins.</p>
+            </aside>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+</body>
+</html>

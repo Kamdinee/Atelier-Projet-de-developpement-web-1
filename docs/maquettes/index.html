@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Programme - Nancy Rock Vibration 2027</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
+    <link rel="stylesheet" href="../../front/public/css/main.css">
+    <link rel="stylesheet" href="../../front/public/css/print.css" media="print">
+</head>
+<body>
+    <!-- maquette statique index.html : donnees reelles du seed, a remplacer par fetch + handlebars -->
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste"><li><a class="nav__lien" href="index.html" aria-current="page">Programme</a></li><li><a class="nav__lien" href="confirmation.html">Mes billets</a></li><li><a class="nav__lien" href="compte.html">Connexion</a></li></ul>
+            </nav>
+            <a class="badge-panier" href="panier.html" aria-label="Panier, 0 articles">Panier <span class="badge-panier__nombre">0</span></a>
+        </div>
+    </header>
+
+    <main id="contenu">
+        <section class="intro" aria-labelledby="titre-programme">
+            <h1 id="titre-programme">Programme du festival</h1>
+            <p>14 soirées du 4 au 17 juin 2027, 37 concerts dans 4 lieux de Nancy. Un billet donne accès à tous les spectacles de la soirée.</p>
+        </section>
+
+        <form class="filtres" role="search" aria-label="Filtrer les spectacles">
+            <div class="filtres__champ">
+                <label for="filtre-date">Date</label>
+                <select id="filtre-date" name="date"><option value="">Toutes les dates</option><option value="2027-06-04">ven. 04/06 · Ouverture électrique</option><option value="2027-06-05">sam. 05/06 · Blues de minuit</option><option value="2027-06-06">dim. 06/06 · Dimanche chanson</option><option value="2027-06-07">lun. 07/06 · Heavy night</option><option value="2027-06-08">mar. 08/06 · Reggae sous les arbres</option><option value="2027-06-09">mer. 09/06 · Punk à Stan</option><option value="2027-06-10">jeu. 10/06 · Folk et feux de camp</option><option value="2027-06-11">ven. 11/06 · Nuit métal</option><option value="2027-06-12">sam. 12/06 · Rock en Lorraine</option><option value="2027-06-13">dim. 13/06 · Électro rock party</option><option value="2027-06-14">lun. 14/06 · Blues et soul</option><option value="2027-06-15">mar. 15/06 · Hommage aux légendes</option><option value="2027-06-16">mer. 16/06 · Reggae roots</option><option value="2027-06-17">jeu. 17/06 · Grand final</option></select>
+            </div>
+            <div class="filtres__champ">
+                <label for="filtre-style">Style de musique</label>
+                <select id="filtre-style" name="style"><option value="">Tous les styles</option><option value="blues-rock">Blues rock</option><option value="chanson">Chanson</option><option value="classic-rock">Classic rock</option><option value="folk">Folk</option><option value="metal">Métal</option><option value="punk">Punk</option><option value="reggae">Reggae</option><option value="electro-rock">Électro rock</option></select>
+            </div>
+            <button class="btn btn--secondaire" type="reset">Réinitialiser</button>
+            <p class="filtres__resultat" aria-live="polite"><strong>37</strong> spectacles</p>
+        </form>
+
+        <ul class="grille-spectacles">
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-1.svg" alt="Moselle Thunder sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Classic rock</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Moselle Thunder</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-04T20:30">ven. 04/06 · 20:30</time> · Ouverture électrique</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-2.svg" alt="Old Lorraine Road sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Classic rock</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Old Lorraine Road</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-04T21:50">ven. 04/06 · 21:50</time> · Ouverture électrique</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-3.svg" alt="Sister Magnolia sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Blues rock</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Sister Magnolia</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-04T23:10">ven. 04/06 · 23:10</time> · Ouverture électrique</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-4.svg" alt="Muddy Meurthe sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Blues rock</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Muddy Meurthe</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-05T21:00">sam. 05/06 · 21:00</time> · Blues de minuit</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-5.svg" alt="The Rusty Strings sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Blues rock</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">The Rusty Strings</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-05T22:20">sam. 05/06 · 22:20</time> · Blues de minuit</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-6.svg" alt="Les Voix du Quai sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Chanson</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Les Voix du Quai</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-06T19:00">dim. 06/06 · 19:00</time> · Dimanche chanson</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-7.svg" alt="Céleste Arnaud sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Chanson</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Céleste Arnaud</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-06T20:20">dim. 06/06 · 20:20</time> · Dimanche chanson</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-8.svg" alt="Clara &amp; the Pines sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Folk</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Clara &amp; the Pines</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-06T21:40">dim. 06/06 · 21:40</time> · Dimanche chanson</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-9.svg" alt="Fer Rouge sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Métal</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Fer Rouge</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-07T20:30">lun. 07/06 · 20:30</time> · Heavy night</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-10.svg" alt="Black Mirabelle sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Métal</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Black Mirabelle</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-07T21:50">lun. 07/06 · 21:50</time> · Heavy night</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-11.svg" alt="Hurlement d&#x27;Acier sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Métal</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Hurlement d&#x27;Acier</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-07T23:10">lun. 07/06 · 23:10</time> · Heavy night</p>
+                    </div>
+                </article>
+            </li>
+            <li>
+                <article class="carte-spectacle">
+                    <img class="carte-spectacle__image" src="img/spectacle-12.svg" alt="Roots Mirabelle sur scène" loading="lazy">
+                    <div class="carte-spectacle__corps">
+                        <span class="etiquette">Reggae</span>
+                        <h2 class="carte-spectacle__titre"><a class="carte-spectacle__lien" href="soiree.html">Roots Mirabelle</a></h2>
+                        <p class="carte-spectacle__infos"><time datetime="2027-06-08T19:30">mar. 08/06 · 19:30</time> · Reggae sous les arbres</p>
+                    </div>
+                </article>
+            </li>
+        </ul>
+
+        <nav class="pagination" aria-label="Pages du programme">
+            <a class="btn btn--secondaire" aria-disabled="true">‹ Précédent</a>
+            <a class="btn" href="index.html" aria-current="page">1</a>
+            <a class="btn btn--secondaire" href="index.html">2</a>
+            <a class="btn btn--secondaire" href="index.html">3</a>
+            <a class="btn btn--secondaire" href="index.html">4</a>
+            <a class="btn btn--secondaire" href="index.html">Suivant ›</a>
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+</body>
+</html>

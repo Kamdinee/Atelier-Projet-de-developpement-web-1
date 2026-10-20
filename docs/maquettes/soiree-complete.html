@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dimanche chanson - Nancy Rock Vibration 2027</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
+    <link rel="stylesheet" href="../../front/public/css/main.css">
+    <link rel="stylesheet" href="../../front/public/css/print.css" media="print">
+</head>
+<body>
+    <!-- maquette statique soiree-complete.html : donnees reelles du seed, a remplacer par fetch + handlebars -->
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste"><li><a class="nav__lien" href="index.html" aria-current="page">Programme</a></li><li><a class="nav__lien" href="confirmation.html">Mes billets</a></li><li><a class="nav__lien" href="compte.html">Connexion</a></li></ul>
+            </nav>
+            <a class="badge-panier" href="panier.html" aria-label="Panier, 0 articles">Panier <span class="badge-panier__nombre">0</span></a>
+        </div>
+    </header>
+
+    <main id="contenu">
+        <article class="soiree">
+            <header class="soiree__entete">
+                <p><a href="index.html">‹ Retour au programme</a></p>
+                <h1>Dimanche chanson</h1>
+                <p class="soiree__infos">
+                    <span class="etiquette">Soirée chanson</span>
+                    <time datetime="2027-06-06T18:30">dimanche 6 juin 2027 · ouverture 18:30</time>
+                    <span>Salle Poirel</span>
+                </p>
+            </header>
+            <section class="soiree__spectacles" aria-labelledby="titre-spectacles">
+                <h2 id="titre-spectacles">3 spectacles au programme</h2>
+                <article class="spectacle-detail">
+                    <img class="spectacle-detail__image" src="img/spectacle-6.svg" alt="Les Voix du Quai sur scène">
+                    <div class="spectacle-detail__corps">
+                        <p class="spectacle-detail__horaire"><time datetime="2027-06-06T19:00">19:00</time> <span class="etiquette">Chanson</span></p>
+                        <h3>Les Voix du Quai</h3>
+                        <p class="spectacle-detail__artistes">Avec Les Voix du Quai</p>
+                        <p>Venue de Loiseau, sur scène depuis 2016, Les Voix du Quai raconte la ville et ses gens. Le groupe présentera aussi des titres inédits.</p>
+                        <div class="video-vignette" role="img" aria-label="Vidéo de Les Voix du Quai (lecteur YouTube intégré)"><span aria-hidden="true">▶</span></div>
+                    </div>
+                </article>
+                <article class="spectacle-detail">
+                    <img class="spectacle-detail__image" src="img/spectacle-7.svg" alt="Céleste Arnaud sur scène">
+                    <div class="spectacle-detail__corps">
+                        <p class="spectacle-detail__horaire"><time datetime="2027-06-06T20:20">20:20</time> <span class="etiquette">Chanson</span></p>
+                        <h3>Céleste Arnaud</h3>
+                        <p class="spectacle-detail__artistes">Avec Céleste Arnaud</p>
+                        <p>Des textes ciselés et une voix qui porte : Céleste Arnaud revisite la grande chanson française. Un concert à ne pas manquer.</p>
+                        <div class="video-vignette" role="img" aria-label="Vidéo de Céleste Arnaud (lecteur YouTube intégré)"><span aria-hidden="true">▶</span></div>
+                    </div>
+                </article>
+                <article class="spectacle-detail">
+                    <img class="spectacle-detail__image" src="img/spectacle-8.svg" alt="Clara &amp; the Pines sur scène">
+                    <div class="spectacle-detail__corps">
+                        <p class="spectacle-detail__horaire"><time datetime="2027-06-06T21:40">21:40</time> <span class="etiquette">Folk</span></p>
+                        <h3>Clara &amp; the Pines</h3>
+                        <p class="spectacle-detail__artistes">Avec Clara &amp; the Pines, Camille Mercier</p>
+                        <p>Depuis Barre-sur-Giraud et depuis 2018, Clara &amp; the Pines fait danser les festivals avec ses ballades. Un concert à ne pas manquer.</p>
+                        <div class="video-vignette" role="img" aria-label="Vidéo de Clara &amp; the Pines (lecteur YouTube intégré)"><span aria-hidden="true">▶</span></div>
+                    </div>
+                </article>
+            </section>
+            <aside class="achat achat--complet" aria-labelledby="titre-achat">
+                <h2 id="titre-achat">Billets</h2>
+                <p class="etiquette etiquette--complet">Complet</p>
+                <p class="achat__places"><strong>0</strong> place restante sur 750</p>
+                <button class="btn" type="button" disabled>Ajouter au panier</button>
+                <p class="achat__pass">Les 750 places de cette soirée ont été vendues.</p>
+            </aside>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+</body>
+</html>
