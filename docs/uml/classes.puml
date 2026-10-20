@@ -1,0 +1,86 @@
+@startuml classes
+!include style.iuml
+hide empty members
+skinparam classAttributeIconSize 0
+hide circle
+
+
+class Utilisateur {
+  - id : int
+  - nom : string
+  - prenom : string
+  - email : string
+  - motDePasse : string
+  - role : string
+  + sInscrire()
+  + seConnecter()
+}
+class Commande {
+  - id : string
+  - dateCreation : date
+  - montantTotal : int
+  - statut : string
+  + valider()
+  + payer()
+}
+abstract class Billet {
+  - id : int
+  - reference : string
+  - token : string
+  - categorieTarif : string
+  - prixPaye : int
+  - nomAcheteur : string
+  + imprimer()
+}
+class BilletSoiree
+class BilletPass
+class Pass {
+  - id : int
+  - libelle : string
+  - nbSoirees : int = 3
+  - tarifNormal : int
+  - tarifReduit : int
+}
+class Soiree {
+  - id : int
+  - nom : string
+  - thematique : string
+  - date : date
+  - heureDebut : time
+  - tarifNormal : int
+  - tarifReduit : int
+  - jauge : int
+  - placesVendues : int
+  + placesRestantes() : int
+  + reserver(nb : int)
+}
+class Spectacle {
+  - id : int
+  - titre : string
+  - description : string
+  - images : string[]
+  - urlVideo : string
+  - horaire : time
+}
+class Style {
+  - id : int
+  - libelle : string
+}
+class Lieu {
+  - id : int
+  - nom : string
+  - adresse : string
+  - capacite : int
+}
+
+Utilisateur "1" -- "0..*" Commande : passe >
+Commande "1" *-- "1..*" Billet : contient >
+Billet <|-- BilletSoiree
+Billet <|-- BilletPass
+BilletSoiree "0..*" --> "1" Soiree : donne accès à >
+BilletPass "0..*" --> "3" Soiree : donne accès à >
+BilletPass "0..*" --> "1" Pass : formule >
+Soiree "1" *-- "2..3" Spectacle : programme >
+Spectacle "0..*" --> "1" Style : a pour style >
+Soiree "0..*" --> "1" Lieu : se déroule à >
+@enduml

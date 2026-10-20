@@ -23,9 +23,9 @@ Application de billetterie d'un festival de musique de 2 semaines : consultation
 Prérequis : Git et Docker avec le plugin `docker compose` (Docker Desktop sous Windows/macOS).
 
 ```bash
-git clone https://github.com/Kamdinee/aterlier-s5-web1.git
-cd aterlier-s5-web1
-git checkout production
+git clone https://github.com/Kamdinee/Atelier-Projet-de-developpement-web-1.git
+cd Atelier-Projet-de-developpement-web-1
+git checkout production-kam
 cp .env.example .env                       # windows powershell : copy .env.example .env
 
 docker compose up -d --build               # la base est creee au premier demarrage (sql/01_schema.sql)
@@ -171,9 +171,9 @@ Sécurité : requêtes préparées PDO systématiques (`ATTR_EMULATE_PREPARES` d
 Sur `docketu.iutnc.univ-lorraine.fr` :
 
 ```bash
-git clone https://github.com/Kamdinee/aterlier-s5-web1.git
-cd aterlier-s5-web1
-git checkout production
+git clone https://github.com/Kamdinee/Atelier-Projet-de-developpement-web-1.git
+cd Atelier-Projet-de-developpement-web-1
+git checkout production-kam
 cp .env.example .env
 ```
 
@@ -223,5 +223,6 @@ Le site est alors sur `http://docketu.iutnc.univ-lorraine.fr:8081` et l'API sur 
 ## Organisation
 
 - tableau Trello par étape (conception, environnement, production...)
-- branche de travail `production`, un commit par carte Trello
-- document de conception : scénarios, modèle du domaine, schéma SQL, contrat d'API, wireframes
+- branche de travail `production-kam`, un commit par carte Trello
+- dossier de rendu de l'itération 1 : [docs/NRV-dossier-iteration-1.pdf](docs/NRV-dossier-iteration-1.pdf)
+- maquettes des écrans : [docs/maquettes](docs/maquettes/README.md) · diagrammes PlantUML : [docs/uml](docs/uml)

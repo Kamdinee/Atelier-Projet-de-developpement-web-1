@@ -1,0 +1,29 @@
+@startuml sequence
+!include style.iuml
+skinparam sequence {
+  ParticipantBackgroundColor #FFFFFF
+  ParticipantBorderColor #333333
+  LifeLineBorderColor #999999
+}
+autonumber
+actor "Navigateur\n(fetch)" as N
+participant "CorsMiddleware" as C
+participant "GetSoireeDetailAction\n(adaptateur d'entrée)" as A
+participant "ConsulterSoiree\n(cas d'usage)" as U
+participant "SoireeRepositoryInterface\n(port de sortie)" as P
+participant "PDOSoireeRepository\n(adaptateur de sortie)" as R
+database "MariaDB" as DB
+N -> C : GET /soirees/8
+C -> A : requête
+A -> A : IdentifiantValidator\n(id entier positif, sinon 400)
+A -> U : executer(8)
+U -> P : trouverParId(8)
+P -> R : (implémentation injectée par PHP-DI)
+R -> DB : SELECT ... WHERE s.id = :id\n(requêtes préparées)
+DB --> R : lignes
+R --> U : Soiree (entité du domaine,\nrègle 2 à 3 spectacles vérifiée)
+U --> A : SoireeDto
+A --> C : 200 + JSON (liens HATEOAS)
+C --> N : + en-têtes CORS
+note over U, P : si la soirée n'existe pas : SoireeIntrouvableException\n-> ProblemJsonErrorHandler -> 404 application/problem+json
+@enduml

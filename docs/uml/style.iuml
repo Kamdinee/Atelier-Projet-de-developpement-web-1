@@ -1,0 +1,21 @@
+skinparam defaultFontName Inter
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam ArrowColor #444444
+skinparam ArrowFontColor #444444
+skinparam ArrowFontSize 11
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #333333
+  HeaderBackgroundColor #EEF0F2
+  AttributeFontSize 12
+}
+skinparam package {
+  BorderColor #999999
+  FontColor #333333
+}
+skinparam note {
+  BackgroundColor #F5F6F7
+  BorderColor #8A9097
+}

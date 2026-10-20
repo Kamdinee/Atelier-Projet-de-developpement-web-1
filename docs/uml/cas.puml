@@ -1,0 +1,34 @@
+@startuml cas
+!include style.iuml
+left to right direction
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #333333
+}
+actor Visiteur as V
+actor Acheteur as A
+actor Administrateur as AD
+A -|> V
+rectangle "NRV.net" {
+  usecase "Consulter le programme" as UC1
+  usecase "Filtrer par date / style" as UC2
+  usecase "Voir le détail d'une soirée" as UC3
+  usecase "Gérer son panier\n(billets soirée, Pass 3 jours)" as UC4
+  usecase "S'inscrire / se connecter" as UC5
+  usecase "Valider la commande" as UC6
+  usecase "Payer (carte simulée)" as UC7
+  usecase "Consulter / imprimer\nses billets" as UC8
+  usecase "Suivre les jauges\net les recettes" as UC9
+}
+V --> UC1
+V --> UC2
+V --> UC3
+V --> UC4
+A --> UC5
+A --> UC6
+A --> UC7
+A --> UC8
+AD --> UC9
+UC6 ..> UC5 : <<include>>
+UC7 ..> UC6 : <<include>>
+@enduml

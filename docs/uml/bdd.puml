@@ -1,0 +1,127 @@
+@startuml bdd
+!include style.iuml
+hide circle
+hide empty members
+skinparam linetype ortho
+skinparam class {
+  HeaderBackgroundColor #EEF0F2
+}
+entity lieux {
+  * id : int <<PK>>
+  --
+  nom, adresse, ville
+  capacite
+}
+entity styles {
+  * id : int <<PK>>
+  --
+  libelle
+  slug <<unique>>
+}
+entity artistes {
+  * id : int <<PK>>
+  --
+  nom <<unique>>
+}
+entity soirees {
+  * id : int <<PK>>
+  --
+  nom, thematique
+  date_soiree <<unique>>
+  heure_debut
+  # lieu_id <<FK>>
+  jauge, places_vendues
+  tarif_normal, tarif_reduit
+}
+entity spectacles {
+  * id : int <<PK>>
+  --
+  # soiree_id <<FK>>
+  # style_id <<FK>>
+  titre, description
+  video_url
+  horaire_previsionnel
+}
+entity spectacle_artiste {
+  * # spectacle_id <<FK>>
+  * # artiste_id <<FK>>
+  --
+  ordre
+}
+entity spectacle_images {
+  * id : int <<PK>>
+  --
+  # spectacle_id <<FK>>
+  url, alt, ordre
+}
+entity pass {
+  * id : int <<PK>>
+  --
+  libelle, nb_soirees
+  tarif_normal, tarif_reduit
+}
+entity utilisateurs {
+  * id : int <<PK>>
+  --
+  email <<unique>>
+  nom, prenom
+  mot_de_passe (hash)
+  role
+}
+entity commandes {
+  * id : uuid <<PK>>
+  --
+  # utilisateur_id <<FK>>
+  statut, total
+  carte_fin
+  cree_le, payee_le
+}
+entity lignes_commande {
+  * id : int <<PK>>
+  --
+  # commande_id <<FK>>
+  type (SOIREE | PASS)
+  # soiree_id <<FK>> ?
+  # pass_id <<FK>> ?
+  categorie, quantite
+  prix_unitaire
+}
+entity ligne_pass_soirees {
+  * # ligne_id <<FK>>
+  * # soiree_id <<FK>>
+}
+entity billets {
+  * id : int <<PK>>
+  --
+  token <<unique>>
+  reference <<unique>>
+  # commande_id <<FK>>
+  type (SOIREE | PASS)
+  # soiree_id <<FK>> ?
+  # pass_id <<FK>> ?
+  categorie, prix_paye
+  nom_acheteur, emis_le
+}
+entity billet_pass_soirees {
+  * # billet_id <<FK>>
+  * # soiree_id <<FK>>
+}
+
+lieux ||--o{ soirees
+soirees ||--|{ spectacles
+styles ||--o{ spectacles
+spectacles ||--|{ spectacle_artiste
+artistes ||--o{ spectacle_artiste
+spectacles ||--o{ spectacle_images
+utilisateurs ||--o{ commandes
+commandes ||--|{ lignes_commande
+lignes_commande ||--o{ ligne_pass_soirees
+commandes ||--o{ billets
+billets ||--o{ billet_pass_soirees
+soirees ||--o{ billets
+soirees ||--o{ billet_pass_soirees
+pass ||--o{ billets
+pass ||--o{ lignes_commande
+soirees ||--o{ lignes_commande
+soirees ||--o{ ligne_pass_soirees
+@enduml
