@@ -4,9 +4,9 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP VIEW  IF EXISTS v_jauges_soirees;
-DROP TABLE IF EXISTS billets, lignes_commande, commandes, utilisateurs,
-                     spectacle_images, spectacle_artiste, spectacles,
-                     soirees, artistes, styles, lieux;
+DROP TABLE IF EXISTS billet_pass_soirees, billets, ligne_pass_soirees, lignes_commande,
+                     commandes, utilisateurs, pass, spectacle_images, spectacle_artiste,
+                     spectacles, soirees, artistes, styles, lieux;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -40,9 +40,9 @@ CREATE TABLE soirees (
     heure_debut     TIME         NOT NULL,
     lieu_id         INT UNSIGNED NOT NULL,
     jauge           INT UNSIGNED NOT NULL,
-    places_vendues  INT UNSIGNED NOT NULL DEFAULT 0,
-    tarif_normal    INT UNSIGNED NOT NULL,          -- centimes
-    tarif_reduit    INT UNSIGNED NOT NULL,          -- centimes
+    places_vendues  INT UNSIGNED NOT NULL DEFAULT 0,  -- billets soiree + pass
+    tarif_normal    INT UNSIGNED NOT NULL,            -- centimes
+    tarif_reduit    INT UNSIGNED NOT NULL,            -- centimes
     CONSTRAINT uq_soirees_date UNIQUE (date_soiree),
     CONSTRAINT fk_soirees_lieu FOREIGN KEY (lieu_id)
         REFERENCES lieux (id) ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -51,6 +51,7 @@ CREATE TABLE soirees (
     CONSTRAINT chk_soirees_tarifs CHECK (tarif_reduit <= tarif_normal)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- un spectacle a un seul style (cle etrangere directe)
 CREATE TABLE spectacles (
     id                    INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     soiree_id             INT UNSIGNED NOT NULL,
@@ -89,12 +90,23 @@ CREATE TABLE spectacle_images (
     INDEX idx_images_spectacle (spectacle_id, ordre)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- formule pass 3 jours : produit a part avec ses deux tarifs (remise de 3 % deja appliquee)
+CREATE TABLE pass (
+    id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    libelle       VARCHAR(80)      NOT NULL,
+    nb_soirees    TINYINT UNSIGNED NOT NULL DEFAULT 3,
+    tarif_normal  INT UNSIGNED     NOT NULL,          -- centimes
+    tarif_reduit  INT UNSIGNED     NOT NULL,          -- centimes
+    CONSTRAINT chk_pass_nb CHECK (nb_soirees >= 2),
+    CONSTRAINT chk_pass_tarifs CHECK (tarif_reduit <= tarif_normal)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE utilisateurs (
     id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     email         VARCHAR(180) NOT NULL,
     nom           VARCHAR(80)  NOT NULL,
     prenom        VARCHAR(80)  NOT NULL,
-    mot_de_passe  VARCHAR(255) NOT NULL,            -- hash bcrypt
+    mot_de_passe  VARCHAR(255) NOT NULL,              -- hash bcrypt
     role          ENUM('CLIENT','ADMIN') NOT NULL DEFAULT 'CLIENT',
     cree_le       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_utilisateurs_email UNIQUE (email)
@@ -104,44 +116,60 @@ CREATE TABLE commandes (
     id              CHAR(36)     NOT NULL PRIMARY KEY,  -- uuid v4
     utilisateur_id  INT UNSIGNED NOT NULL,
     statut          ENUM('EN_ATTENTE','PAYEE','ANNULEE') NOT NULL DEFAULT 'EN_ATTENTE',
-    sous_total      INT UNSIGNED NOT NULL,              -- centimes
-    remise          INT UNSIGNED NOT NULL DEFAULT 0,
-    total           INT UNSIGNED NOT NULL,
+    total           INT UNSIGNED NOT NULL,              -- centimes
     carte_fin       CHAR(4)      NULL,
     cree_le         DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     payee_le        DATETIME     NULL,
     CONSTRAINT fk_commandes_utilisateur FOREIGN KEY (utilisateur_id)
         REFERENCES utilisateurs (id) ON DELETE RESTRICT,
-    CONSTRAINT chk_commandes_total CHECK (total = sous_total - remise),
     INDEX idx_commandes_utilisateur (utilisateur_id, cree_le)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- une ligne = n billets identiques : soit pour une soiree, soit un pass sur 3 soirees
 CREATE TABLE lignes_commande (
-    id                INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    commande_id       CHAR(36)     NOT NULL,
-    soiree_id         INT UNSIGNED NOT NULL,
-    categorie         ENUM('NORMAL','REDUIT') NOT NULL,
-    quantite          SMALLINT UNSIGNED NOT NULL,
-    prix_unitaire     INT UNSIGNED NOT NULL,
-    quantite_en_pass  SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-    remise_unitaire   INT UNSIGNED NOT NULL DEFAULT 0,
-    CONSTRAINT uq_lignes UNIQUE (commande_id, soiree_id, categorie),
+    id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    commande_id    CHAR(36)     NOT NULL,
+    type           ENUM('SOIREE','PASS') NOT NULL,
+    soiree_id      INT UNSIGNED NULL,                   -- rempli si type = SOIREE
+    pass_id        INT UNSIGNED NULL,                   -- rempli si type = PASS
+    categorie      ENUM('NORMAL','REDUIT') NOT NULL,
+    quantite       SMALLINT UNSIGNED NOT NULL,
+    prix_unitaire  INT UNSIGNED NOT NULL,
     CONSTRAINT fk_lignes_commande FOREIGN KEY (commande_id)
         REFERENCES commandes (id) ON DELETE CASCADE,
     CONSTRAINT fk_lignes_soiree FOREIGN KEY (soiree_id)
         REFERENCES soirees (id) ON DELETE RESTRICT,
+    CONSTRAINT fk_lignes_pass FOREIGN KEY (pass_id)
+        REFERENCES pass (id) ON DELETE RESTRICT,
     CONSTRAINT chk_lignes_quantite CHECK (quantite BETWEEN 1 AND 10),
-    CONSTRAINT chk_lignes_pass CHECK (quantite_en_pass <= quantite)
+    CONSTRAINT chk_lignes_type CHECK (
+        (type = 'SOIREE' AND soiree_id IS NOT NULL AND pass_id IS NULL)
+        OR (type = 'PASS' AND soiree_id IS NULL AND pass_id IS NOT NULL)
+    )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- les 3 soirees choisies pour une ligne de pass
+CREATE TABLE ligne_pass_soirees (
+    ligne_id   INT UNSIGNED NOT NULL,
+    soiree_id  INT UNSIGNED NOT NULL,
+    PRIMARY KEY (ligne_id, soiree_id),
+    CONSTRAINT fk_lps_ligne FOREIGN KEY (ligne_id)
+        REFERENCES lignes_commande (id) ON DELETE CASCADE,
+    CONSTRAINT fk_lps_soiree FOREIGN KEY (soiree_id)
+        REFERENCES soirees (id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- billet soiree (1 soiree) ou billet pass 3 jours (3 soirees dans billet_pass_soirees)
 CREATE TABLE billets (
     id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     token         CHAR(36)     NOT NULL,                -- uuid v4 aleatoire
     reference     VARCHAR(40)  NOT NULL,
     commande_id   CHAR(36)     NOT NULL,
-    soiree_id     INT UNSIGNED NOT NULL,
+    type          ENUM('SOIREE','PASS') NOT NULL,
+    soiree_id     INT UNSIGNED NULL,                    -- rempli si type = SOIREE
+    pass_id       INT UNSIGNED NULL,                    -- rempli si type = PASS
     categorie     ENUM('NORMAL','REDUIT') NOT NULL,
-    prix_paye     INT UNSIGNED NOT NULL,                -- centimes, remise deduite
+    prix_paye     INT UNSIGNED NOT NULL,                -- centimes
     nom_acheteur  VARCHAR(170) NOT NULL,                -- fige a l'emission
     emis_le       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_billets_token UNIQUE (token),
@@ -150,22 +178,48 @@ CREATE TABLE billets (
         REFERENCES commandes (id) ON DELETE RESTRICT,
     CONSTRAINT fk_billets_soiree FOREIGN KEY (soiree_id)
         REFERENCES soirees (id) ON DELETE RESTRICT,
+    CONSTRAINT fk_billets_pass FOREIGN KEY (pass_id)
+        REFERENCES pass (id) ON DELETE RESTRICT,
+    CONSTRAINT chk_billets_type CHECK (
+        (type = 'SOIREE' AND soiree_id IS NOT NULL AND pass_id IS NULL)
+        OR (type = 'PASS' AND soiree_id IS NULL AND pass_id IS NOT NULL)
+    ),
     INDEX idx_billets_soiree (soiree_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- les 3 soirees d'un billet pass (cle primaire = soirees distinctes)
+CREATE TABLE billet_pass_soirees (
+    billet_id  INT UNSIGNED NOT NULL,
+    soiree_id  INT UNSIGNED NOT NULL,
+    PRIMARY KEY (billet_id, soiree_id),
+    CONSTRAINT fk_bps_billet FOREIGN KEY (billet_id)
+        REFERENCES billets (id) ON DELETE CASCADE,
+    CONSTRAINT fk_bps_soiree FOREIGN KEY (soiree_id)
+        REFERENCES soirees (id) ON DELETE RESTRICT,
+    INDEX idx_bps_soiree (soiree_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- vue pour le backoffice : jauge et recette par soiree
+-- la recette d'un pass est repartie a parts egales sur ses soirees
 CREATE VIEW v_jauges_soirees AS
 SELECT  s.id,
         s.nom,
         s.date_soiree,
         s.heure_debut,
-        l.nom                              AS lieu,
+        l.nom                                      AS lieu,
         s.jauge,
         s.places_vendues,
-        s.jauge - s.places_vendues         AS places_restantes,
+        s.jauge - s.places_vendues                 AS places_restantes,
         ROUND(100 * s.places_vendues / s.jauge, 1) AS taux_remplissage,
-        COALESCE(SUM(b.prix_paye), 0)      AS recette
+        (SELECT COUNT(*) FROM billets b WHERE b.soiree_id = s.id)            AS billets_soiree,
+        (SELECT COUNT(*) FROM billet_pass_soirees bp WHERE bp.soiree_id = s.id) AS billets_pass,
+        ROUND(
+            COALESCE((SELECT SUM(b.prix_paye) FROM billets b WHERE b.soiree_id = s.id), 0)
+          + COALESCE((SELECT SUM(b.prix_paye / p.nb_soirees)
+                      FROM billet_pass_soirees bp
+                      JOIN billets b ON b.id = bp.billet_id
+                      JOIN pass p    ON p.id = b.pass_id
+                      WHERE bp.soiree_id = s.id), 0)
+        )                                          AS recette
 FROM    soirees s
-JOIN    lieux   l ON l.id = s.lieu_id
-LEFT JOIN billets b ON b.soiree_id = s.id
-GROUP BY s.id, s.nom, s.date_soiree, s.heure_debut, l.nom, s.jauge, s.places_vendues;
+JOIN    lieux   l ON l.id = s.lieu_id;
