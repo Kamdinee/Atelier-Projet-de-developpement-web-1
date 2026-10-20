@@ -60,9 +60,9 @@ $styles = [
 
 // groupes fictifs par style
 $groupes = [
-    'classic-rock' => ['The Stanislas Riders', 'Velvet Moselle', 'Les Chardons Électriques', 'Old Lorraine Road', 'Highway 54', 'The Grand Duke', 'Marble Heads'],
-    'blues-rock' => ['Muddy Meurthe', 'Johnny Bluesville', 'The Rusty Strings', 'Sister Magnolia', 'Slow Train Quartet'],
-    'metal' => ['Iron Lorraine', 'Fer Rouge', 'Abyssal Forge', 'Thrash Gargoyle', 'Nordic Anvil', 'Black Mirabelle'],
+    'classic-rock' => ['The Stanislas Riders', 'Velvet Moselle', 'Les Chardons Électriques', 'Old Lorraine Road', 'Highway 54', 'The Grand Duke', 'Marble Heads', 'Moselle Thunder'],
+    'blues-rock' => ['Muddy Meurthe', 'Johnny Bluesville', 'The Rusty Strings', 'Sister Magnolia', 'Slow Train Quartet', 'Bayou Lorrain'],
+    'metal' => ['Iron Lorraine', 'Fer Rouge', 'Abyssal Forge', 'Thrash Gargoyle', 'Nordic Anvil', 'Black Mirabelle', 'Hurlement d\'Acier'],
     'chanson' => ['Lou Marchal', 'Céleste Arnaud', 'Les Voix du Quai', 'Jeanne Vasseur', 'Antoine Lebrun'],
     'reggae' => ['Roots Mirabelle', 'Dub Station 54', 'Kaya Lion', 'Sound System Austrasie'],
     'punk' => ['Les Rats de Ville-Vieille', 'No Futur Stan', 'Pogo Sabotage', 'Crash Kiosque'],
