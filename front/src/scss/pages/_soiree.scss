@@ -23,6 +23,17 @@
     &__spectacles > h2 {
         margin-bottom: $espace-m;
     }
+
+    &__retour {
+        display: inline-block;
+        margin-bottom: $espace-s;
+        color: $couleur-texte-doux;
+        text-decoration: none;
+
+        &:hover {
+            color: $blanc;
+        }
+    }
 }
 
 // image a gauche, texte a droite a partir de la tablette
@@ -44,6 +55,7 @@
 
     &__image {
         width: 100%;
+        height: auto;
         aspect-ratio: 16 / 10;
         object-fit: cover;
         border-radius: $rayon;
@@ -68,9 +80,43 @@
 
     iframe {
         width: 100%;
+        max-width: 32rem;
         aspect-ratio: 16 / 9;
         border: 0;
         border-radius: $rayon;
+    }
+}
+
+// miniatures sous l'image quand un spectacle en a plusieurs
+.galerie {
+    @include flex(flex-start, center, $espace-s, wrap);
+    margin-top: $espace-s;
+
+    &__bouton {
+        width: 4.5rem;
+        padding: 0;
+        overflow: hidden;
+        border: 2px solid transparent;
+        border-radius: $rayon;
+        background: none;
+        opacity: 0.6;
+        transition: opacity $transition, border-color $transition;
+        @include focus-visible;
+
+        &:hover,
+        &[aria-pressed='true'] {
+            opacity: 1;
+        }
+
+        &[aria-pressed='true'] {
+            border-color: $couleur-accent;
+        }
+
+        img {
+            aspect-ratio: 16 / 10;
+            width: 100%;
+            object-fit: cover;
+        }
     }
 }
 
@@ -78,13 +124,25 @@
 .video-vignette {
     display: grid;
     place-items: center;
+    gap: $espace-s;
     width: 100%;
     max-width: 22rem;
     aspect-ratio: 16 / 9;
+    padding: 0;
+    border: 1px solid rgba($blanc, 0.08);
     border-radius: $rayon;
     background: linear-gradient(135deg, #2a2530, $noir);
+    color: $couleur-texte-doux;
+    font-size: 0.85rem;
+    @include focus-visible;
+
+    &:hover span {
+        background: $couleur-accent-hover;
+        transform: scale(1.08);
+    }
 
     span {
+        transition: background $transition, transform $transition;
         display: grid;
         place-items: center;
         width: 3.5rem;
@@ -155,6 +213,11 @@
     &__pass {
         color: $couleur-texte-doux;
         font-size: 0.9rem;
+    }
+
+    &__limite {
+        color: $couleur-alerte;
+        font-size: 0.85rem;
     }
 
     &--complet {

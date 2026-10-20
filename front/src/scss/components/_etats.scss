@@ -1,0 +1,82 @@
+@use '../abstracts' as *;
+
+// etats d'une zone remplie par fetch : chargement, erreur
+
+// carte grise animee pendant le chargement
+.squelette {
+    overflow: hidden;
+    border-radius: $rayon;
+    background: $couleur-surface;
+
+    &__image {
+        aspect-ratio: 16 / 10;
+        background: rgba($blanc, 0.05);
+    }
+
+    &__ligne {
+        height: 0.9rem;
+        margin: $espace-m;
+        border-radius: $rayon;
+        background: rgba($blanc, 0.07);
+
+        & + & {
+            width: 60%;
+            margin-top: 0;
+        }
+    }
+
+    &__image,
+    &__ligne {
+        animation: squelette-pulse 1.2s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes squelette-pulse {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.45;
+    }
+}
+
+// zone en cours de rechargement (filtres, pagination) : on garde l'ancien contenu
+[aria-busy='true'] > .grille-spectacles {
+    opacity: 0.5;
+    transition: opacity $transition;
+}
+
+// message d'erreur de l'api
+.message-erreur {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $espace-m;
+    padding: $espace-xl $espace-m;
+    border: 1px solid rgba($couleur-accent, 0.4);
+    border-radius: $rayon;
+    background: rgba($couleur-accent, 0.08);
+    text-align: center;
+
+    &__titre {
+        color: $blanc;
+        font-weight: 700;
+    }
+
+    &__detail {
+        color: $couleur-texte-doux;
+        font-size: 0.9rem;
+    }
+}
+
+// pas d'animation si l'utilisateur l'a demande
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

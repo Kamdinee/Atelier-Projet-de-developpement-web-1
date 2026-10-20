@@ -28,4 +28,30 @@
 .pagination {
     @include flex(center, center, $espace-s, wrap);
     margin-top: $espace-xl;
+
+    .btn {
+        min-width: 2.75rem;
+        padding-inline: $espace-m;
+    }
+
+    &__ellipse {
+        color: $couleur-texte-doux;
+    }
+
+    // sur mobile on garde seulement precedent / page courante / suivant
+    @media (max-width: 599px) {
+        &__numero:not([aria-current]),
+        &__ellipse {
+            display: none;
+        }
+    }
+}
+
+// filtres actifs rappeles au-dessus de la grille
+.resultats {
+    scroll-margin-top: 6rem;
+
+    &:focus {
+        outline: none;
+    }
 }

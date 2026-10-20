@@ -1,5 +1,23 @@
 @use '../abstracts' as *;
 
+// lien "aller au contenu" : visible seulement au clavier
+.lien-evitement {
+    position: absolute;
+    top: -10rem;
+    left: $espace-m;
+    z-index: 30;
+    padding: $espace-s $espace-m;
+    border-radius: $rayon;
+    background: $couleur-accent;
+    color: $blanc;
+    font-weight: 600;
+
+    &:focus {
+        top: $espace-s;
+        color: $blanc;
+    }
+}
+
 // flex : logo | navigation | panier
 .site-header {
     position: sticky;
