@@ -16,7 +16,7 @@ return [
             'password' => $env('DB_PASSWORD', 'nrv'),
         ],
         'jwt' => [
-            'secret' => $env('JWT_SECRET', 'change-moi'),
+            'secret' => $env('JWT_SECRET', 'change-moi-cle-de-dev-de-32-caracteres-min'),
             'ttl' => (int) $env('JWT_TTL', '3600'),
         ],
         'cors' => [
