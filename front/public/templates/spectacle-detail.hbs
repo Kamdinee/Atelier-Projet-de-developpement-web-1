@@ -1,0 +1,32 @@
+{{!-- un spectacle de la soiree : titre, artistes, description, style, images, video --}}
+<article class="spectacle-detail" aria-labelledby="spectacle-{{id}}">
+    <div class="spectacle-detail__visuel">
+        {{#if images.length}}
+        <img class="spectacle-detail__image" src="{{images.0.url}}" alt="{{images.0.alt}}" width="800" height="500" loading="lazy">
+        {{#if (plusDeUn images)}}
+        <ul class="galerie" aria-label="Photos de {{titre}}">
+            {{#each images}}
+            <li>
+                <button class="galerie__bouton" type="button" data-url="{{url}}" data-alt="{{alt}}" aria-pressed="{{#if @first}}true{{else}}false{{/if}}">
+                    <img src="{{url}}" alt="" width="160" height="100" loading="lazy">
+                    <span class="sr-only">Photo {{plusUn @index}}</span>
+                </button>
+            </li>
+            {{/each}}
+        </ul>
+        {{/if}}
+        {{/if}}
+    </div>
+    <div class="spectacle-detail__corps">
+        <p class="spectacle-detail__horaire"><time datetime="{{date}}T{{horaire}}">{{horaire}}</time> <span class="etiquette">{{style.libelle}}</span></p>
+        <h3 id="spectacle-{{id}}">{{titre}}</h3>
+        <p class="spectacle-detail__artistes">Avec {{joindre artistes ", "}}</p>
+        <p>{{description}}</p>
+        {{#if video}}
+        <button class="video-vignette" type="button" data-video="{{video}}" data-titre="{{titre}}">
+            <span aria-hidden="true">▶</span>
+            Voir la vidéo<span class="sr-only"> de {{titre}}</span>
+        </button>
+        {{/if}}
+    </div>
+</article>

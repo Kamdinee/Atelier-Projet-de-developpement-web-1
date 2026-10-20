@@ -1,0 +1,37 @@
+{{!-- encart d'achat : ajout de billets au panier (F6) dans la limite des places (E4) --}}
+{{#if complete}}
+<aside class="achat achat--complet" aria-labelledby="titre-achat">
+    <h2 id="titre-achat">Billets</h2>
+    <p class="etiquette etiquette--complet">Complet</p>
+    <p class="achat__places"><strong>0</strong> place restante sur {{nombre jauge}}</p>
+    <button class="btn" type="button" disabled>Ajouter au panier</button>
+    <p class="achat__pass">Les {{nombre jauge}} places de cette soirée ont été vendues.</p>
+</aside>
+{{else}}
+<aside class="achat" aria-labelledby="titre-achat">
+    <h2 id="titre-achat">Billets</h2>
+    <p class="achat__places"><strong>{{nombre places_restantes}}</strong> {{pluriel places_restantes "place restante" "places restantes"}} sur {{nombre jauge}}</p>
+    <form class="achat__form" id="form-achat" novalidate>
+        <div class="achat__ligne">
+            <label for="qte-normal">Tarif normal <strong>{{prix tarifs.normal}}</strong></label>
+            <div class="quantite">
+                <button class="btn btn--secondaire" type="button" data-pas="-1" data-cible="qte-normal" aria-label="Retirer un billet normal">−</button>
+                <input id="qte-normal" name="normal" type="number" min="0" max="{{maxParLigne}}" value="0" inputmode="numeric">
+                <button class="btn btn--secondaire" type="button" data-pas="1" data-cible="qte-normal" aria-label="Ajouter un billet normal">+</button>
+            </div>
+        </div>
+        <div class="achat__ligne">
+            <label for="qte-reduit">Tarif réduit <strong>{{prix tarifs.reduit}}</strong><small>étudiants, demandeurs d'emploi, situation de handicap</small></label>
+            <div class="quantite">
+                <button class="btn btn--secondaire" type="button" data-pas="-1" data-cible="qte-reduit" aria-label="Retirer un billet réduit">−</button>
+                <input id="qte-reduit" name="reduit" type="number" min="0" max="{{maxParLigne}}" value="0" inputmode="numeric">
+                <button class="btn btn--secondaire" type="button" data-pas="1" data-cible="qte-reduit" aria-label="Ajouter un billet réduit">+</button>
+            </div>
+        </div>
+        <p class="achat__limite" id="achat-limite" aria-live="polite" hidden></p>
+        <p class="achat__total">Sous-total <strong id="achat-total">{{prix 0}}</strong></p>
+        <button class="btn" type="submit" id="achat-ajouter" disabled>Ajouter au panier</button>
+    </form>
+    <p class="achat__pass">Vous venez 3 soirs ? Le <a href="panier.html#composer-pass">Pass 3 jours</a> coûte 3 % de moins.</p>
+</aside>
+{{/if}}

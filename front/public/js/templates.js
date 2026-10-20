@@ -16,6 +16,7 @@ Handlebars.registerHelper('pluriel', (n, mot, motPluriel) =>
 Handlebars.registerHelper('joindre', (liste, separateur) =>
     (Array.isArray(liste) ? liste : []).join(typeof separateur === 'string' ? separateur : ', '));
 Handlebars.registerHelper('eq', (a, b) => a === b);
+Handlebars.registerHelper('plusUn', (n) => Number(n) + 1);
 Handlebars.registerHelper('plusDeUn', (liste) => Array.isArray(liste) && liste.length > 1);
 
 async function chargerSource(nom) {

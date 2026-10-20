@@ -1,0 +1,21 @@
+{{!-- detail d'une soiree (F2) : infos, spectacles, encart d'achat --}}
+<article class="soiree">
+    <header class="soiree__entete">
+        <a class="soiree__retour" href="{{retour}}">‹ Retour au programme</a>
+        <h1>{{nom}}</h1>
+        <p class="soiree__infos">
+            <span class="etiquette">{{thematique}}</span>
+            <time datetime="{{date}}T{{heure_debut}}">{{dateLongue date}} · ouverture {{heure_debut}}</time>
+            <span>{{lieu.nom}}, {{lieu.adresse}}</span>
+        </p>
+    </header>
+
+    <section class="soiree__spectacles" aria-labelledby="titre-spectacles">
+        <h2 id="titre-spectacles">{{spectacles.length}} {{pluriel spectacles.length "spectacle"}} au programme</h2>
+        {{#each spectacles}}
+        {{> spectacle-detail}}
+        {{/each}}
+    </section>
+
+    {{> achat}}
+</article>
