@@ -1,0 +1,16 @@
+{
+  "name": "nrv-front",
+  "private": true,
+  "description": "front de la billetterie nrv.net",
+  "scripts": {
+    "build": "sass src/scss:public/css --style=compressed --no-source-map",
+    "watch": "sass --watch src/scss:public/css",
+    "postinstall": "cp node_modules/handlebars/dist/handlebars.min.js public/vendor/handlebars.min.js"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8"
+  },
+  "devDependencies": {
+    "sass": "^1.80.0"
+  }
+}
