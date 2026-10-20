@@ -1,4 +1,5 @@
 # nrv.net - environnement de dev
+# sur fedora / selinux, le :z autorise les conteneurs a lire les dossiers montes
 # api : http://localhost:8080 | front : http://localhost:8081 | adminer : http://localhost:8082
 
 services:
@@ -12,7 +13,7 @@ services:
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
     volumes:
       # le schema est joue au premier demarrage
-      - ./sql:/docker-entrypoint-initdb.d:ro
+      - ./sql:/docker-entrypoint-initdb.d:ro,z
       - db-data:/var/lib/mysql
     ports:
       - "3307:3306"
@@ -29,7 +30,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./api:/var/www/api
+      - ./api:/var/www/api:z
     depends_on:
       db:
         condition: service_healthy
@@ -40,8 +41,8 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./api:/var/www/api:ro
-      - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./api:/var/www/api:ro,z
+      - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf:ro,z
     depends_on:
       - php
 
@@ -51,8 +52,8 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./front/public:/usr/share/nginx/html:ro
-      - ./docker/nginx/front.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./front/public:/usr/share/nginx/html:ro,z
+      - ./docker/nginx/front.conf:/etc/nginx/conf.d/default.conf:ro,z
 
   # compile le scss en continu (optionnel : docker compose --profile dev up)
   sass:
@@ -60,7 +61,7 @@ services:
     profiles: ["dev"]
     working_dir: /front
     volumes:
-      - ./front:/front
+      - ./front:/front:z
     command: sh -c "npm install && npm run watch"
 
   adminer:
