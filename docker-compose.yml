@@ -1,6 +1,7 @@
 # nrv.net - environnement de dev
 # sur fedora / selinux, le :z autorise les conteneurs a lire les dossiers montes
 # api : http://localhost:8080 | front : http://localhost:8081 | adminer : http://localhost:8082
+# les ports se changent dans le .env (utile sur docketu si un port est deja pris)
 
 services:
   db:
@@ -16,7 +17,8 @@ services:
       - ./sql:/docker-entrypoint-initdb.d:ro,z
       - db-data:/var/lib/mysql
     ports:
-      - "3307:3306"
+      # base accessible seulement depuis la machine elle-meme
+      - "127.0.0.1:${DB_PORT_HOTE:-3307}:3306"
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
@@ -39,7 +41,7 @@ services:
     image: nginx:1.27-alpine
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "${API_PORT:-8080}:80"
     volumes:
       - ./api:/var/www/api:ro,z
       - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf:ro,z
@@ -50,7 +52,7 @@ services:
     image: nginx:1.27-alpine
     restart: unless-stopped
     ports:
-      - "8081:80"
+      - "${FRONT_PORT:-8081}:80"
     volumes:
       - ./front/public:/usr/share/nginx/html:ro,z
       - ./docker/nginx/front.conf:/etc/nginx/conf.d/default.conf:ro,z
@@ -68,7 +70,7 @@ services:
     image: adminer:4
     restart: unless-stopped
     ports:
-      - "8082:8080"
+      - "${ADMINER_PORT:-8082}:8080"
     environment:
       ADMINER_DEFAULT_SERVER: db
     depends_on:

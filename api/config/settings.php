@@ -19,8 +19,12 @@ return [
             'secret' => $env('JWT_SECRET', 'change-moi-cle-de-dev-de-32-caracteres-min'),
             'ttl' => (int) $env('JWT_TTL', '3600'),
         ],
+        // liste separee par des virgules (CORS_ORIGIN seul reste accepte pour les anciens .env)
         'cors' => [
-            'origin' => $env('CORS_ORIGIN', 'http://localhost:8081'),
+            'origines' => array_values(array_filter(array_map(
+                'trim',
+                explode(',', $env('CORS_ORIGINS', $env('CORS_ORIGIN', 'http://localhost:8081,http://127.0.0.1:8081')))
+            ))),
         ],
     ],
 ];

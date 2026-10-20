@@ -18,5 +18,5 @@ return static function (App $app): void {
     $erreurs->setDefaultErrorHandler(new ProblemJsonErrorHandler($app->getResponseFactory()));
 
     // en dernier pour que les reponses d'erreur aient aussi les entetes cors
-    $app->add(new CorsMiddleware($settings['cors']['origin']));
+    $app->add(new CorsMiddleware($settings['cors']['origines']));
 };

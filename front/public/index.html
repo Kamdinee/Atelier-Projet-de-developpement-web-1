@@ -45,15 +45,17 @@
 
     <div class="toast" role="status" aria-live="polite" hidden></div>
 
+    <script src="js/config.js"></script>
     <script>
         // test simple : l'api repond-elle ?
-        fetch('http://localhost:8080/')
+        const api = window.NRV_CONFIG.apiUrl;
+        fetch(api + '/')
             .then((reponse) => reponse.json())
             .then((data) => {
-                document.getElementById('etat-api').textContent = 'API connectée : ' + data.nom;
+                document.getElementById('etat-api').textContent = 'API connectée : ' + data.nom + ' (' + api + ')';
             })
             .catch(() => {
-                document.getElementById('etat-api').textContent = "L'API ne répond pas sur http://localhost:8080";
+                document.getElementById('etat-api').textContent = "L'API ne répond pas sur " + api;
             });
     </script>
 </body>
