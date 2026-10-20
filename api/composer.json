@@ -1,0 +1,35 @@
+{
+    "name": "nrv/api",
+    "description": "api de billetterie du festival nancy rock vibration",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2",
+        "ext-pdo": "*",
+        "slim/slim": "^4.14",
+        "slim/psr7": "^1.7",
+        "php-di/php-di": "^7.0",
+        "firebase/php-jwt": "^6.10"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.23",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nrv\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nrv\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "seed": "php bin/seed.php",
+        "test": "phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
