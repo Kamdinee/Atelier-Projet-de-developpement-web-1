@@ -120,37 +120,35 @@
     }
 }
 
-// emplacement de la video youtube
+// bouton "voir la video" : le lecteur youtube n'est charge qu'au clic
 .video-vignette {
-    display: grid;
-    place-items: center;
-    gap: $espace-s;
-    width: 100%;
-    max-width: 22rem;
-    aspect-ratio: 16 / 9;
-    padding: 0;
-    border: 1px solid rgba($blanc, 0.08);
-    border-radius: $rayon;
-    background: linear-gradient(135deg, #2a2530, $noir);
-    color: $couleur-texte-doux;
-    font-size: 0.85rem;
+    @include flex(flex-start, center, $espace-s);
+    align-self: flex-start;
+    padding: $espace-xs $espace-m $espace-xs $espace-xs;
+    border: 1px solid rgba($blanc, 0.12);
+    border-radius: 999px;
+    background: rgba($blanc, 0.04);
+    color: $couleur-texte;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: border-color $transition, background $transition;
     @include focus-visible;
 
-    &:hover span {
-        background: $couleur-accent-hover;
-        transform: scale(1.08);
+    &:hover {
+        border-color: $couleur-accent;
+        background: rgba($couleur-accent, 0.1);
     }
 
-    span {
-        transition: background $transition, transform $transition;
+    // pastille lecture (le texte pour lecteur d'ecran est dans un autre span)
+    > span[aria-hidden='true'] {
         display: grid;
         place-items: center;
-        width: 3.5rem;
-        height: 3.5rem;
+        width: 2rem;
+        height: 2rem;
         border-radius: 50%;
         background: $couleur-accent;
         color: $blanc;
-        font-size: 1.25rem;
+        font-size: 0.8rem;
     }
 }
 

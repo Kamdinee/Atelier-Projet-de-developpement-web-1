@@ -34,6 +34,11 @@
         font-size: 0.85rem;
     }
 
+    &__limite {
+        color: $couleur-alerte;
+        font-size: 0.85rem;
+    }
+
     &__prix {
         min-width: 6rem;
         text-align: right;

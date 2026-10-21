@@ -88,4 +88,12 @@ input[type='number'] {
         height: 2.25rem;
         padding: 0;
     }
+
+    // valeur affichee (page panier)
+    &__valeur {
+        min-width: 2.5rem;
+        text-align: center;
+        font-weight: 700;
+        color: $blanc;
+    }
 }

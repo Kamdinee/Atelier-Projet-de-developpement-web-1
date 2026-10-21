@@ -1,0 +1,36 @@
+{{!-- contenu du panier (F7) : lignes modifiables (E2) et total --}}
+{{#if lignes.length}}
+<ul class="panier">
+    {{#each lignes}}
+    <li class="panier__ligne">
+        <div class="panier__libelle">
+            <strong>{{nom}} · Tarif {{#if (eq categorie "REDUIT")}}réduit{{else}}normal{{/if}}</strong>
+            <span class="panier__soirees-pass"><time datetime="{{date}}T{{heure}}">{{dateCourte date}} · {{heure}}</time> · {{prix prixUnitaire}} l'unité</span>
+            {{#if limite}}<span class="panier__limite">{{limite}}</span>{{/if}}
+        </div>
+        <div class="quantite">
+            <button class="btn btn--secondaire" type="button" data-action="moins" data-index="{{@index}}" aria-label="Retirer un billet {{nom}}">−</button>
+            <output class="quantite__valeur" aria-live="polite">{{quantite}}</output>
+            <button class="btn btn--secondaire" type="button" data-action="plus" data-index="{{@index}}" aria-label="Ajouter un billet {{nom}}"{{#if complet}} disabled{{/if}}>+</button>
+        </div>
+        <p class="panier__prix">{{prix montant}}</p>
+        <button class="panier__supprimer" type="button" data-action="supprimer" data-index="{{@index}}" aria-label="Supprimer {{nom}} du panier">✕</button>
+    </li>
+    {{/each}}
+</ul>
+
+<section class="recap" aria-label="Total de la commande">
+    <p class="recap__ligne"><span>{{nombreBillets}} {{pluriel nombreBillets "billet"}}</span><span>{{prix total}}</span></p>
+    <p class="recap__total"><span>Total</span><span>{{prix total}}</span></p>
+    <p class="recap__note">Les places sont vérifiées et réservées au moment du paiement. La commande en ligne ouvre prochainement.</p>
+    <div class="recap__actions">
+        <button class="btn" type="button" disabled>Valider la commande</button>
+        <button class="btn btn--secondaire" type="button" data-action="vider">Vider le panier</button>
+    </div>
+</section>
+{{else}}
+<div class="message-vide">
+    <p>Votre panier est vide.</p>
+    <p><a class="btn btn--secondaire" href="index.html">Voir le programme</a></p>
+</div>
+{{/if}}

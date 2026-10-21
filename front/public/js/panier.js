@@ -57,6 +57,24 @@ export function ajouterBillets(soiree, categorie, quantite, prixUnitaire) {
     ecrire(lignes);
 }
 
+// change la quantite d'une ligne ; 0 supprime la ligne
+export function changerQuantite(index, quantite) {
+    const lignes = lire();
+    if (!lignes[index]) {
+        return;
+    }
+    if (quantite <= 0) {
+        lignes.splice(index, 1);
+    } else {
+        lignes[index].quantite = quantite;
+    }
+    ecrire(lignes);
+}
+
+export function vider() {
+    ecrire([]);
+}
+
 // pastille du nombre de billets dans l'en-tete
 export function majBadge() {
     const nombre = nombreBillets();
