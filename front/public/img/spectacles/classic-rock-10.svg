@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+<defs>
+<linearGradient id="f" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="hsl(22,30%,14%)"/><stop offset="1" stop-color="hsl(34,25%,5%)"/></linearGradient>
+<radialGradient id="h" cx="0.47" cy="0.23" r="0.7"><stop offset="0" stop-color="hsl(22,80%,55%)" stop-opacity="0.55"/><stop offset="1" stop-color="hsl(22,80%,30%)" stop-opacity="0"/></radialGradient>
+<linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="e" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e4322b"/><stop offset="1" stop-color="hsl(34,85%,60%)"/></linearGradient>
+</defs>
+<rect width="800" height="500" fill="url(#f)"/><rect width="800" height="500" fill="url(#h)"/>
+<rect x="0" y="34" width="800" height="6" fill="#000" opacity="0.5"/>
+<polygon points="38,40 50,40 -94,500 -228,500" fill="url(#b)" opacity="0.39"/>
+<circle cx="44" cy="40" r="7" fill="hsl(34,90%,70%)"/>
+<polygon points="153,40 165,40 328,500 187,500" fill="url(#b)" opacity="0.68"/>
+<circle cx="159" cy="40" r="7" fill="hsl(22,90%,70%)"/>
+<polygon points="299,40 311,40 546,500 351,500" fill="url(#b)" opacity="0.37"/>
+<circle cx="305" cy="40" r="7" fill="hsl(22,90%,70%)"/>
+<polygon points="375,40 387,40 438,500 300,500" fill="url(#b)" opacity="0.66"/>
+<circle cx="381" cy="40" r="7" fill="hsl(34,90%,70%)"/>
+<polygon points="514,40 526,40 458,500 299,500" fill="url(#b)" opacity="0.62"/>
+<circle cx="520" cy="40" r="7" fill="hsl(22,90%,70%)"/>
+<polygon points="641,40 653,40 686,500 430,500" fill="url(#b)" opacity="0.70"/>
+<circle cx="647" cy="40" r="7" fill="hsl(22,90%,70%)"/>
+<polygon points="738,40 750,40 780,500 548,500" fill="url(#b)" opacity="0.63"/>
+<circle cx="744" cy="40" r="7" fill="hsl(34,90%,70%)"/>
+<rect x="0" y="430" width="800" height="70" fill="#000" opacity="0.55"/>
+<rect x="0" y="430" width="800" height="3" fill="#e4322b" opacity="0.9"/>
+</svg>

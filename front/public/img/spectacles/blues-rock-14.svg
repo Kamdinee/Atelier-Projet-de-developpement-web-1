@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+<defs>
+<linearGradient id="f" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="hsl(215,30%,14%)"/><stop offset="1" stop-color="hsl(243,25%,5%)"/></linearGradient>
+<radialGradient id="h" cx="0.39" cy="0.43" r="0.7"><stop offset="0" stop-color="hsl(215,80%,55%)" stop-opacity="0.55"/><stop offset="1" stop-color="hsl(215,80%,30%)" stop-opacity="0"/></radialGradient>
+<linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="e" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e4322b"/><stop offset="1" stop-color="hsl(243,85%,60%)"/></linearGradient>
+</defs>
+<rect width="800" height="500" fill="url(#f)"/><rect width="800" height="500" fill="url(#h)"/>
+<rect x="0" y="34" width="800" height="6" fill="#000" opacity="0.5"/>
+<polygon points="37,40 49,40 371,500 134,500" fill="url(#b)" opacity="0.68"/>
+<circle cx="43" cy="40" r="7" fill="hsl(243,90%,70%)"/>
+<polygon points="215,40 227,40 569,500 352,500" fill="url(#b)" opacity="0.68"/>
+<circle cx="221" cy="40" r="7" fill="hsl(215,90%,70%)"/>
+<polygon points="306,40 318,40 188,500 -36,500" fill="url(#b)" opacity="0.44"/>
+<circle cx="312" cy="40" r="7" fill="hsl(215,90%,70%)"/>
+<polygon points="478,40 490,40 469,500 237,500" fill="url(#b)" opacity="0.60"/>
+<circle cx="484" cy="40" r="7" fill="hsl(243,90%,70%)"/>
+<polygon points="584,40 596,40 896,500 721,500" fill="url(#b)" opacity="0.67"/>
+<circle cx="590" cy="40" r="7" fill="hsl(215,90%,70%)"/>
+<polygon points="711,40 723,40 1001,500 872,500" fill="url(#b)" opacity="0.71"/>
+<circle cx="717" cy="40" r="7" fill="hsl(215,90%,70%)"/>
+<rect x="0" y="430" width="800" height="70" fill="#000" opacity="0.55"/>
+<rect x="0" y="430" width="800" height="3" fill="#e4322b" opacity="0.9"/>
+</svg>
