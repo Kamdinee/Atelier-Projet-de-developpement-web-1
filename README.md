@@ -2,19 +2,19 @@
 
 SAE « Atelier-projet de développement web 1 » - BUT 3 informatique, IUT Nancy-Charlemagne.
 
-Programme du festival, achat de billets (soirée ou Pass 3 jours) et suivi des jauges.
+Programme du festival, achat de billets (soirée ou Pass 3 jours) et suivi des jauges.  
 Backend PHP 8 / Slim 4 en architecture hexagonale, front HTML / Sass / Handlebars, le tout sous Docker.
 
 Le détail de la conception et du travail réalisé est dans le dossier de rendu : [docs/NRV-dossier-iteration-1.pdf](docs/NRV-dossier-iteration-1.pdf).
 
-## Installation
+## Installation en local
 
 Prérequis : Git et Docker (avec `docker compose`).
 
 ```bash
 git clone https://github.com/Kamdinee/Atelier-Projet-de-developpement-web-1.git
 cd Atelier-Projet-de-developpement-web-1
-git checkout production-kam
+git checkout main
 cp .env.example .env
 
 docker compose up -d --build
@@ -22,7 +22,7 @@ docker compose exec php composer install
 docker compose exec php composer seed
 ```
 
-| Service | Adresse |
+| Service | Adresse par défaut |
 | --- | --- |
 | API | http://localhost:8080 |
 | Front | http://localhost:8081 |
@@ -30,14 +30,16 @@ docker compose exec php composer seed
 
 ## Données de test
 
-`composer seed` remplit la base : 14 soirées du 4 au 17 juin 2027, 37 spectacles, des milliers de billets et de pass déjà vendus.
+La commande `docker compose exec php composer seed` remplit la base : 14 soirées du 4 au 17 juin 2027, 37 spectacles, des milliers de billets et de pass déjà vendus.
 
 | Rôle | Email | Mot de passe |
 | --- | --- | --- |
-| admin | admin@nrv.net | admin12345 |
-| client | client@nrv.net | client12345 |
+| Admin | `admin@nrv.net` | `admin12345` |
+| Client | `client@nrv.net` | `client12345` |
 
-## Tests
+## Tests automatisés
+
+Pour lancer la suite de tests unitaires (PHPUnit) :
 
 ```bash
 docker compose exec php composer test
@@ -45,20 +47,34 @@ docker compose exec php composer test
 
 ## Déploiement sur docketu
 
-Mêmes commandes que l'installation, après avoir adapté le `.env` :
+Mêmes commandes que pour l'installation, en adaptant le fichier `.env` :
 
 ```ini
 APP_ENV=prod
-JWT_SECRET=<chaine aleatoire de 32 caracteres minimum>
-CORS_ORIGINS=http://docketu.iutnc.univ-lorraine.fr:8081
+JWT_SECRET=<chaine_aleatoire_de_32_caracteres_minimum>
+
+# Adapter les ports si ceux par défaut sont déjà utilisés sur la machine :
+API_PORT=25000
+FRONT_PORT=25001
+ADMINER_PORT=25002
+DB_PORT_HOTE=25003
+
+# L'adresse autorisée pour le front doit correspondre au FRONT_PORT choisi :
+CORS_ORIGINS=http://docketu.iutnc.univ-lorraine.fr:25001
 ```
 
-Si un port est déjà pris, le changer dans le `.env` (`API_PORT`, `FRONT_PORT`...). Si `API_PORT` change, reporter la valeur dans `front/public/js/config.js`.
+> **Attention - Points importants sur docketu :**
+> 1. Si `API_PORT` est modifié dans `.env`, reporter la même valeur dans `front/public/js/config.js` (`const API_PORT = <VOTRE_API_PORT>;`).
+> 2. **Correctif IPv6 Adminer :** Si le conteneur Adminer redémarre en boucle avec une erreur `Failed to listen on [::]:8080`, forcer l'écoute en IPv4 dans `docker-compose.yml` sous le service `adminer` :
+>    ```yaml
+>    entrypoint: ["php", "-S", "0.0.0.0:8080", "-t", "/var/www/html"]
+>    ```
 
 ## Commandes utiles
 
 | Pour... | Commande |
 | --- | --- |
-| arrêter | `docker compose down` |
-| repartir d'une base neuve | `docker compose down -v && docker compose up -d && docker compose exec php composer seed` |
-| voir les logs | `docker compose logs -f api` |
+| Arrêter les conteneurs | `docker compose down` |
+| Voir les logs de l'API | `docker compose logs -f api` |
+| Réinitialiser complètement la base | `docker compose down -v && docker compose up -d && docker compose exec php composer seed` |
+| Reconstruire après modification Docker | `docker compose up -d --build` |
