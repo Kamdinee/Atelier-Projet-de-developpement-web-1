@@ -11,6 +11,11 @@ use Nrv\Infrastructure\Http\Exception\RequeteInvalideException;
 // verifie les parametres de GET /spectacles
 final class FiltreSpectaclesValidator
 {
+    // au-dela, le calcul du decalage deborderait
+    public const PAGE_MAX = 10000;
+
+    private const PARAMETRES = ['date', 'style', 'page', 'size'];
+
     /**
      * @param array<string, mixed> $query
      */
@@ -18,24 +23,31 @@ final class FiltreSpectaclesValidator
     {
         $erreurs = [];
 
+        // un parametre doit etre un simple texte (pas ?style[]=...)
+        foreach (self::PARAMETRES as $nom) {
+            if (isset($query[$nom]) && !is_string($query[$nom])) {
+                $erreurs[$nom] = 'valeur simple attendue';
+            }
+        }
+
         $date = $this->texte($query, 'date');
         if ($date !== null && !$this->estDate($date)) {
-            $erreurs['date'] = 'format attendu : AAAA-MM-JJ';
+            $erreurs['date'] ??= 'format attendu : AAAA-MM-JJ';
         }
 
         $style = $this->texte($query, 'style');
         if ($style !== null && preg_match('/^[a-z0-9-]{1,60}$/', $style) !== 1) {
-            $erreurs['style'] = 'style invalide (lettres minuscules, chiffres et tirets)';
+            $erreurs['style'] ??= 'style invalide (lettres minuscules, chiffres et tirets)';
         }
 
         $page = $this->entier($query, 'page', 1);
-        if ($page === null || $page < 1) {
-            $erreurs['page'] = 'entier superieur ou egal a 1 attendu';
+        if ($page === null || $page < 1 || $page > self::PAGE_MAX) {
+            $erreurs['page'] ??= 'entier entre 1 et ' . self::PAGE_MAX . ' attendu';
         }
 
         $taille = $this->entier($query, 'size', CriteresSpectacles::TAILLE_DEFAUT);
         if ($taille === null || $taille < 1 || $taille > CriteresSpectacles::TAILLE_MAX) {
-            $erreurs['size'] = 'entier entre 1 et ' . CriteresSpectacles::TAILLE_MAX . ' attendu';
+            $erreurs['size'] ??= 'entier entre 1 et ' . CriteresSpectacles::TAILLE_MAX . ' attendu';
         }
 
         if ($erreurs !== []) {
@@ -62,7 +74,8 @@ final class FiltreSpectaclesValidator
             return $defaut;
         }
 
-        return ctype_digit($valeur) ? (int) $valeur : null;
+        // 6 chiffres au plus : evite les nombres trop grands pour un int
+        return ctype_digit($valeur) && strlen($valeur) <= 6 ? (int) $valeur : null;
     }
 
     private function estDate(string $valeur): bool

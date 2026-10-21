@@ -122,7 +122,9 @@ async function chargerSpectacles({ focus = false } = {}) {
 
         await afficher(grille, 'spectacles', { spectacles: page.spectacles.map(versCarte) });
         await afficher(pagination, 'pagination', modelePagination(page));
-        compteur.innerHTML = `<strong>${nombre(page.total)}</strong> ${pluriel(page.total, 'spectacle')}`;
+        const total = document.createElement('strong');
+        total.textContent = nombre(page.total);
+        compteur.replaceChildren(total, ` ${pluriel(page.total, 'spectacle')}`);
 
         if (focus) {
             resultats.focus({ preventScroll: true });
