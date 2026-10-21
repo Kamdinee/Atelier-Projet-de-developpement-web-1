@@ -7,6 +7,22 @@ Backend PHP 8 / Slim 4 en architecture hexagonale, front HTML / Sass / Handlebar
 
 Le détail de la conception et du travail réalisé est dans le dossier de rendu : [docs/NRV-dossier-iteration-1.pdf](docs/NRV-dossier-iteration-1.pdf).
 
+## Version en ligne
+
+| Service | Adresse |
+| --- | --- |
+| Site du festival | http://docketu.iutnc.univ-lorraine.fr:25001/ |
+| API (JSON) | http://docketu.iutnc.univ-lorraine.fr:25000/ |
+| Adminer (base de données) | http://docketu.iutnc.univ-lorraine.fr:25002/ - serveur `db`, utilisateur `nrv`, mot de passe `nrv`, base `nrv` |
+
+Le serveur docketu est sur le réseau privé de l'IUT : les liens marchent directement à l'IUT (Wi-Fi Eduroam).
+Depuis l'extérieur, activer d'abord le VPN de l'Université de Lorraine :
+
+1. aller sur https://vpn.univ-lorraine.fr/ et se connecter avec ses identifiants ENT (`login@etu`)
+2. installer le logiciel proposé (Cisco Secure Client)
+3. dans Cisco Secure Client, saisir `vpn.univ-lorraine.fr`, cliquer sur *Connect*, puis entrer son identifiant et son mot de passe ENT
+4. une fois le cadenas vert affiché, les liens ci-dessus fonctionnent
+
 ## Installation en local
 
 Prérequis : Git et Docker (avec `docker compose`).
