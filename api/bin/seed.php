@@ -38,6 +38,18 @@ const PASS_NB_SOIREES = 3;
 const PASS_NORMAL = 8730;  // round(3 x 3000 x 0.97)
 const PASS_REDUIT = 5820;  // round(3 x 2000 x 0.97)
 
+// une video youtube reelle par style (videos officielles, integration autorisee, verifiees le 21/10/2026)
+const VIDEOS = [
+    'classic-rock' => 'v2AC41dglnM', // AC/DC - Thunderstruck
+    'blues-rock' => 'a_426RiwST8',   // The Black Keys - Lonely Boy
+    'metal' => 'CD-E-LDc384',        // Metallica - Enter Sandman
+    'chanson' => 'VHoT4N43jK8',      // Stromae - Alors on danse
+    'reggae' => '69RdQFDuYPI',       // Bob Marley - Is This Love
+    'punk' => 'EfK-WX2pa8c',         // The Clash - London Calling
+    'folk' => 'lLJf9qJHR3E',         // Mumford & Sons - Little Lion Man
+    'electro-rock' => 'w8KQmps-Sog', // Muse - Uprising
+];
+
 // ---------- donnees de reference ----------
 
 $lieux = [
@@ -176,7 +188,7 @@ foreach ($programme as $i => [$nom, $thematique, $lieuIndex, $heure, $stylesSoir
             'Le groupe présentera aussi des titres inédits.',
         ]);
 
-        $video = 'https://www.youtube.com/embed/' . $faker->regexify('[A-Za-z0-9_-]{11}');
+        $video = 'https://www.youtube-nocookie.com/embed/' . VIDEOS[$slug];
         $insSpectacle->execute([$soireeId, $stylesIds[$slug], $groupe, $description, $video, $horaire->format('H:i')]);
         $spectacleId = (int) $pdo->lastInsertId();
         $nbSpectacles++;
@@ -190,7 +202,8 @@ foreach ($programme as $i => [$nom, $thematique, $lieuIndex, $heure, $stylesSoir
 
         $nbImages = $faker->numberBetween(1, 3);
         for ($n = 1; $n <= $nbImages; $n++) {
-            $insImage->execute([$spectacleId, "https://picsum.photos/seed/nrv-{$spectacleId}-{$n}/800/500", "{$groupe} sur scène", $n]);
+            // visuels servis par le front (front/public/img/spectacles), pas de site externe
+            $insImage->execute([$spectacleId, "img/spectacles/{$slug}-{$n}.svg", "{$groupe} sur scène", $n]);
         }
     }
 
