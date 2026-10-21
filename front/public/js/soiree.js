@@ -82,13 +82,17 @@ function initialiserAchat() {
     const disponibles = () =>
         Math.max(0, soiree.places_restantes - panier.billetsPourSoiree(soiree.id));
 
+    // 10 billets au maximum par tarif, en comptant ceux deja dans le panier
+    const plafond = (categorie) =>
+        Math.max(0, MAX_PAR_LIGNE - panier.billetsPourLigne(soiree.id, categorie));
+
     // recalcule le sous-total et bloque ce qui depasserait les places disponibles
     function maj(champModifie = null) {
         const max = disponibles();
 
         // on corrige d'abord les valeurs saisies au clavier
-        for (const champ of Object.values(champs)) {
-            champ.value = Math.min(valeur(champ), MAX_PAR_LIGNE);
+        for (const [categorie, champ] of Object.entries(champs)) {
+            champ.value = Math.min(valeur(champ), plafond(categorie));
         }
         let quantite = valeur(champs.NORMAL) + valeur(champs.REDUIT);
         if (quantite > max) {
@@ -103,9 +107,10 @@ function initialiserAchat() {
 
         form.querySelectorAll('[data-pas]').forEach((bouton) => {
             const champ = form.querySelector('#' + bouton.dataset.cible);
+            const categorie = champ === champs.NORMAL ? 'NORMAL' : 'REDUIT';
             bouton.disabled = Number(bouton.dataset.pas) < 0
                 ? valeur(champ) === 0
-                : valeur(champ) >= MAX_PAR_LIGNE || quantite >= max;
+                : valeur(champ) >= plafond(categorie) || quantite >= max;
         });
 
         // message quand on atteint la limite des places
@@ -116,6 +121,8 @@ function initialiserAchat() {
             limite.textContent = dejaAuPanier > 0
                 ? `Vous avez déjà ${dejaAuPanier} ${pluriel(dejaAuPanier, 'billet')} pour cette soirée : ${max} de plus au maximum.`
                 : `Il ne reste que ${max} ${pluriel(max, 'place')} pour cette soirée.`;
+        } else if (Object.keys(champs).some((c) => plafond(c) < MAX_PAR_LIGNE && valeur(champs[c]) >= plafond(c))) {
+            limite.textContent = `${MAX_PAR_LIGNE} billets au maximum par tarif, en comptant ceux déjà dans votre panier.`;
         } else {
             limite.textContent = '';
         }

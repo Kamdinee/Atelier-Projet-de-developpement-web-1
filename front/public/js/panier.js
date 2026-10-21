@@ -2,11 +2,25 @@
 // les prix sont indicatifs, le serveur les recalcule a la commande
 
 const CLE = 'nrv-panier';
+const MAX_PAR_LIGNE = 10;
+
+// une ligne modifiee a la main dans le navigateur est ignoree
+function ligneValide(ligne) {
+    const entier = (n, min, max) => Number.isInteger(n) && n >= min && n <= max;
+    return ligne !== null
+        && typeof ligne === 'object'
+        && ligne.type === 'SOIREE'
+        && ['NORMAL', 'REDUIT'].includes(ligne.categorie)
+        && entier(ligne.soireeId, 1, 999999999)
+        && entier(ligne.quantite, 1, MAX_PAR_LIGNE)
+        && entier(ligne.prixUnitaire, 0, 1000000)
+        && typeof ligne.nom === 'string';
+}
 
 export function lire() {
     try {
         const lignes = JSON.parse(localStorage.getItem(CLE));
-        return Array.isArray(lignes) ? lignes : [];
+        return Array.isArray(lignes) ? lignes.filter(ligneValide) : [];
     } catch {
         return [];
     }
@@ -31,6 +45,13 @@ export function billetsPourSoiree(soireeId) {
         .reduce((total, ligne) => total + ligne.quantite, 0);
 }
 
+// billets deja dans la ligne d'une soiree et d'une categorie (10 au maximum par ligne)
+export function billetsPourLigne(soireeId, categorie) {
+    return lire()
+        .filter((ligne) => ligne.soireeId === soireeId && ligne.categorie === categorie)
+        .reduce((total, ligne) => total + ligne.quantite, 0);
+}
+
 // ajoute n billets d'une categorie (NORMAL ou REDUIT) ; une ligne par soiree et categorie
 export function ajouterBillets(soiree, categorie, quantite, prixUnitaire) {
     if (quantite <= 0) {
@@ -41,7 +62,7 @@ export function ajouterBillets(soiree, categorie, quantite, prixUnitaire) {
         ligne.type === 'SOIREE' && ligne.soireeId === soiree.id && ligne.categorie === categorie);
 
     if (existante) {
-        existante.quantite += quantite;
+        existante.quantite = Math.min(MAX_PAR_LIGNE, existante.quantite + quantite);
     } else {
         lignes.push({
             type: 'SOIREE',
@@ -50,7 +71,7 @@ export function ajouterBillets(soiree, categorie, quantite, prixUnitaire) {
             date: soiree.date,
             heure: soiree.heure_debut,
             categorie,
-            quantite,
+            quantite: Math.min(MAX_PAR_LIGNE, quantite),
             prixUnitaire,
         });
     }
@@ -66,7 +87,7 @@ export function changerQuantite(index, quantite) {
     if (quantite <= 0) {
         lignes.splice(index, 1);
     } else {
-        lignes[index].quantite = quantite;
+        lignes[index].quantite = Math.min(MAX_PAR_LIGNE, quantite);
     }
     ecrire(lignes);
 }
