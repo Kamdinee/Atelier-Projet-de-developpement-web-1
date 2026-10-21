@@ -37,6 +37,7 @@ function idDepuisUrl() {
 function changerImage(bouton) {
     const spectacle = bouton.closest('.spectacle-detail');
     const image = spectacle.querySelector('.spectacle-detail__image');
+    image.srcset = bouton.dataset.srcset ?? '';
     image.src = bouton.dataset.url;
     image.alt = bouton.dataset.alt;
     spectacle.querySelectorAll('.galerie__bouton').forEach((b) => {

@@ -2,7 +2,7 @@
 <li>
     <article class="carte-spectacle">
         {{#if image}}
-        <img class="carte-spectacle__image" src="{{image}}" alt="{{titre}} sur scène" width="800" height="500" loading="lazy">
+        <img class="carte-spectacle__image" src="{{petite image}}" srcset="{{srcset image}}" sizes="(min-width: 1024px) 18rem, (min-width: 600px) 50vw, 100vw" alt="{{titre}} en concert" width="1200" height="750" loading="lazy">
         {{else}}
         <div class="carte-spectacle__image" aria-hidden="true"></div>
         {{/if}}
