@@ -1,6 +1,8 @@
 // appels a l'api nrv.net avec fetch
 // les erreurs de l'api sont au format application/problem+json (rfc 7807)
 
+import * as session from './session.js';
+
 const API_URL = window.NRV_CONFIG.apiUrl;
 
 export class ErreurApi extends Error {
@@ -12,13 +14,29 @@ export class ErreurApi extends Error {
     }
 }
 
-// GET <chemin> et renvoie le json ; accepte un chemin (/soirees/8) ou un lien hateoas complet
-export async function getJson(chemin, { signal } = {}) {
+// appel generique : GET par defaut, corps json pour POST, jeton de connexion si auth = true
+async function requete(chemin, { methode = 'GET', corps, auth = false, signal } = {}) {
     const url = chemin.startsWith('http') ? chemin : API_URL + chemin;
+    const entetes = { Accept: 'application/json' };
+    if (corps !== undefined) {
+        entetes['Content-Type'] = 'application/json';
+    }
+    if (auth) {
+        const jeton = session.jeton();
+        if (!jeton) {
+            throw new ErreurApi(401, 'Connexion requise');
+        }
+        entetes.Authorization = `Bearer ${jeton}`;
+    }
 
     let reponse;
     try {
-        reponse = await fetch(url, { headers: { Accept: 'application/json' }, signal });
+        reponse = await fetch(url, {
+            method: methode,
+            headers: entetes,
+            body: corps !== undefined ? JSON.stringify(corps) : undefined,
+            signal,
+        });
     } catch (e) {
         // requete annulee volontairement : on laisse remonter tel quel
         if (e.name === 'AbortError') {
@@ -30,6 +48,10 @@ export async function getJson(chemin, { signal } = {}) {
     const data = await reponse.json().catch(() => null);
 
     if (!reponse.ok) {
+        // jeton refuse par l'api : la session locale n'est plus valable
+        if (reponse.status === 401 && auth) {
+            session.oublier();
+        }
         throw new ErreurApi(
             reponse.status,
             data?.title ?? `Erreur ${reponse.status}`,
@@ -38,6 +60,15 @@ export async function getJson(chemin, { signal } = {}) {
     }
 
     return data;
+}
+
+// GET <chemin> et renvoie le json ; accepte un chemin (/soirees/8) ou un lien hateoas complet
+export function getJson(chemin, options = {}) {
+    return requete(chemin, options);
+}
+
+export function postJson(chemin, corps, options = {}) {
+    return requete(chemin, { ...options, methode: 'POST', corps });
 }
 
 // id a la fin d'un lien hateoas : { href: "/soirees/4" } -> 4
@@ -61,4 +92,19 @@ export const api = {
     soiree: (id, options) => getJson(`/soirees/${encodeURIComponent(id)}`, options),
     styles: (options) => getJson('/styles', options),
     dates: (options) => getJson('/dates', options),
+
+    // billets (le jeton du billet suffit, pas besoin d'etre connecte)
+    billet: (jeton, options) => getJson(`/billets/${encodeURIComponent(jeton)}`, options),
+
+    // espace client : connexion requise
+    commandes: (options) => getJson('/commandes', { ...options, auth: true }),
+    billetsCommande: (id, options) => getJson(`/commandes/${encodeURIComponent(id)}/billets`, { ...options, auth: true }),
+    mesBillets: (options) => getJson('/billets', { ...options, auth: true }),
+
+    // backoffice : connexion admin requise
+    jauges: (options) => getJson('/admin/jauges', { ...options, auth: true }),
+    referentiels: (options) => getJson('/admin/referentiels', { ...options, auth: true }),
+    ajouterSoiree: (soiree) => postJson('/admin/soirees', soiree, { auth: true }),
+    ajouterSpectacle: (soireeId, spectacle) =>
+        postJson(`/admin/soirees/${encodeURIComponent(soireeId)}/spectacles`, spectacle, { auth: true }),
 };

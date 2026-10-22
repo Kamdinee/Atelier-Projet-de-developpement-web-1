@@ -1,5 +1,15 @@
 @use '../abstracts' as *;
 
+// en-tete de la page billet, aligne sur la largeur des billets
+.billets__entete {
+    max-width: 48rem;
+    margin-inline: auto;
+
+    p + p {
+        margin-top: $espace-m;
+    }
+}
+
 // billet a l'ecran : corps | talon
 .billet {
     display: grid;
@@ -59,6 +69,7 @@
     &__url {
         color: $gris;
         font-size: 0.8rem;
+        overflow-wrap: anywhere;
     }
 
     &__talon {
