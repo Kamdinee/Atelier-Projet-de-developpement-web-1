@@ -1,5 +1,15 @@
 @use '../abstracts' as *;
 
+// flex : texte de mise a jour | actualiser | ajouter
+.admin__barre {
+    @include flex(flex-start, center, $espace-s $espace-m, wrap);
+    color: $couleur-texte-doux;
+
+    span {
+        flex: 1 1 16rem;
+    }
+}
+
 // grid des indicateurs : 1 colonne mobile, 3 sur tablette
 .kpi {
     display: grid;
@@ -47,10 +57,37 @@
     }
 
     th button {
+        padding: 0;
         border: 0;
         background: none;
         color: inherit;
         font-weight: 700;
+        @include focus-visible;
+
+        &::after {
+            content: ' ↕';
+            color: $couleur-texte-doux;
+        }
+    }
+
+    // fleche de la colonne triee
+    th[aria-sort='ascending'] button::after {
+        content: ' ▲';
+        color: $couleur-accent;
+    }
+
+    th[aria-sort='descending'] button::after {
+        content: ' ▼';
+        color: $couleur-accent;
+    }
+
+    th[scope='row'] a {
+        color: $blanc;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 
     // colonnes masquees sur mobile

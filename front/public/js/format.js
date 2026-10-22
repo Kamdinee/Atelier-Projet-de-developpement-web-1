@@ -42,6 +42,11 @@ export function nombre(n) {
     return Number(n).toLocaleString('fr-FR');
 }
 
+// 73.5 -> "73,5 %"
+export function pourcent(n) {
+    return `${Number(n).toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
+}
+
 // pluriel simple : pluriel(2, 'spectacle') -> "spectacles"
 export function pluriel(n, mot, motPluriel = mot + 's') {
     return Number(n) > 1 ? motPluriel : mot;
