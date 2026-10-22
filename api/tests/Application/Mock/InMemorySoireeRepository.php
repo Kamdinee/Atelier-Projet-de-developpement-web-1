@@ -28,6 +28,19 @@ final class InMemorySoireeRepository implements SoireeRepositoryInterface
         return $this->soirees[$id] ?? null;
     }
 
+    /** @var list<int> soirees enregistrees (pour verifier qu'un refus n'ecrit rien) */
+    public array $enregistrees = [];
+
+    public function verrouiller(array $ids): array
+    {
+        return array_intersect_key($this->soirees, array_flip($ids));
+    }
+
+    public function enregistrerPlacesVendues(Soiree $soiree): void
+    {
+        $this->enregistrees[] = $soiree->id();
+    }
+
     public function lister(): array
     {
         $soirees = array_values($this->soirees);

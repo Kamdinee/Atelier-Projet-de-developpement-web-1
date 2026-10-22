@@ -18,4 +18,15 @@ final class InMemoryPassRepository implements PassRepositoryInterface
     {
         return $this->pass;
     }
+
+    public function trouverParId(int $id): ?Pass
+    {
+        foreach ($this->pass as $p) {
+            if ($p->id() === $id) {
+                return $p;
+            }
+        }
+
+        return null;
+    }
 }
