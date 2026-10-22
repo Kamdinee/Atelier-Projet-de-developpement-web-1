@@ -111,6 +111,7 @@ contenu.addEventListener('click', async (e) => {
             panier.vider();
             break;
         case 'valider': {
+            console.log('[Panier] Clic sur Valider la commande');
             const lignes = panier.lire();
             if (!lignes.length) {
                 toast('Votre panier est vide.');
@@ -121,9 +122,7 @@ contenu.addEventListener('click', async (e) => {
             if (!token) {
                 sessionStorage.setItem('nrv_redirect', 'panier.html');
                 toast('Veuillez vous connecter pour valider votre commande.');
-                window.setTimeout(() => {
-                    window.location.href = 'connexion.html?redirect=panier.html';
-                }, 600);
+                window.location.href = 'connexion.html?redirect=panier.html';
                 return;
             }
 
@@ -144,12 +143,10 @@ contenu.addEventListener('click', async (e) => {
                 const commandeId = res.commande.id;
 
                 toast('Commande enregistrée ! Accès au paiement…');
-                window.setTimeout(() => {
-                    window.location.href = `commande.html?id=${encodeURIComponent(commandeId)}`;
-                }, 350);
+                window.location.href = `commande.html?id=${encodeURIComponent(commandeId)}`;
             } catch (err) {
                 console.error('Erreur création commande:', err);
-                toast(err.message || 'Impossible de créer la commande.', { erreur: true });
+                alert('Erreur lors de la validation du panier : ' + (err.message || 'Impossible de créer la commande.'));
                 bouton.disabled = false;
                 bouton.textContent = 'Valider la commande';
             }
