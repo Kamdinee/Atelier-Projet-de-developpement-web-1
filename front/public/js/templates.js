@@ -18,6 +18,10 @@ Handlebars.registerHelper('joindre', (liste, separateur) =>
 Handlebars.registerHelper('eq', (a, b) => a === b);
 Handlebars.registerHelper('plusUn', (n) => Number(n) + 1);
 Handlebars.registerHelper('plusDeUn', (liste) => Array.isArray(liste) && liste.length > 1);
+// photo en deux tailles (front/tools/photos.py) : le navigateur choisit selon l'ecran
+const PHOTO = /\.webp$/;
+Handlebars.registerHelper('petite', (url) => (PHOTO.test(url ?? '') ? url.replace(PHOTO, '-640.webp') : url));
+Handlebars.registerHelper('srcset', (url) => (PHOTO.test(url ?? '') ? `${url.replace(PHOTO, '-640.webp')} 640w, ${url} 1200w` : ''));
 
 async function chargerSource(nom) {
     const reponse = await fetch(`templates/${nom}.hbs`);

@@ -163,7 +163,7 @@ $artisteId = static function (string $nom) use (&$artistesIds, $insArtiste, $pdo
 $reserve = array_map(static fn (array $g) => $faker->shuffleArray($g), $groupes);
 $soirees = [];
 $nbSpectacles = 0;
-// rang du spectacle dans son style : chaque spectacle a ses propres visuels
+// rang du spectacle dans son style : le n-ieme spectacle prend la n-ieme photo du style
 $rangStyle = [];
 $date = new DateTimeImmutable('2027-06-04');
 
@@ -202,13 +202,11 @@ foreach ($programme as $i => [$nom, $thematique, $lieuIndex, $heure, $stylesSoir
             $insLien->execute([$spectacleId, $artisteId($invite), 2]);
         }
 
+        // une photo par spectacle, servie par le front (front/public/img/spectacles, preparees par front/tools/photos.py)
         $rangStyle[$slug] = ($rangStyle[$slug] ?? 0) + 1;
-        $nbImages = $faker->numberBetween(1, 3);
-        for ($n = 1; $n <= $nbImages; $n++) {
-            // visuels servis par le front (front/public/img/spectacles, generes par front/tools/visuels.py)
-            $numero = ($rangStyle[$slug] - 1) * 3 + $n;
-            $insImage->execute([$spectacleId, "img/spectacles/{$slug}-{$numero}.svg", "Visuel de {$groupe}", $n]);
-        }
+        $insImage->execute([$spectacleId, "img/spectacles/{$slug}-{$rangStyle[$slug]}.webp", "{$groupe} en concert", 1]);
+        // tirage conserve pour que le reste du jeu de donnees ne change pas
+        $faker->numberBetween(1, 3);
     }
 
     $date = $date->modify('+1 day');

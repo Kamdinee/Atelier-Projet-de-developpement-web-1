@@ -38,6 +38,7 @@
 └── front/
     ├── package.json            sass + handlebars
     ├── src/scss/               abstracts (variables, mixins), base, layout, components, pages, print
+    ├── tools/photos.py         prepare les photos des spectacles (recadrage 16/10, webp 1200 et 640 px)
     └── public/                 servi par nginx : html, css compile, js, templates handlebars, img
 ```
 

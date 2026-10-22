@@ -70,6 +70,8 @@ services:
   adminer:
     image: adminer:4
     restart: unless-stopped
+    # ecoute en ipv4 : sans ca adminer redemarre en boucle sur docketu (pas d'ipv6)
+    command: ["php", "-S", "0.0.0.0:8080", "-t", "/var/www/html"]
     ports:
       - "${ADMINER_PORT:-8082}:8080"
     environment:

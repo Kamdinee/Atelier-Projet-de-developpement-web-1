@@ -2,13 +2,13 @@
 <article class="spectacle-detail" aria-labelledby="spectacle-{{id}}">
     <div class="spectacle-detail__visuel">
         {{#if images.length}}
-        <img class="spectacle-detail__image" src="{{images.0.url}}" alt="{{images.0.alt}}" width="800" height="500" loading="lazy">
+        <img class="spectacle-detail__image" src="{{petite images.0.url}}" srcset="{{srcset images.0.url}}" sizes="(min-width: 1024px) 19rem, (min-width: 600px) 40vw, 100vw" alt="{{images.0.alt}}" width="1200" height="750" loading="lazy">
         {{#if (plusDeUn images)}}
         <ul class="galerie" aria-label="Photos de {{titre}}">
             {{#each images}}
             <li>
-                <button class="galerie__bouton" type="button" data-url="{{url}}" data-alt="{{alt}}" aria-pressed="{{#if @first}}true{{else}}false{{/if}}">
-                    <img src="{{url}}" alt="" width="160" height="100" loading="lazy">
+                <button class="galerie__bouton" type="button" data-url="{{url}}" data-srcset="{{srcset url}}" data-alt="{{alt}}" aria-pressed="{{#if @first}}true{{else}}false{{/if}}">
+                    <img src="{{petite url}}" alt="" width="160" height="100" loading="lazy">
                     <span class="sr-only">Photo {{plusUn @index}}</span>
                 </button>
             </li>

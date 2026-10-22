@@ -1,46 +1,78 @@
-// page panier : lignes du panier, modification des quantites (E2), total (F7)
-// le panier est dans le navigateur ; les places restantes sont relues sur l'api
-
 import { api } from './api.js';
-import { nombre, pluriel } from './format.js';
+import { dateCourte, nombre, pluriel, prix } from './format.js';
 import * as panier from './panier.js';
 import { afficher } from './templates.js';
 import { toast } from './ui.js';
 
 const MAX_PAR_LIGNE = 10;
 const contenu = document.getElementById('contenu-panier');
-
-// places restantes par soiree, lues une fois au chargement
 const placesRestantes = new Map();
 
+const formulairePass = document.getElementById('form-pass-3-jours');
+const listeDatesPass = document.getElementById('pass-dates');
+const compteurPass = document.getElementById('pass-compteur');
+const tarifPass = document.getElementById('pass-tarif');
+const prixPass = document.getElementById('pass-prix');
+const messagePass = document.getElementById('pass-message');
+const boutonPass = document.getElementById('pass-ajouter');
+
+let definitionPass = null;
+
+function afficherMessagePass(texte, type = '') {
+    messagePass.textContent = texte;
+    messagePass.className = 'pass-3-jours__message';
+
+    if (type) {
+        messagePass.classList.add(`pass-3-jours__message--${type}`);
+    }
+}
+
 async function chargerPlaces() {
-    const ids = [...new Set(panier.lire().map((ligne) => ligne.soireeId))];
+    const ids = [
+        ...new Set(
+            panier.lire()
+                .filter((ligne) => ligne.type === 'SOIREE')
+                .map((ligne) => ligne.soireeId)
+        ),
+    ];
+
     await Promise.all(ids.map(async (id) => {
         try {
             const { soiree } = await api.soiree(id);
             placesRestantes.set(id, soiree.places_restantes);
         } catch {
-            // api indisponible : on ne bloque pas l'affichage du panier
+            // L'affichage du panier reste possible si l'API est indisponible.
         }
     }));
 }
 
 function modele() {
     const lignes = panier.lire().map((ligne) => {
-        const restantes = placesRestantes.get(ligne.soireeId);
-        const dansLePanier = panier.billetsPourSoiree(ligne.soireeId);
+        const estPass = ligne.type === 'PASS';
+        const restantes = estPass ? undefined : placesRestantes.get(ligne.soireeId);
+        const dansLePanier = estPass ? 0 : panier.billetsPourSoiree(ligne.soireeId);
+
         const complet = ligne.quantite >= MAX_PAR_LIGNE
-            || (restantes !== undefined && dansLePanier >= restantes);
+            || (!estPass && restantes !== undefined && dansLePanier >= restantes);
+
         let limite = '';
-        if (restantes !== undefined && dansLePanier > restantes) {
+        if (!estPass && restantes !== undefined && dansLePanier > restantes) {
             limite = `Il ne reste que ${nombre(restantes)} ${pluriel(restantes, 'place')} pour cette soirée.`;
         }
-        return { ...ligne, montant: ligne.quantite * ligne.prixUnitaire, complet, limite };
+
+        return {
+            ...ligne,
+            estPass,
+            montant: ligne.quantite * ligne.prixUnitaire,
+            complet,
+            limite,
+        };
     });
+
     return {
         lignes,
-        nombreBillets: lignes.reduce((n, l) => n + l.quantite, 0),
-        total: lignes.reduce((t, l) => t + l.montant, 0),
+        nombreBillets: lignes.reduce((total, ligne) => total + ligne.quantite, 0),
+        total: lignes.reduce((total, ligne) => total + ligne.montant, 0),
     };
 }
 
@@ -51,11 +83,17 @@ async function rafraichir() {
 
 contenu.addEventListener('click', async (e) => {
     const bouton = e.target.closest('[data-action]');
+
     if (!bouton) {
         return;
     }
+
     const index = Number(bouton.dataset.index);
     const ligne = panier.lire()[index];
+
+    if (bouton.dataset.action !== 'vider' && !ligne) {
+        return;
+    }
 
     switch (bouton.dataset.action) {
         case 'plus':
@@ -74,20 +112,148 @@ contenu.addEventListener('click', async (e) => {
         default:
             return;
     }
+
     await rafraichir();
 });
 
-// le panier peut changer dans un autre onglet
 window.addEventListener('storage', (e) => {
     if (e.key === 'nrv-panier') {
         rafraichir();
     }
 });
 
+function actualiserEtatFormulaire() {
+    if (!formulairePass) {
+        return;
+    }
+
+    const selection = [
+        ...formulairePass.querySelectorAll('input[name="dates-pass"]:checked'),
+    ];
+
+    const nombreRequis = Number(definitionPass?.nb_soirees) || 3;
+
+    compteurPass.textContent =
+        `${selection.length} / ${nombreRequis} dates sélectionnées`;
+
+    // Une fois trois dates choisies, les autres cases sont désactivées.
+    for (const caseDate of formulairePass.querySelectorAll('input[name="dates-pass"]')) {
+        caseDate.disabled = selection.length >= nombreRequis && !caseDate.checked;
+    }
+
+    const tarif = tarifPass.value;
+    const montant = tarif === 'REDUIT'
+        ? definitionPass?.tarif_reduit
+        : definitionPass?.tarif_normal;
+
+    prixPass.textContent = Number.isInteger(montant) ? prix(montant) : '—';
+    boutonPass.disabled = !definitionPass || selection.length !== nombreRequis;
+}
+
+async function initialiserComposerPass() {
+    if (!formulairePass) {
+        return;
+    }
+
+    try {
+        const [reponseDates, reponsePass] = await Promise.all([
+            api.dates(),
+            api.pass(),
+        ]);
+
+        const dates = Array.isArray(reponseDates.dates)
+            ? [...new Set(reponseDates.dates)].sort()
+            : [];
+
+        definitionPass = Array.isArray(reponsePass.pass)
+            ? reponsePass.pass.find((pass) => Number(pass.nb_soirees) === 3)
+            : null;
+
+        if (!definitionPass || dates.length < 3) {
+            throw new Error('Les données du Pass 3 jours sont indisponibles.');
+        }
+
+        listeDatesPass.replaceChildren();
+
+        for (const date of dates) {
+            const label = document.createElement('label');
+            label.className = 'pass-date';
+
+            const caseDate = document.createElement('input');
+            caseDate.type = 'checkbox';
+            caseDate.name = 'dates-pass';
+            caseDate.value = date;
+            caseDate.addEventListener('change', () => {
+                afficherMessagePass('');
+                actualiserEtatFormulaire();
+            });
+
+            const texte = document.createElement('span');
+            texte.textContent = dateCourte(date);
+
+            label.append(caseDate, texte);
+            listeDatesPass.append(label);
+        }
+
+        tarifPass.addEventListener('change', actualiserEtatFormulaire);
+        actualiserEtatFormulaire();
+    } catch (erreur) {
+        definitionPass = null;
+        boutonPass.disabled = true;
+        listeDatesPass.textContent = 'Impossible de charger les dates disponibles.';
+        afficherMessagePass(
+            erreur.message || 'Impossible de charger les Pass depuis le serveur.',
+            'erreur'
+        );
+    }
+}
+
+formulairePass?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!definitionPass) {
+        afficherMessagePass('Les données du Pass ne sont pas disponibles.', 'erreur');
+        return;
+    }
+
+    const dates = [
+        ...formulairePass.querySelectorAll('input[name="dates-pass"]:checked'),
+    ].map((caseDate) => caseDate.value);
+
+    const nombreRequis = Number(definitionPass.nb_soirees);
+
+    if (dates.length !== nombreRequis || new Set(dates).size !== nombreRequis) {
+        afficherMessagePass(`Sélectionnez exactement ${nombreRequis} dates différentes.`, 'erreur');
+        return;
+    }
+
+    const categorie = tarifPass.value;
+    const montant = categorie === 'REDUIT'
+        ? definitionPass.tarif_reduit
+        : definitionPass.tarif_normal;
+
+    const ajoute = panier.ajouterPass(
+        definitionPass,
+        dates,
+        categorie,
+        montant
+    );
+
+    if (!ajoute) {
+        afficherMessagePass('Impossible d’ajouter ce Pass. Vérifiez les dates et la quantité.', 'erreur');
+        return;
+    }
+
+    afficherMessagePass('Pass 3 jours ajouté à votre panier.', 'succes');
+    toast('Pass 3 jours ajouté au panier.');
+    await rafraichir();
+});
+
 async function demarrer() {
     panier.majBadge();
     await chargerPlaces();
     await rafraichir();
+    await initialiserComposerPass();
     contenu.setAttribute('aria-busy', 'false');
 }
 
