@@ -12,6 +12,9 @@ class PlacesInsuffisantesException extends NrvException
         public readonly int $demandees,
         public readonly int $restantes,
     ) {
-        parent::__construct("soiree {$soireeId} : {$demandees} places demandees, {$restantes} restantes");
+        $msg = $restantes <= 0
+            ? "La soirée n°{$soireeId} est désormais complète (0 place restante)."
+            : "Il ne reste que {$restantes} place(s) pour la soirée n°{$soireeId} ({$demandees} demandée(s)).";
+        parent::__construct($msg);
     }
 }

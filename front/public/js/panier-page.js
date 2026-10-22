@@ -146,7 +146,22 @@ contenu.addEventListener('click', async (e) => {
                 window.location.href = `commande.html?id=${encodeURIComponent(commandeId)}`;
             } catch (err) {
                 console.error('Erreur création commande:', err);
-                alert('Erreur lors de la validation du panier : ' + (err.message || 'Impossible de créer la commande.'));
+                const conteneurErreur = document.getElementById('panier-erreur');
+                let messageErreur = err.message || 'Impossible de créer la commande.';
+                
+                // Explication claire et bien formulée
+                if (messageErreur.toLowerCase().includes('places') || messageErreur.toLowerCase().includes('complète')) {
+                    messageErreur = `${messageErreur} Veuillez modifier ou supprimer cette date de votre panier pour continuer.`;
+                }
+
+                if (conteneurErreur) {
+                    conteneurErreur.textContent = messageErreur;
+                    conteneurErreur.style.display = 'block';
+                    conteneurErreur.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    toast(messageErreur, 'erreur');
+                }
+
                 bouton.disabled = false;
                 bouton.textContent = 'Valider la commande';
             }
