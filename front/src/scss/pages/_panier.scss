@@ -213,6 +213,11 @@
         padding: 0;
         list-style: none;
     }
+
+    // flex : imprimer tout | mes billets
+    &__actions {
+        @include flex(flex-start, center, $espace-m, wrap);
+    }
 }
 
 // page connexion / inscription

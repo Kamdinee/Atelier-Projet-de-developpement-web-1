@@ -4,7 +4,7 @@
 const CLE = 'nrv-session';
 
 // pages ou l'on peut revenir apres la connexion (evite une redirection vers un autre site)
-const RETOURS = /^(index|panier|compte|mes-billets|admin|admin-programme|paiement)\.html$|^soiree\.html\?id=\d{1,9}$/;
+const RETOURS = /^(index|panier|compte|mes-billets|admin|admin-programme)\.html$|^soiree\.html\?id=\d{1,9}$|^paiement\.html\?commande=[0-9a-f-]{36}$/;
 
 // contenu du jeton (partie centrale, en base64url) ; sert a l'affichage, l'api verifie la signature
 function contenu(jeton) {

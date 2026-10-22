@@ -1,0 +1,21 @@
+{{!-- confirmation apres paiement : un lien par billet (F10) --}}
+<section class="confirmation" aria-labelledby="titre-confirmation">
+    <p class="etiquette etiquette--succes">Paiement accepté</p>
+    <h1 id="titre-confirmation" tabindex="-1">Merci {{prenom}}, {{#if (plusDeUn billets)}}vos {{billets.length}} billets sont prêts{{else}}votre billet est prêt{{/if}}</h1>
+    <p>Commande {{reference}} · {{prix total}}{{#if carte_fin}} · carte se terminant par {{carte_fin}}{{/if}}. Chaque billet a son propre lien : vous pouvez l'imprimer ou l'envoyer à vos accompagnants, il n'est pas nominatif.</p>
+    <ul class="confirmation__billets">
+        {{#each billets}}
+        <li class="panier__ligne">
+            <div class="panier__libelle">
+                <strong>{{titre}} · {{categorie}}</strong>
+                <span class="panier__soirees-pass">{{reference}} · {{dates}}</span>
+            </div>
+            <a class="btn btn--secondaire" href="billet.html?token={{token}}">Voir / imprimer<span class="sr-only"> le billet {{reference}}</span></a>
+        </li>
+        {{/each}}
+    </ul>
+    <p class="confirmation__actions">
+        <a class="btn" href="billet.html?commande={{id}}">Imprimer tous les billets</a>
+        <a class="btn btn--secondaire" href="mes-billets.html">Mes billets</a>
+    </p>
+</section>

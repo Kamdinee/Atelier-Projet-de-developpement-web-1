@@ -107,6 +107,11 @@ export const api = {
     billetsCommande: (id, options) => getJson(`/commandes/${encodeURIComponent(id)}/billets`, { ...options, auth: true }),
     mesBillets: (options) => getJson('/billets', { ...options, auth: true }),
 
+    // commande et paiement (etape 6) : connexion requise
+    creerCommande: (lignes) => postJson('/commandes', { lignes }, { auth: true }),
+    commande: (id, options) => getJson(`/commandes/${encodeURIComponent(id)}`, { ...options, auth: true }),
+    payer: (id, carte) => postJson(`/commandes/${encodeURIComponent(id)}/paiement`, carte, { auth: true }),
+
     // backoffice : connexion admin requise
     jauges: (options) => getJson('/admin/jauges', { ...options, auth: true }),
     referentiels: (options) => getJson('/admin/referentiels', { ...options, auth: true }),

@@ -1,0 +1,40 @@
+{{!-- paiement (F9) : recapitulatif de la commande et carte bancaire (paiement simule) --}}
+<h1 id="titre-paiement" tabindex="-1">Paiement</h1>
+<div class="paiement">
+    <section class="recap" aria-labelledby="titre-recap">
+        <h2 id="titre-recap">Commande {{reference}}</h2>
+        {{#each lignes}}
+        <p class="recap__ligne">
+            <span>{{quantite}} × {{libelle}} · {{#if (eq categorie "REDUIT")}}réduit{{else}}normal{{/if}}<br>
+                <small>{{#each soirees}}<time datetime="{{date}}T{{heure}}">{{dateCourte date}}</time>{{#if ../pass}} {{nom}}{{/if}}{{#unless @last}} · {{/unless}}{{/each}}</small></span>
+            <span>{{prix montant}}</span>
+        </p>
+        {{/each}}
+        <p class="recap__total"><span>Total</span><span>{{prix total}}</span></p>
+        <p class="recap__note">Les places sont vérifiées et réservées au moment du paiement.</p>
+    </section>
+
+    <form class="formulaire" id="form-paiement" action="#" method="post" aria-labelledby="titre-carte">
+        <h2 id="titre-carte">Carte bancaire</h2>
+        <p class="formulaire__note">Paiement simulé : aucune somme n'est débitée. Carte de test acceptée : 4242 4242 4242 4242 ; refusée : 4000 0000 0000 0002.</p>
+        <div class="champ">
+            <label for="numero">Numéro de carte</label>
+            <input id="numero" name="numero" inputmode="numeric" autocomplete="cc-number" maxlength="23" required aria-describedby="numero-erreur">
+            <p class="champ-erreur" id="numero-erreur" hidden></p>
+        </div>
+        <div class="champ-groupe">
+            <div class="champ">
+                <label for="expiration">Expiration (MM/AA)</label>
+                <input id="expiration" name="expiration" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" maxlength="5" required aria-describedby="expiration-erreur">
+                <p class="champ-erreur" id="expiration-erreur" hidden></p>
+            </div>
+            <div class="champ">
+                <label for="cryptogramme">Cryptogramme</label>
+                <input id="cryptogramme" name="cryptogramme" inputmode="numeric" autocomplete="cc-csc" maxlength="4" required aria-describedby="cryptogramme-erreur">
+                <p class="champ-erreur" id="cryptogramme-erreur" hidden></p>
+            </div>
+        </div>
+        <p class="formulaire__message" id="message-formulaire" role="alert" hidden></p>
+        <button class="btn" type="submit">Payer {{prix total}}</button>
+    </form>
+</div>

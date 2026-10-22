@@ -4,6 +4,7 @@
 import { api } from './api.js';
 import { nombre, pluriel, prix } from './format.js';
 import * as panier from './panier.js';
+import * as session from './session.js';
 import { afficher } from './templates.js';
 import { toast } from './ui.js';
 
@@ -55,7 +56,51 @@ function modele() {
         lignes,
         nombreBillets: lignes.reduce((n, l) => n + l.quantite, 0),
         total: lignes.reduce((t, l) => t + l.montant, 0),
+        connecte: session.lire() !== null,
+        message: messageCommande,
     };
+}
+
+// ---------- validation du panier (F8) ----------
+
+let messageCommande = '';
+
+// lignes envoyees a l'api : seulement les identifiants, la categorie et la quantite (le serveur fixe les prix)
+function lignesAEnvoyer() {
+    return panier.lire().map((l) => (l.type === 'PASS'
+        ? { type: 'PASS', pass_id: l.passId, soirees: l.soirees.map((s) => s.id), categorie: l.categorie, quantite: l.quantite }
+        : { type: 'SOIREE', soiree_id: l.soireeId, categorie: l.categorie, quantite: l.quantite }));
+}
+
+async function valider(bouton) {
+    // connexion requise : on revient ensuite sur le panier
+    if (!session.lire()) {
+        window.location.href = 'connexion.html?retour=panier.html';
+        return;
+    }
+    bouton.disabled = true;
+    bouton.textContent = 'Un instant…';
+    try {
+        const { commande } = await api.creerCommande(lignesAEnvoyer());
+        window.location.href = `paiement.html?commande=${encodeURIComponent(commande.id)}`;
+    } catch (erreur) {
+        if (erreur.statut === 401) {
+            window.location.href = 'connexion.html?retour=panier.html';
+            return;
+        }
+        if (erreur.statut === 409 && erreur.details?.soirees) {
+            const { soiree_id: id, restantes } = erreur.details.soirees[0];
+            const nom = soirees.get(id)?.nom ?? 'une soirée';
+            messageCommande = restantes === 0
+                ? `« ${nom} » est complète : retirez-la du panier pour commander.`
+                : `Il ne reste que ${nombre(restantes)} ${pluriel(restantes, 'place')} pour « ${nom} » : réduisez la quantité.`;
+            // les places ont change depuis le chargement de la page
+            await chargerDonnees();
+        } else {
+            messageCommande = erreur.message;
+        }
+        await rafraichir();
+    }
 }
 
 // ---------- composition d'un pass ----------
@@ -151,6 +196,7 @@ contenu.addEventListener('click', async (e) => {
     }
     const index = Number(bouton.dataset.index);
     const ligne = panier.lire()[index];
+    messageCommande = '';
 
     switch (bouton.dataset.action) {
         case 'plus':
@@ -166,6 +212,9 @@ contenu.addEventListener('click', async (e) => {
         case 'vider':
             panier.vider();
             break;
+        case 'valider':
+            await valider(bouton);
+            return;
         default:
             return;
     }

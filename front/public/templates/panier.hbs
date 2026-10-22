@@ -27,9 +27,10 @@
 <section class="recap" aria-label="Total de la commande">
     <p class="recap__ligne"><span>{{nombreBillets}} {{pluriel nombreBillets "billet"}}</span><span>{{prix total}}</span></p>
     <p class="recap__total"><span>Total</span><span>{{prix total}}</span></p>
-    <p class="recap__note">Les places sont vérifiées et réservées au moment du paiement. La commande en ligne ouvre prochainement.</p>
+    <p class="recap__note">Les places sont vérifiées et réservées au moment du paiement.{{#unless connecte}} Vous devrez vous connecter ou créer un compte pour commander.{{/unless}}</p>
+    <p class="formulaire__message" id="message-commande" role="alert"{{#unless message}} hidden{{/unless}}>{{message}}</p>
     <div class="recap__actions">
-        <button class="btn" type="button" disabled>Valider la commande</button>
+        <button class="btn" type="button" data-action="valider">Valider la commande</button>
         <button class="btn btn--secondaire" type="button" data-action="vider">Vider le panier</button>
     </div>
 </section>
