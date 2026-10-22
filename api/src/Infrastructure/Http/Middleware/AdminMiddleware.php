@@ -4,26 +4,25 @@ declare(strict_types=1);
 
 namespace Nrv\Infrastructure\Http\Middleware;
 
-use Nrv\Domain\ValueObject\Role;
+use Nrv\Infrastructure\Http\Exception\AccesInterditException;
+use Nrv\Infrastructure\Http\Exception\NonAuthentifieException;
+use Nrv\Infrastructure\Security\UtilisateurConnecte;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Exception\HttpForbiddenException;
-use Slim\Exception\HttpUnauthorizedException;
 
-// route reservee aux administrateurs (backoffice) ; se place apres AuthMiddleware :
-// $app->group('/admin', ...)->add(AdminMiddleware::class)->add(AuthMiddleware::class);
+// route du backoffice : reservee au role ADMIN, se place apres AuthMiddleware
 final class AdminMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $porteur = $request->getAttribute(AuthMiddleware::ATTRIBUT);
-        if (!is_array($porteur)) {
-            throw new HttpUnauthorizedException($request, 'connexion requise');
+        $utilisateur = $request->getAttribute(UtilisateurConnecte::ATTRIBUT);
+        if (!$utilisateur instanceof UtilisateurConnecte) {
+            throw new NonAuthentifieException('connexion requise');
         }
-        if ($porteur['role'] !== Role::Admin) {
-            throw new HttpForbiddenException($request, 'acces reserve aux administrateurs');
+        if (!$utilisateur->estAdmin()) {
+            throw new AccesInterditException('reserve aux administrateurs');
         }
 
         return $handler->handle($request);

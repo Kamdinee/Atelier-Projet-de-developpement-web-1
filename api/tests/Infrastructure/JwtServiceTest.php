@@ -20,7 +20,8 @@ final class JwtServiceTest extends TestCase
         $jwt = new JwtService(self::SECRET);
         $porteur = $jwt->lire($jwt->creer(Fabrique::utilisateur(5, Role::Admin, 'admin@nrv.net')));
 
-        $this->assertSame(['id' => 5, 'role' => Role::Admin], $porteur);
+        $this->assertSame(5, $porteur?->id);
+        $this->assertTrue($porteur->estAdmin());
     }
 
     public function testUnJetonModifieEstRefuse(): void

@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Nrv\Tests\Infrastructure;
 
 use Nrv\Domain\ValueObject\Role;
+use Nrv\Infrastructure\Http\Exception\AccesInterditException;
+use Nrv\Infrastructure\Http\Exception\NonAuthentifieException;
 use Nrv\Infrastructure\Http\Middleware\AdminMiddleware;
 use Nrv\Infrastructure\Http\Middleware\AuthMiddleware;
+use Nrv\Infrastructure\Security\UtilisateurConnecte;
 use Nrv\Infrastructure\Token\JwtService;
 use Nrv\Tests\Fixtures\Fabrique;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Exception\HttpForbiddenException;
-use Slim\Exception\HttpUnauthorizedException;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use Slim\Psr7\Response;
 
@@ -51,14 +52,14 @@ final class MiddlewaresTest extends TestCase
 
     public function testSansJetonLaRouteRepond401(): void
     {
-        $this->expectException(HttpUnauthorizedException::class);
+        $this->expectException(NonAuthentifieException::class);
 
         (new AuthMiddleware($this->jwt))->process($this->requete(), $this->action());
     }
 
     public function testUnEnTeteMalFormeRepond401(): void
     {
-        $this->expectException(HttpUnauthorizedException::class);
+        $this->expectException(NonAuthentifieException::class);
 
         (new AuthMiddleware($this->jwt))->process($this->requete('Basic Y2xpZW50'), $this->action());
     }
@@ -70,28 +71,31 @@ final class MiddlewaresTest extends TestCase
 
         (new AuthMiddleware($this->jwt))->process($this->requete("Bearer {$jeton}"), $action);
 
-        $this->assertSame(['id' => 3, 'role' => Role::Client], $action->recue?->getAttribute(AuthMiddleware::ATTRIBUT));
+        $utilisateur = $action->recue?->getAttribute(UtilisateurConnecte::ATTRIBUT);
+        $this->assertInstanceOf(UtilisateurConnecte::class, $utilisateur);
+        $this->assertSame(3, $utilisateur->id);
+        $this->assertFalse($utilisateur->estAdmin());
     }
 
     public function testUnClientNAccedePasAuBackoffice(): void
     {
-        $requete = $this->requete()->withAttribute(AuthMiddleware::ATTRIBUT, ['id' => 3, 'role' => Role::Client]);
+        $requete = $this->requete()->withAttribute(UtilisateurConnecte::ATTRIBUT, new UtilisateurConnecte(3, Role::Client->value));
 
-        $this->expectException(HttpForbiddenException::class);
+        $this->expectException(AccesInterditException::class);
 
         (new AdminMiddleware())->process($requete, $this->action());
     }
 
     public function testUnAdministrateurAccedeAuBackoffice(): void
     {
-        $requete = $this->requete()->withAttribute(AuthMiddleware::ATTRIBUT, ['id' => 1, 'role' => Role::Admin]);
+        $requete = $this->requete()->withAttribute(UtilisateurConnecte::ATTRIBUT, new UtilisateurConnecte(1, Role::Admin->value));
 
         $this->assertSame(200, (new AdminMiddleware())->process($requete, $this->action())->getStatusCode());
     }
 
     public function testLeBackofficeSansConnexionRepond401(): void
     {
-        $this->expectException(HttpUnauthorizedException::class);
+        $this->expectException(NonAuthentifieException::class);
 
         (new AdminMiddleware())->process($this->requete(), $this->action());
     }

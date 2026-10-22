@@ -4,7 +4,6 @@
 import { api, ErreurApi } from './api.js';
 import { nombre, pluriel, prix } from './format.js';
 import * as panier from './panier.js';
-import { majNavigation } from './session.js';
 import { afficher, partials } from './templates.js';
 import { afficherErreur, toast } from './ui.js';
 
@@ -212,7 +211,6 @@ contenu.addEventListener('click', (e) => {
 
 async function demarrer() {
     panier.majBadge();
-    majNavigation();
     await partials('spectacle-detail', 'achat');
     await charger();
 }

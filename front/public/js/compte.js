@@ -17,7 +17,7 @@ async function charger() {
     }
 
     try {
-        const { utilisateur } = await api.compte(jeton);
+        const { utilisateur } = await api.compte();
         await afficher(contenu, 'compte', { ...utilisateur, admin: utilisateur.role === 'ADMIN' });
     } catch (erreur) {
         // jeton refuse par l'api (expire, compte supprime) : on se reconnecte

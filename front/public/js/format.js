@@ -30,9 +30,21 @@ export function dateLongue(iso) {
     });
 }
 
+// "2026-10-15T18:42:00" -> "15/10/2026 à 18:42"
+export function dateHeure(iso) {
+    const [date, heure = ''] = String(iso).split('T');
+    const [annee, mois, jour] = date.split('-');
+    return `${jour}/${mois}/${annee}${heure ? ` à ${heure.slice(0, 5)}` : ''}`;
+}
+
 // 1350 -> "1 350"
 export function nombre(n) {
     return Number(n).toLocaleString('fr-FR');
+}
+
+// 73.5 -> "73,5 %"
+export function pourcent(n) {
+    return `${Number(n).toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
 }
 
 // pluriel simple : pluriel(2, 'spectacle') -> "spectacles"

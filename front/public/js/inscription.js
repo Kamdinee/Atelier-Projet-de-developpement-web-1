@@ -12,7 +12,6 @@ if (session.lire()) {
 }
 
 majBadge();
-session.majNavigation();
 document.getElementById('lien-autre').href = `connexion.html${window.location.search}`;
 
 brancher(document.getElementById('form-compte'), async (donnees) => {

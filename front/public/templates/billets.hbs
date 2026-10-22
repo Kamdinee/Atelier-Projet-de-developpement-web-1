@@ -1,0 +1,33 @@
+{{!-- billets imprimables (F10) : nom de l'acheteur, reference, soiree(s), categorie, prix --}}
+<div class="billets__entete no-print">
+    <h1>{{titre}}</h1>
+    <p>Présentez ce billet (imprimé ou sur téléphone) à l'entrée. Il n'est pas nominatif : gardez son lien pour vous.</p>
+    <p><button class="btn" type="button" data-action="imprimer">Imprimer {{#if plusieurs}}les {{billets.length}} billets{{else}}le billet{{/if}}</button></p>
+</div>
+
+{{#each billets}}
+<article class="billet" aria-labelledby="billet-{{reference}}">
+    <div class="billet__corps">
+        <p class="billet__festival">NRV · Nancy Rock Vibration 2027</p>
+        <h2 id="billet-{{reference}}">{{titre}}</h2>
+        <ol class="billet__soirees">
+            {{#each soirees}}
+            <li>
+                <strong><time datetime="{{date}}T{{heure_debut}}">{{dateLongue date}} · {{heure_debut}}</time></strong><br>
+                {{nom}} · {{lieu.nom}}<br>
+                <small>{{lieu.adresse}}</small>
+                {{#if spectacles.length}}<br><small>{{#each spectacles}}{{titre}} {{horaire}}{{#unless @last}}, {{/unless}}{{/each}}</small>{{/if}}
+            </li>
+            {{/each}}
+        </ol>
+        <p>Acheteur : <strong>{{nom_acheteur}}</strong> · billet non nominatif</p>
+        <p class="billet__url"><a href="{{lien}}">{{lienCourt}}</a></p>
+    </div>
+    <div class="billet__talon">
+        {{{qr}}}
+        <p class="billet__ref">{{reference}}</p>
+        <p class="etiquette">{{categorieLibelle}}</p>
+        <p class="billet__prix">{{prix prix}}</p>
+    </div>
+</article>
+{{/each}}

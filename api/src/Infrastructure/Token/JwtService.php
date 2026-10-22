@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use Nrv\Application\Port\Out\JetonInterface;
 use Nrv\Domain\Entity\Utilisateur;
 use Nrv\Domain\ValueObject\Role;
+use Nrv\Infrastructure\Security\UtilisateurConnecte;
 use Throwable;
 
 // adaptateur du port JetonInterface : jwt signe en hs256 avec le secret du .env
@@ -45,9 +46,8 @@ final class JwtService implements JetonInterface
         return date(DATE_ATOM, time() + $this->dureeSecondes);
     }
 
-    // id et role du porteur, ou null si le jeton est faux, expire ou d'un autre emetteur
-    /** @return array{id: int, role: Role}|null */
-    public function lire(string $jeton): ?array
+    // porteur du jeton, ou null si le jeton est faux, expire ou d'un autre emetteur
+    public function lire(string $jeton): ?UtilisateurConnecte
     {
         try {
             $contenu = (array) JWT::decode($jeton, new Key($this->secret, self::ALGO));
@@ -61,6 +61,6 @@ final class JwtService implements JetonInterface
             return null;
         }
 
-        return ['id' => $id, 'role' => $role];
+        return new UtilisateurConnecte($id, $role->value);
     }
 }

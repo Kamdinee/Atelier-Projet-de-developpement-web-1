@@ -3,30 +3,46 @@
 declare(strict_types=1);
 
 use Nrv\Application\Port\In\AuthentifierUtilisateurInterface;
+use Nrv\Application\Port\In\ConsulterBilletInterface;
 use Nrv\Application\Port\In\ConsulterCompteInterface;
+use Nrv\Application\Port\In\ConsulterJaugesInterface;
+use Nrv\Application\Port\In\ConsulterMesAchatsInterface;
 use Nrv\Application\Port\In\ConsulterPassInterface;
 use Nrv\Application\Port\In\ConsulterSoireeInterface;
 use Nrv\Application\Port\In\ConsulterSpectacleInterface;
+use Nrv\Application\Port\In\GererProgrammeInterface;
 use Nrv\Application\Port\In\InscrireUtilisateurInterface;
 use Nrv\Application\Port\In\ListerFiltresProgrammeInterface;
 use Nrv\Application\Port\In\ListerSoireesInterface;
 use Nrv\Application\Port\In\ListerSpectaclesInterface;
+use Nrv\Application\Port\Out\BilletRepositoryInterface;
+use Nrv\Application\Port\Out\CommandeLectureRepositoryInterface;
 use Nrv\Application\Port\Out\HacheurMotDePasseInterface;
+use Nrv\Application\Port\Out\JaugeRepositoryInterface;
 use Nrv\Application\Port\Out\JetonInterface;
 use Nrv\Application\Port\Out\PassRepositoryInterface;
+use Nrv\Application\Port\Out\ProgrammeAdminRepositoryInterface;
 use Nrv\Application\Port\Out\SoireeRepositoryInterface;
 use Nrv\Application\Port\Out\SpectacleRepositoryInterface;
 use Nrv\Application\Port\Out\UtilisateurRepositoryInterface;
 use Nrv\Application\UseCase\AuthentifierUtilisateur;
+use Nrv\Application\UseCase\ConsulterBillet;
 use Nrv\Application\UseCase\ConsulterCompte;
+use Nrv\Application\UseCase\ConsulterJauges;
+use Nrv\Application\UseCase\ConsulterMesAchats;
 use Nrv\Application\UseCase\ConsulterPass;
 use Nrv\Application\UseCase\ConsulterSoiree;
 use Nrv\Application\UseCase\ConsulterSpectacle;
+use Nrv\Application\UseCase\GererProgramme;
 use Nrv\Application\UseCase\InscrireUtilisateur;
 use Nrv\Application\UseCase\ListerFiltresProgramme;
 use Nrv\Application\UseCase\ListerSoirees;
 use Nrv\Application\UseCase\ListerSpectacles;
+use Nrv\Infrastructure\Persistence\Pdo\PDOBilletRepository;
+use Nrv\Infrastructure\Persistence\Pdo\PDOCommandeLectureRepository;
+use Nrv\Infrastructure\Persistence\Pdo\PDOJaugeRepository;
 use Nrv\Infrastructure\Persistence\Pdo\PDOPassRepository;
+use Nrv\Infrastructure\Persistence\Pdo\PDOProgrammeAdminRepository;
 use Nrv\Infrastructure\Persistence\Pdo\PDOSoireeRepository;
 use Nrv\Infrastructure\Persistence\Pdo\PDOSpectacleRepository;
 use Nrv\Infrastructure\Persistence\Pdo\PDOUtilisateurRepository;
@@ -67,6 +83,10 @@ return [
     PassRepositoryInterface::class => autowire(PDOPassRepository::class),
     HacheurMotDePasseInterface::class => autowire(BcryptHacheur::class),
     JetonInterface::class => get(JwtService::class),
+    BilletRepositoryInterface::class => autowire(PDOBilletRepository::class),
+    CommandeLectureRepositoryInterface::class => autowire(PDOCommandeLectureRepository::class),
+    JaugeRepositoryInterface::class => autowire(PDOJaugeRepository::class),
+    ProgrammeAdminRepositoryInterface::class => autowire(PDOProgrammeAdminRepository::class),
 
     // ports d'entree -> cas d'usage
     ListerSpectaclesInterface::class => autowire(ListerSpectacles::class),
@@ -78,4 +98,8 @@ return [
     InscrireUtilisateurInterface::class => autowire(InscrireUtilisateur::class),
     AuthentifierUtilisateurInterface::class => autowire(AuthentifierUtilisateur::class),
     ConsulterCompteInterface::class => autowire(ConsulterCompte::class),
+    ConsulterBilletInterface::class => autowire(ConsulterBillet::class),
+    ConsulterMesAchatsInterface::class => autowire(ConsulterMesAchats::class),
+    ConsulterJaugesInterface::class => autowire(ConsulterJauges::class),
+    GererProgrammeInterface::class => autowire(GererProgramme::class),
 ];

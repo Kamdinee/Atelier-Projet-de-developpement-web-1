@@ -1,7 +1,7 @@
 // chargement et compilation des templates handlebars (public/templates/*.hbs)
 // Handlebars est charge en global par vendor/handlebars.min.js
 
-import { dateCourte, dateLongue, nombre, pluriel, prix } from './format.js';
+import { dateCourte, dateHeure, dateLongue, nombre, pluriel, pourcent, prix } from './format.js';
 
 const Handlebars = window.Handlebars;
 const cache = new Map();
@@ -16,6 +16,8 @@ Handlebars.registerHelper('pluriel', (n, mot, motPluriel) =>
 Handlebars.registerHelper('joindre', (liste, separateur) =>
     (Array.isArray(liste) ? liste : []).join(typeof separateur === 'string' ? separateur : ', '));
 Handlebars.registerHelper('eq', (a, b) => a === b);
+Handlebars.registerHelper('dateHeure', (iso) => dateHeure(iso));
+Handlebars.registerHelper('pourcent', (n) => pourcent(n));
 Handlebars.registerHelper('plusUn', (n) => Number(n) + 1);
 Handlebars.registerHelper('plusDeUn', (liste) => Array.isArray(liste) && liste.length > 1);
 // photo en deux tailles (front/tools/photos.py) : le navigateur choisit selon l'ecran

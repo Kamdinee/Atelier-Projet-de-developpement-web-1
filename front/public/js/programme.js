@@ -4,7 +4,6 @@
 import { api, idDepuisLien } from './api.js';
 import { dateCourte, nombre, pluriel } from './format.js';
 import { majBadge } from './panier.js';
-import { majNavigation } from './session.js';
 import { afficher, partials } from './templates.js';
 import { afficherErreur } from './ui.js';
 
@@ -224,7 +223,6 @@ window.addEventListener('popstate', () => {
 
 async function demarrer() {
     majBadge();
-    majNavigation();
     memoriserRetour();
     await partials('carte-spectacle');
     await afficher(grille, 'squelette', { cartes: Array.from({ length: 8 }) });

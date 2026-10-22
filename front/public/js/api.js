@@ -1,6 +1,8 @@
 // appels a l'api nrv.net avec fetch
 // les erreurs de l'api sont au format application/problem+json (rfc 7807)
 
+import * as session from './session.js';
+
 const API_URL = window.NRV_CONFIG.apiUrl;
 
 export class ErreurApi extends Error {
@@ -12,24 +14,27 @@ export class ErreurApi extends Error {
     }
 }
 
-// appel de l'api : accepte un chemin (/soirees/8) ou un lien hateoas complet
-// corps : objet envoye en json (POST) ; jeton : jwt de l'utilisateur connecte
-async function requete(chemin, { methode = 'GET', corps, jeton, signal } = {}) {
+// appel generique : GET par defaut, corps json pour POST, jeton de connexion si auth = true
+async function requete(chemin, { methode = 'GET', corps, auth = false, signal } = {}) {
     const url = chemin.startsWith('http') ? chemin : API_URL + chemin;
-    const headers = { Accept: 'application/json' };
+    const entetes = { Accept: 'application/json' };
     if (corps !== undefined) {
-        headers['Content-Type'] = 'application/json';
+        entetes['Content-Type'] = 'application/json';
     }
-    if (jeton) {
-        headers.Authorization = `Bearer ${jeton}`;
+    if (auth) {
+        const jeton = session.jeton();
+        if (!jeton) {
+            throw new ErreurApi(401, 'Connexion requise');
+        }
+        entetes.Authorization = `Bearer ${jeton}`;
     }
 
     let reponse;
     try {
         reponse = await fetch(url, {
             method: methode,
-            headers,
-            body: corps === undefined ? undefined : JSON.stringify(corps),
+            headers: entetes,
+            body: corps !== undefined ? JSON.stringify(corps) : undefined,
             signal,
         });
     } catch (e) {
@@ -43,6 +48,10 @@ async function requete(chemin, { methode = 'GET', corps, jeton, signal } = {}) {
     const data = await reponse.json().catch(() => null);
 
     if (!reponse.ok) {
+        // jeton refuse par l'api : la session locale n'est plus valable
+        if (reponse.status === 401 && auth) {
+            session.oublier();
+        }
         throw new ErreurApi(
             reponse.status,
             data?.title ?? `Erreur ${reponse.status}`,
@@ -88,5 +97,20 @@ export const api = {
     // comptes
     inscription: (donnees) => postJson('/auth/register', donnees),
     connexion: (donnees) => postJson('/auth/signin', donnees),
-    compte: (jeton) => getJson('/compte', { jeton }),
+    compte: (options) => getJson('/compte', { ...options, auth: true }),
+
+    // billets (le jeton du billet suffit, pas besoin d'etre connecte)
+    billet: (jeton, options) => getJson(`/billets/${encodeURIComponent(jeton)}`, options),
+
+    // espace client : connexion requise
+    commandes: (options) => getJson('/commandes', { ...options, auth: true }),
+    billetsCommande: (id, options) => getJson(`/commandes/${encodeURIComponent(id)}/billets`, { ...options, auth: true }),
+    mesBillets: (options) => getJson('/billets', { ...options, auth: true }),
+
+    // backoffice : connexion admin requise
+    jauges: (options) => getJson('/admin/jauges', { ...options, auth: true }),
+    referentiels: (options) => getJson('/admin/referentiels', { ...options, auth: true }),
+    ajouterSoiree: (soiree) => postJson('/admin/soirees', soiree, { auth: true }),
+    ajouterSpectacle: (soireeId, spectacle) =>
+        postJson(`/admin/soirees/${encodeURIComponent(soireeId)}/spectacles`, spectacle, { auth: true }),
 };

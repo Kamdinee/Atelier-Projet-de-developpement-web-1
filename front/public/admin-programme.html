@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Backoffice : programme - Nancy Rock Vibration 2027</title>
+    <meta name="description" content="Backoffice : ajout de soirées et de spectacles au programme">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/print.css" media="print">
+</head>
+<body>
+    <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste">
+                    <li><a class="nav__lien" href="index.html">Programme</a></li>
+                    <li><a class="nav__lien" id="lien-compte" href="connexion.html">Connexion</a></li>
+                </ul>
+            </nav>
+            <a class="badge-panier" href="panier.html">
+                Panier <span class="badge-panier__nombre" id="panier-nombre">0</span>
+            </a>
+        </div>
+    </header>
+
+    <main id="contenu" class="admin-programme">
+        <p><a class="soiree__retour" href="admin.html">‹ Retour au suivi des jauges</a></p>
+        <h1>Programme du festival</h1>
+        <p class="intro">Une soirée a toujours 2 ou 3 spectacles : créez-la avec ses spectacles, puis ajoutez un 3<sup>e</sup> spectacle plus tard si besoin.</p>
+
+        <div id="admin-etat" aria-live="polite"></div>
+
+        <!-- nouvelle soiree : POST /admin/soirees -->
+        <form class="formulaire admin-form" id="form-soiree" aria-labelledby="titre-soiree">
+            <h2 id="titre-soiree">Nouvelle soirée</h2>
+            <p class="admin-form__message" role="alert" hidden></p>
+            <div class="champ-groupe">
+                <div class="champ">
+                    <label for="soiree-nom">Nom de la soirée</label>
+                    <input id="soiree-nom" name="nom" maxlength="120" required>
+                </div>
+                <div class="champ">
+                    <label for="soiree-thematique">Thématique</label>
+                    <input id="soiree-thematique" name="thematique" maxlength="80" placeholder="Soirée métal" required>
+                </div>
+            </div>
+            <div class="champ-groupe">
+                <div class="champ">
+                    <label for="soiree-date">Date</label>
+                    <input id="soiree-date" name="date" type="date" required>
+                </div>
+                <div class="champ champ--court">
+                    <label for="soiree-heure">Ouverture</label>
+                    <input id="soiree-heure" name="heure_debut" type="time" required>
+                </div>
+                <div class="champ">
+                    <label for="soiree-lieu">Lieu</label>
+                    <select id="soiree-lieu" name="lieu_id" required>
+                        <option value="">Chargement…</option>
+                    </select>
+                </div>
+                <div class="champ champ--court">
+                    <label for="soiree-jauge">Jauge <small>(facultatif)</small></label>
+                    <input id="soiree-jauge" name="jauge" type="number" min="1" inputmode="numeric" placeholder="capacité">
+                </div>
+            </div>
+            <div class="champ-groupe">
+                <div class="champ champ--court">
+                    <label for="soiree-normal">Tarif normal (€)</label>
+                    <input id="soiree-normal" name="tarif_normal" type="number" min="0" max="1000" step="0.01" value="30.00" required>
+                </div>
+                <div class="champ champ--court">
+                    <label for="soiree-reduit">Tarif réduit (€)</label>
+                    <input id="soiree-reduit" name="tarif_reduit" type="number" min="0" max="1000" step="0.01" value="20.00" required>
+                </div>
+            </div>
+            <div id="soiree-spectacles"></div>
+            <p class="admin-form__actions">
+                <button class="btn btn--secondaire" type="button" data-action="ajouter-spectacle">Ajouter un troisième spectacle</button>
+                <button class="btn" type="submit">Créer la soirée</button>
+            </p>
+        </form>
+
+        <!-- spectacle dans une soiree existante : POST /admin/soirees/{id}/spectacles -->
+        <form class="formulaire admin-form" id="form-spectacle" aria-labelledby="titre-spectacle">
+            <h2 id="titre-spectacle">Ajouter un spectacle à une soirée</h2>
+            <p class="admin-form__message" role="alert" hidden></p>
+            <div class="champ">
+                <label for="spectacle-soiree">Soirée</label>
+                <select id="spectacle-soiree" name="soiree" required>
+                    <option value="">Chargement…</option>
+                </select>
+                <p class="formulaire__note" id="spectacle-soiree-info" aria-live="polite"></p>
+            </div>
+            <div id="spectacle-champs"></div>
+            <p class="admin-form__actions">
+                <button class="btn" type="submit">Ajouter le spectacle</button>
+            </p>
+        </form>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+
+    <div class="toast" role="status" aria-live="polite" hidden></div>
+
+    <script src="vendor/handlebars.min.js"></script>
+    <script src="js/config.js"></script>
+    <script type="module" src="js/admin-programme.js"></script>
+    <script type="module" src="js/entete.js"></script>
+</body>
+</html>

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Nrv\Infrastructure\Http\Error;
 
+use Nrv\Domain\Exception\BilletIntrouvableException;
+use Nrv\Domain\Exception\CommandeIntrouvableException;
 use Nrv\Domain\Exception\DonneeInvalideException;
 use Nrv\Domain\Exception\EmailDejaUtiliseException;
 use Nrv\Domain\Exception\IdentifiantsInvalidesException;
@@ -12,6 +14,8 @@ use Nrv\Domain\Exception\PlacesInsuffisantesException;
 use Nrv\Domain\Exception\SoireeIntrouvableException;
 use Nrv\Domain\Exception\SpectacleIntrouvableException;
 use Nrv\Domain\Exception\UtilisateurIntrouvableException;
+use Nrv\Infrastructure\Http\Exception\AccesInterditException;
+use Nrv\Infrastructure\Http\Exception\NonAuthentifieException;
 use Nrv\Infrastructure\Http\Exception\RequeteInvalideException;
 use Nrv\Infrastructure\Http\Json;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -88,10 +92,14 @@ final class ProblemJsonErrorHandler implements ErrorHandlerInterface
         return match (true) {
             $e instanceof RequeteInvalideException => [400, 'requete-invalide', 'Requête invalide'],
             $e instanceof IdentifiantsInvalidesException => [401, 'identifiants-invalides', 'Identifiants invalides'],
+            $e instanceof NonAuthentifieException => [401, 'non-authentifie', 'Connexion requise'],
+            $e instanceof AccesInterditException => [403, 'acces-interdit', 'Accès interdit'],
             $e instanceof EmailDejaUtiliseException => [409, 'email-deja-utilise', 'Adresse email déjà utilisée'],
             $e instanceof SoireeIntrouvableException,
             $e instanceof SpectacleIntrouvableException,
-            $e instanceof UtilisateurIntrouvableException => [404, 'introuvable', 'Ressource introuvable'],
+            $e instanceof UtilisateurIntrouvableException,
+            $e instanceof BilletIntrouvableException,
+            $e instanceof CommandeIntrouvableException => [404, 'introuvable', 'Ressource introuvable'],
             $e instanceof PlacesInsuffisantesException => [409, 'places-insuffisantes', 'Places insuffisantes'],
             $e instanceof DonneeInvalideException => [422, 'validation', 'Données invalides'],
             $e instanceof NrvException => [409, 'conflit', 'Conflit'],

@@ -4,7 +4,6 @@
 import { api } from './api.js';
 import { nombre, pluriel, prix } from './format.js';
 import * as panier from './panier.js';
-import { majNavigation } from './session.js';
 import { afficher } from './templates.js';
 import { toast } from './ui.js';
 
@@ -182,7 +181,6 @@ window.addEventListener('storage', (e) => {
 
 async function demarrer() {
     panier.majBadge();
-    majNavigation();
     await chargerDonnees();
     await rafraichir();
     contenu.setAttribute('aria-busy', 'false');
