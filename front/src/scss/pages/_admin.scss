@@ -139,3 +139,70 @@
         vertical-align: middle;
     }
 }
+
+// formulaires d'ajout au programme
+.admin-programme {
+    max-width: 56rem;
+
+    .intro {
+        color: $couleur-texte-doux;
+    }
+}
+
+.admin-form {
+    margin-top: $espace-l;
+
+    // ce formulaire porte deja .btn en bas : on garde les boutons sur une ligne
+    .btn {
+        align-self: auto;
+    }
+
+    &__message {
+        padding: $espace-s $espace-m;
+        border-left: 4px solid $couleur-accent;
+        border-radius: $rayon;
+        background: rgba($couleur-accent, 0.1);
+        color: $blanc;
+    }
+
+    // flex : ajouter un 3e spectacle | valider
+    &__actions {
+        @include flex(flex-end, center, $espace-s $espace-m, wrap);
+    }
+}
+
+// un bloc de champs par spectacle
+.admin-spectacle {
+    display: flex;
+    flex-direction: column;
+    gap: $espace-m;
+    margin: 0 0 $espace-m;
+    padding: $espace-m;
+    border: 1px solid rgba($blanc, 0.12);
+    border-radius: $rayon;
+
+    legend {
+        padding-inline: $espace-xs;
+        color: $blanc;
+        font-weight: 700;
+    }
+
+    small {
+        color: $couleur-texte-doux;
+        font-weight: 400;
+    }
+}
+
+// champs etroits (heure, jauge, tarifs) dans une ligne
+.champ-groupe .champ--court {
+    flex: 0 1 9rem;
+}
+
+.admin-succes {
+    margin-top: $espace-l;
+    padding: $espace-m;
+    border-left: 4px solid $couleur-succes;
+    border-radius: $rayon;
+    background: rgba($couleur-succes, 0.12);
+    color: $blanc;
+}
