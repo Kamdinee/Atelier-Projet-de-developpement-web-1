@@ -14,6 +14,7 @@ use Nrv\Application\UseCase\ListerFiltresProgramme;
 use Nrv\Application\UseCase\ListerSpectacles;
 use Nrv\Infrastructure\Persistence\Pdo\PDOSoireeRepository;
 use Nrv\Infrastructure\Persistence\Pdo\PDOSpectacleRepository;
+use Nrv\Infrastructure\Security\JwtDecodeur;
 use Psr\Container\ContainerInterface;
 
 use function DI\autowire;
@@ -43,4 +44,7 @@ return [
     ConsulterSpectacleInterface::class => autowire(ConsulterSpectacle::class),
     ConsulterSoireeInterface::class => autowire(ConsulterSoiree::class),
     ListerFiltresProgrammeInterface::class => autowire(ListerFiltresProgramme::class),
+
+    // verification des jetons jwt (secret JWT_SECRET du .env)
+    JwtDecodeur::class => static fn (ContainerInterface $c): JwtDecodeur => new JwtDecodeur($c->get('settings')['jwt']['secret']),
 ];

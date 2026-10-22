@@ -22,4 +22,10 @@ return static function (App $app): void {
     // listes des filtres
     $app->get('/styles', GetStylesAction::class);
     $app->get('/dates', GetDatesAction::class);
+
+    // un billet par son jeton : public, le jeton aleatoire sert de cle (F10)
+
+    // espace client : utilisateur connecte (jeton jwt)
+
+    // backoffice : connecte + role ADMIN (le dernier middleware ajoute s'execute en premier)
 };

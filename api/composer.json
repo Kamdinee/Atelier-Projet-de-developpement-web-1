@@ -27,7 +27,8 @@
     },
     "scripts": {
         "seed": "php bin/seed.php",
-        "test": "phpunit"
+        "test": "phpunit",
+        "jeton": "php bin/jeton.php"
     },
     "config": {
         "sort-packages": true
