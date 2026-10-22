@@ -250,8 +250,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             pied.append(acheteur, prixBillet);
 
             corps.append(titre, infos, pied);
+
+            if (billet.token) {
+                const lienBillet = document.createElement('a');
+                lienBillet.className = 'btn btn--secondaire';
+                lienBillet.style.marginTop = '0.75rem';
+                lienBillet.style.fontSize = '0.9rem';
+                lienBillet.href = `billet.html?token=${encodeURIComponent(billet.token)}`;
+                lienBillet.textContent = 'Voir le billet & QR Code';
+                corps.append(lienBillet);
+            }
+
             carte.append(header, corps);
             grilleBillets.append(carte);
+        }
+
+        const btnImprimer = document.getElementById('btn-imprimer-billets-officiels');
+        if (btnImprimer) {
+            btnImprimer.href = `billet.html?commande=${encodeURIComponent(commande.id)}`;
         }
     }
 });
