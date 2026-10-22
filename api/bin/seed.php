@@ -332,6 +332,31 @@ foreach (array_keys($soirees) as $i) {
     }
 }
 
+// une commande connue pour le compte client@nrv.net (espace client, billets imprimables)
+// 2 billets normaux pour Nuit metal + 1 pass reduit (Nuit metal, Rock en Lorraine, Hommage aux legendes)
+$marcId = (int) $pdo->query("SELECT id FROM utilisateurs WHERE email = 'client@nrv.net'")->fetchColumn();
+$commandeMarc = uuid4();
+$dateMarc = '2026-10-15 18:42:00';
+$insCommande->execute([$commandeMarc, $marcId, 2 * TARIF_NORMAL + PASS_REDUIT, '4242', $dateMarc, $dateMarc]);
+$insLigne->execute([$commandeMarc, 'SOIREE', $soirees[7]['id'], null, 'NORMAL', 2, TARIF_NORMAL]);
+$insLigne->execute([$commandeMarc, 'PASS', null, $passId, 'REDUIT', 1, PASS_REDUIT]);
+$lignePassMarc = (int) $pdo->lastInsertId();
+$passMarc = [7, 8, 11];
+foreach ($passMarc as $i) {
+    $insLignePass->execute([$lignePassMarc, $soirees[$i]['id']]);
+}
+$referenceMarc = strtoupper(substr($commandeMarc, 0, 8));
+for ($n = 1; $n <= 2; $n++) {
+    $insBillet->execute([uuid4(), "NRV-{$referenceMarc}-0{$n}", $commandeMarc, 'SOIREE', $soirees[7]['id'], null, 'NORMAL', TARIF_NORMAL, 'Marc Durand', $dateMarc]);
+}
+$insBillet->execute([uuid4(), "NRV-{$referenceMarc}-03", $commandeMarc, 'PASS', null, $passId, 'REDUIT', PASS_REDUIT, 'Marc Durand', $dateMarc]);
+$billetPassMarc = (int) $pdo->lastInsertId();
+foreach ($passMarc as $i) {
+    $insBilletPass->execute([$billetPassMarc, $soirees[$i]['id']]);
+    $soirees[$i]['vendues'] += 1;
+}
+$soirees[7]['vendues'] += 2;
+
 foreach ($soirees as $s) {
     $majVendues->execute([$s['vendues'], $s['id']]);
 }

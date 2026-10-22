@@ -16,6 +16,7 @@
                     <li><a class="nav__lien" href="index.html">Programme</a></li>
                     <li data-auth="anonyme"><a class="nav__lien" href="connexion.html" aria-current="page">Connexion</a></li>
                     <li data-auth="anonyme"><a class="nav__lien" href="inscription.html">Inscription</a></li>
+                    <li data-auth="connecte" hidden><a class="nav__lien" href="mes-billets.html">Mes billets</a></li>
                     <li data-auth="connecte" hidden><a class="nav__lien" href="compte.html">Mon compte</a></li>
                     <li data-auth="connecte" hidden><button type="button" class="nav__lien nav__lien--deconnexion" id="nav-deconnexion">Déconnexion</button></li>
                 </ul>
@@ -83,5 +84,6 @@
         import { majBadge } from './js/panier.js';
         majBadge();
     </script>
+    <script type="module" src="js/entete.js"></script>
 </body>
 </html>

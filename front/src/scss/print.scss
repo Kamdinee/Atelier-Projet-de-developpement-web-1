@@ -25,13 +25,16 @@
 
     main {
         max-width: none;
-        padding: 0;
+        // 1pt pour que la bordure droite du billet ne soit pas rognee
+        padding: 0 1pt;
     }
 
     .billet {
         display: grid;
         grid-template-columns: 1fr 55mm;
+        width: 100%;
         max-width: none;
+        margin: 0;
         border: 1pt solid #000;
         border-radius: 0;
         background: #fff;
@@ -52,6 +55,22 @@
         &__talon {
             border-top: 0;
             border-left: 1pt dashed #000;
+        }
+
+        // le billet imprime est en noir et blanc
+        .billet__festival,
+        .etiquette {
+            color: #000;
+        }
+
+        .etiquette {
+            border: 1pt solid #000;
+            background: none;
+        }
+
+        .qr {
+            width: 35mm;
+            height: 35mm;
         }
     }
 

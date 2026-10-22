@@ -1,0 +1,15 @@
+{{!-- billets d'une commande payee : un lien par billet (non nominatif, partageable) --}}
+<ul class="commande__billets">
+    {{#each billets}}
+    <li class="commande__billet">
+        <span>
+            <strong>{{titre}} · {{categorie}}</strong>
+            <small>{{reference}} · {{dates}}</small>
+        </span>
+        <a class="btn btn--secondaire" href="billet.html?token={{token}}">Voir / imprimer<span class="sr-only"> le billet {{reference}}</span></a>
+    </li>
+    {{/each}}
+</ul>
+<p class="commande__actions">
+    <a class="btn" href="billet.html?commande={{commande}}">Imprimer les {{billets.length}} billets</a>
+</p>

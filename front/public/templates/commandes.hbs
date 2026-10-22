@@ -1,0 +1,38 @@
+{{!-- espace client : mes commandes, depliables pour voir leurs billets --}}
+{{#if commandes.length}}
+<p>{{commandes.length}} {{pluriel commandes.length "commande"}} · {{nombreBillets}} {{pluriel nombreBillets "billet"}}</p>
+<ul class="commandes">
+    {{#each commandes}}
+    <li>
+        <details class="commande" data-commande="{{id}}" {{#if @first}}open{{/if}}>
+            <summary class="commande__resume">
+                <span class="commande__titre">
+                    <strong>Commande du {{dateHeure cree_le}}</strong>
+                    <small>{{reference}}</small>
+                </span>
+                {{#if payee}}
+                <span class="etiquette etiquette--succes">Payée</span>
+                {{else if annulee}}
+                <span class="etiquette">Annulée</span>
+                {{else}}
+                <span class="etiquette etiquette--alerte">En attente de paiement</span>
+                {{/if}}
+                <span class="commande__total">{{prix total}}</span>
+            </summary>
+            <div class="commande__corps" aria-live="polite">
+                {{#if payee}}
+                <p class="message-vide">Chargement des billets…</p>
+                {{else}}
+                <p>Aucun billet : les billets sont créés au paiement de la commande.</p>
+                {{/if}}
+            </div>
+        </details>
+    </li>
+    {{/each}}
+</ul>
+{{else}}
+<div class="message-vide">
+    <p>Vous n'avez pas encore de billet.</p>
+    <p><a class="btn" href="index.html">Voir le programme</a></p>
+</div>
+{{/if}}

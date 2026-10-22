@@ -1,0 +1,40 @@
+{{!-- champs d'un spectacle dans les formulaires du backoffice ; prefixe = nom des champs (spectacles.0.) --}}
+<fieldset class="admin-spectacle" data-prefixe="{{prefixe}}">
+    <legend>{{legende}}</legend>
+    <div class="champ-groupe">
+        <div class="champ">
+            <label for="{{id}}-titre">Titre</label>
+            <input id="{{id}}-titre" name="{{prefixe}}titre" maxlength="150" required>
+        </div>
+        <div class="champ">
+            <label for="{{id}}-style">Style de musique</label>
+            <select id="{{id}}-style" name="{{prefixe}}style" required>
+                <option value="">Choisir…</option>
+                {{#each styles}}<option value="{{slug}}">{{libelle}}</option>{{/each}}
+            </select>
+        </div>
+        <div class="champ champ--court">
+            <label for="{{id}}-horaire">Horaire</label>
+            <input id="{{id}}-horaire" name="{{prefixe}}horaire" type="time" required>
+        </div>
+    </div>
+    <div class="champ">
+        <label for="{{id}}-artistes">Artistes <small>(séparés par des virgules, 5 au plus)</small></label>
+        <input id="{{id}}-artistes" name="{{prefixe}}artistes" maxlength="600" required>
+    </div>
+    <div class="champ">
+        <label for="{{id}}-description">Description</label>
+        <textarea id="{{id}}-description" name="{{prefixe}}description" rows="3" maxlength="2000" required></textarea>
+    </div>
+    <div class="champ-groupe">
+        <div class="champ">
+            <label for="{{id}}-video">Vidéo <small>(facultatif, lien YouTube « embed »)</small></label>
+            <input id="{{id}}-video" name="{{prefixe}}video" type="url" placeholder="https://www.youtube.com/embed/…" maxlength="255">
+        </div>
+        <div class="champ">
+            <label for="{{id}}-image">Image <small>(facultatif, https://… ou img/…)</small></label>
+            <input id="{{id}}-image" name="{{prefixe}}image" placeholder="img/spectacles/metal-1.webp" maxlength="255">
+        </div>
+    </div>
+    {{#if supprimable}}<p><button class="btn btn--secondaire" type="button" data-action="retirer-spectacle">Retirer ce spectacle</button></p>{{/if}}
+</fieldset>

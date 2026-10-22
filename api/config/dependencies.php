@@ -22,6 +22,23 @@ use Nrv\Infrastructure\Persistence\Pdo\PDOSpectacleRepository;
 use Nrv\Infrastructure\Persistence\Pdo\PDOUtilisateurRepository;
 use Nrv\Infrastructure\Security\PasswordHasher;
 use Nrv\Infrastructure\Token\JwtTokenService;
+use Nrv\Application\Port\In\ConsulterBilletInterface;
+use Nrv\Application\Port\In\ConsulterJaugesInterface;
+use Nrv\Application\Port\In\ConsulterMesAchatsInterface;
+use Nrv\Application\Port\In\GererProgrammeInterface;
+use Nrv\Application\Port\Out\BilletRepositoryInterface;
+use Nrv\Application\Port\Out\CommandeLectureRepositoryInterface;
+use Nrv\Application\Port\Out\JaugeRepositoryInterface;
+use Nrv\Application\Port\Out\ProgrammeAdminRepositoryInterface;
+use Nrv\Application\UseCase\ConsulterBillet;
+use Nrv\Application\UseCase\ConsulterJauges;
+use Nrv\Application\UseCase\ConsulterMesAchats;
+use Nrv\Application\UseCase\GererProgramme;
+use Nrv\Infrastructure\Persistence\Pdo\PDOBilletRepository;
+use Nrv\Infrastructure\Persistence\Pdo\PDOCommandeLectureRepository;
+use Nrv\Infrastructure\Persistence\Pdo\PDOJaugeRepository;
+use Nrv\Infrastructure\Persistence\Pdo\PDOProgrammeAdminRepository;
+use Nrv\Infrastructure\Security\JwtDecodeur;
 use Psr\Container\ContainerInterface;
 use Nrv\Infrastructure\Http\Middleware\AdminMiddleware;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -81,5 +98,18 @@ AdminMiddleware::class => autowire(AdminMiddleware::class),
     AuthentifierUtilisateur::class => autowire(AuthentifierUtilisateur::class),
     InscrireUtilisateur::class => autowire(InscrireUtilisateur::class),
     PassRepositoryInterface::class => autowire(PDOPassRepository::class),
+
+    // etape 7 : billets, espace client, backoffice
+    BilletRepositoryInterface::class => autowire(PDOBilletRepository::class),
+    CommandeLectureRepositoryInterface::class => autowire(PDOCommandeLectureRepository::class),
+    JaugeRepositoryInterface::class => autowire(PDOJaugeRepository::class),
+    ProgrammeAdminRepositoryInterface::class => autowire(PDOProgrammeAdminRepository::class),
+    ConsulterBilletInterface::class => autowire(ConsulterBillet::class),
+    ConsulterMesAchatsInterface::class => autowire(ConsulterMesAchats::class),
+    ConsulterJaugesInterface::class => autowire(ConsulterJauges::class),
+    GererProgrammeInterface::class => autowire(GererProgramme::class),
+
+    // lit l'utilisateur du jeton emis par /auth (JwtTokenService)
+    JwtDecodeur::class => autowire(JwtDecodeur::class),
 
 ];

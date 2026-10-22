@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Nrv\Infrastructure\Http\Error;
 
+use Nrv\Domain\Exception\BilletIntrouvableException;
+use Nrv\Domain\Exception\CommandeIntrouvableException;
 use Nrv\Domain\Exception\DonneeInvalideException;
 use Nrv\Domain\Exception\NrvException;
 use Nrv\Domain\Exception\PlacesInsuffisantesException;
 use Nrv\Domain\Exception\SoireeIntrouvableException;
 use Nrv\Domain\Exception\SpectacleIntrouvableException;
+use Nrv\Infrastructure\Http\Exception\AccesInterditException;
+use Nrv\Infrastructure\Http\Exception\NonAuthentifieException;
 use Nrv\Infrastructure\Http\Exception\RequeteInvalideException;
 use Nrv\Infrastructure\Http\Json;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -64,6 +68,11 @@ final class ProblemJsonErrorHandler implements ErrorHandlerInterface
 
         $response = Json::reponse($this->responseFactory->createResponse(), $probleme, $statut, 'application/problem+json');
 
+        // le client doit envoyer un jeton bearer
+        if ($statut === 401) {
+            $response = $response->withHeader('WWW-Authenticate', 'Bearer');
+        }
+
         // slim indique les methodes autorisees pour un 405
         if ($exception instanceof HttpException && $statut === 405 && method_exists($exception, 'getAllowedMethods')) {
             $response = $response->withHeader('Allow', implode(', ', $exception->getAllowedMethods()));
@@ -79,8 +88,12 @@ final class ProblemJsonErrorHandler implements ErrorHandlerInterface
     {
         return match (true) {
             $e instanceof RequeteInvalideException => [400, 'requete-invalide', 'Requête invalide'],
+            $e instanceof NonAuthentifieException => [401, 'non-authentifie', 'Connexion requise'],
+            $e instanceof AccesInterditException => [403, 'acces-interdit', 'Accès interdit'],
             $e instanceof SoireeIntrouvableException,
-            $e instanceof SpectacleIntrouvableException => [404, 'introuvable', 'Ressource introuvable'],
+            $e instanceof SpectacleIntrouvableException,
+            $e instanceof BilletIntrouvableException,
+            $e instanceof CommandeIntrouvableException => [404, 'introuvable', 'Ressource introuvable'],
             $e instanceof PlacesInsuffisantesException => [409, 'places-insuffisantes', 'Places insuffisantes'],
             $e instanceof DonneeInvalideException => [422, 'validation', 'Données invalides'],
             $e instanceof NrvException => [409, 'conflit', 'Conflit'],

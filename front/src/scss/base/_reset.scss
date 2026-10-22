@@ -34,6 +34,7 @@ ol[class] {
     list-style: none;
 }
 
+// l'attribut hidden gagne sur les display des composants (.btn, .formulaire...)
 [hidden] {
     display: none !important;
 }

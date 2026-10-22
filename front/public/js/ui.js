@@ -26,7 +26,8 @@ export async function afficherErreur(element, erreur, reessayer, libelle = 'Rée
         : erreur.details;
 
     await afficher(element, 'erreur', {
-        titre: erreur.statut === 404 ? 'Introuvable' : 'Impossible de charger les données',
+        titre: { 401: 'Connexion requise', 403: 'Accès réservé', 404: 'Introuvable' }[erreur.statut]
+            ?? 'Impossible de charger les données',
         message: erreur.message,
         details,
         reessayer: Boolean(reessayer),

@@ -1,0 +1,53 @@
+{{!-- tableau de bord du backoffice (F11) : synthese puis une ligne par soiree --}}
+<section class="kpi" aria-label="Synthèse du festival">
+    <div class="kpi__carte">
+        <p>Places vendues</p>
+        <p class="kpi__valeur">{{nombre synthese.places_vendues}}</p>
+        <p><small>sur {{nombre synthese.jauge}} places</small></p>
+    </div>
+    <div class="kpi__carte">
+        <p>Taux de remplissage</p>
+        <p class="kpi__valeur">{{pourcent synthese.taux_remplissage}}</p>
+        <p><small>{{synthese.soirees_completes}} {{pluriel synthese.soirees_completes "soirée complète" "soirées complètes"}} · {{synthese.soirees_presque_completes}} presque</small></p>
+    </div>
+    <div class="kpi__carte">
+        <p>Recette</p>
+        <p class="kpi__valeur">{{prix synthese.recette}}</p>
+        <p><small>billets et pass</small></p>
+    </div>
+</section>
+
+<div class="tableau-conteneur" tabindex="0" role="region" aria-labelledby="legende-jauges">
+    <table class="tableau-jauges">
+        <caption id="legende-jauges">Jauge et recette par soirée, triées par {{triLibelle}}</caption>
+        <thead>
+            <tr>
+                <th scope="col" aria-sort="{{tri.date}}"><button type="button" data-tri="date">Date</button></th>
+                <th scope="col">Soirée</th>
+                <th scope="col" class="col-secondaire">Lieu</th>
+                <th scope="col" class="col-secondaire nombre">Jauge</th>
+                <th scope="col" class="nombre" aria-sort="{{tri.places_vendues}}"><button type="button" data-tri="places_vendues">Vendues</button></th>
+                <th scope="col" class="nombre">Restantes</th>
+                <th scope="col" aria-sort="{{tri.taux_remplissage}}"><button type="button" data-tri="taux_remplissage">Remplissage</button></th>
+                <th scope="col" class="nombre" aria-sort="{{tri.recette}}"><button type="button" data-tri="recette">Recette</button></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each soirees}}
+            <tr{{#if complete}} class="complet"{{else if presque_complete}} class="presque"{{/if}}>
+                <td><time datetime="{{date}}">{{dateCourte date}}</time></td>
+                <th scope="row">
+                    <a href="soiree.html?id={{id}}">{{nom}}</a>
+                    {{#if complete}}<span class="etiquette etiquette--complet">Complet</span>{{else if presque_complete}}<span class="etiquette etiquette--alerte">Presque complet</span>{{/if}}
+                </th>
+                <td class="col-secondaire col-lieu">{{lieu}}</td>
+                <td class="col-secondaire nombre">{{nombre jauge}}</td>
+                <td class="nombre">{{nombre places_vendues}}<br><small>{{nombre billets_soiree}} billets + {{nombre billets_pass}} pass</small></td>
+                <td class="nombre">{{nombre places_restantes}}</td>
+                <td><meter min="0" max="100" low="60" high="90" optimum="50" value="{{taux_remplissage}}">{{pourcent taux_remplissage}}</meter> {{pourcent taux_remplissage}}</td>
+                <td class="nombre">{{prix recette}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
