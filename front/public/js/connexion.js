@@ -44,18 +44,12 @@ formulaire.addEventListener('submit', async (event) => {
         if (resultat.token || resultat.utilisateur) {
             enregistrerSession(resultat.token, resultat.utilisateur);
         }
-
-        message.textContent = 'Connexion réussie ! Redirection...';
-        message.className = 'auth-message auth-message--succes';
-
         const redirection = new URLSearchParams(window.location.search).get('redirect')
             || sessionStorage.getItem('nrv_redirect')
             || 'compte.html';
         sessionStorage.removeItem('nrv_redirect');
 
-        window.setTimeout(() => {
-            window.location.href = redirection;
-        }, 500);
+        window.location.href = redirection;
     } catch (erreur) {
         message.textContent = erreur.message || 'Connexion impossible.';
         message.className = 'auth-message auth-message--erreur';

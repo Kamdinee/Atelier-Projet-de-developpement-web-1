@@ -60,9 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Infos
         document.getElementById('compte-prenom').textContent = prenom || '—';
         document.getElementById('compte-nom').textContent    = nom    || '—';
-        document.getElementById('compte-email').textContent  = email  || '—';
-
-        afficherMessage('Vous êtes connecté à votre compte.', 'succes');
+        // Message silencieux ou masqué si connecté avec succès
+        afficherMessage('');
     }
 
     btnDeconnexion?.addEventListener('click', () => {
