@@ -18,6 +18,11 @@ final class AccueilAction
                 'spectacles' => ['href' => '/spectacles'],
                 'styles' => ['href' => '/styles'],
                 'dates' => ['href' => '/dates'],
+                'soirees' => ['href' => '/soirees'],
+                'pass' => ['href' => '/pass'],
+                'inscription' => ['href' => '/auth/register', 'method' => 'POST'],
+                'connexion' => ['href' => '/auth/signin', 'method' => 'POST'],
+                'compte' => ['href' => '/compte'],
             ],
         ];
 

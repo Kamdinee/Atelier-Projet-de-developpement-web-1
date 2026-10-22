@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Nrv\Application\Port\Out;
 
+use Nrv\Domain\Entity\Utilisateur;
+use Nrv\Domain\Exception\EmailDejaUtiliseException;
+
+// port de sortie : acces aux comptes, implemente par un adaptateur de persistance
 interface UtilisateurRepositoryInterface
 {
-    public function trouverParEmail(string $email): ?array;
+    public function trouverParEmail(string $email): ?Utilisateur;
 
-    public function creer(
-        string $email,
-        string $nom,
-        string $prenom,
-        string $motDePasseHache,
-    ): int;
+    public function trouverParId(int $id): ?Utilisateur;
+
+    // enregistre un nouveau compte et le renvoie avec son id
+    /** @throws EmailDejaUtiliseException */
+    public function ajouter(Utilisateur $utilisateur): Utilisateur;
 }

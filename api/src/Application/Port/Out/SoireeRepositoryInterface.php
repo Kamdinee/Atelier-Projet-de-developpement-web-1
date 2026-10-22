@@ -11,4 +11,8 @@ interface SoireeRepositoryInterface
 {
     // soiree complete avec son lieu et ses 2 a 3 spectacles, null si inconnue
     public function trouverParId(int $id): ?Soiree;
+
+    // toutes les soirees, dans l'ordre des dates
+    /** @return list<Soiree> */
+    public function lister(): array;
 }

@@ -20,17 +20,16 @@ final class PDOSoireeRepository implements SoireeRepositoryInterface
     ) {
     }
 
+    private const SELECT = 'SELECT s.id, s.nom, s.thematique, s.date_soiree, s.heure_debut, s.jauge, s.places_vendues,
+            s.tarif_normal, s.tarif_reduit, l.id AS lieu_id, l.nom AS lieu_nom, l.adresse AS lieu_adresse,
+            l.capacite AS lieu_capacite
+        FROM soirees s
+        JOIN lieux l ON l.id = s.lieu_id';
+
     public function trouverParId(int $id): ?Soiree
     {
         // la soiree et son lieu
-        $requete = $this->pdo->prepare(
-            'SELECT s.id, s.nom, s.thematique, s.date_soiree, s.heure_debut, s.jauge, s.places_vendues,
-                s.tarif_normal, s.tarif_reduit, l.id AS lieu_id, l.nom AS lieu_nom, l.adresse AS lieu_adresse,
-                l.capacite AS lieu_capacite
-            FROM soirees s
-            JOIN lieux l ON l.id = s.lieu_id
-            WHERE s.id = :id'
-        );
+        $requete = $this->pdo->prepare(self::SELECT . ' WHERE s.id = :id');
         $requete->bindValue('id', $id, PDO::PARAM_INT);
         $requete->execute();
 
@@ -46,6 +45,28 @@ final class PDOSoireeRepository implements SoireeRepositoryInterface
         $spectacles->bindValue('id', $id, PDO::PARAM_INT);
         $spectacles->execute();
 
+        return $this->construire($l, $this->hydrator->hydrater($spectacles->fetchAll(PDO::FETCH_ASSOC)));
+    }
+
+    public function lister(): array
+    {
+        // deux requetes en tout : les soirees, puis tous les spectacles regroupes par soiree
+        $requete = $this->pdo->prepare(self::SELECT . ' ORDER BY s.date_soiree');
+        $requete->execute();
+        $lignes = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+        $spectacles = $this->pdo->prepare(SpectacleHydrator::SELECT . ' ORDER BY sp.horaire_previsionnel');
+        $spectacles->execute();
+        $parSoiree = [];
+        foreach ($this->hydrator->hydrater($spectacles->fetchAll(PDO::FETCH_ASSOC)) as $spectacle) {
+            $parSoiree[$spectacle->soireeId()][] = $spectacle;
+        }
+
+        return array_map(fn (array $l): Soiree => $this->construire($l, $parSoiree[(int) $l['id']] ?? []), $lignes);
+    }
+
+    private function construire(array $l, array $spectacles): Soiree
+    {
         return new Soiree(
             (int) $l['id'],
             (string) $l['nom'],
@@ -55,7 +76,7 @@ final class PDOSoireeRepository implements SoireeRepositoryInterface
             new Tarifs((int) $l['tarif_normal'], (int) $l['tarif_reduit']),
             (int) $l['jauge'],
             (int) $l['places_vendues'],
-            $this->hydrator->hydrater($spectacles->fetchAll(PDO::FETCH_ASSOC)),
+            $spectacles,
         );
     }
 }

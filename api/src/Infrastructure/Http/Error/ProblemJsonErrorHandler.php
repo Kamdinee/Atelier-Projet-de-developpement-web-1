@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Nrv\Infrastructure\Http\Error;
 
 use Nrv\Domain\Exception\DonneeInvalideException;
+use Nrv\Domain\Exception\EmailDejaUtiliseException;
+use Nrv\Domain\Exception\IdentifiantsInvalidesException;
 use Nrv\Domain\Exception\NrvException;
 use Nrv\Domain\Exception\PlacesInsuffisantesException;
 use Nrv\Domain\Exception\SoireeIntrouvableException;
 use Nrv\Domain\Exception\SpectacleIntrouvableException;
+use Nrv\Domain\Exception\UtilisateurIntrouvableException;
 use Nrv\Infrastructure\Http\Exception\RequeteInvalideException;
 use Nrv\Infrastructure\Http\Json;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -64,6 +67,11 @@ final class ProblemJsonErrorHandler implements ErrorHandlerInterface
 
         $response = Json::reponse($this->responseFactory->createResponse(), $probleme, $statut, 'application/problem+json');
 
+        // un 401 indique le schema d'authentification attendu
+        if ($statut === 401) {
+            $response = $response->withHeader('WWW-Authenticate', 'Bearer');
+        }
+
         // slim indique les methodes autorisees pour un 405
         if ($exception instanceof HttpException && $statut === 405 && method_exists($exception, 'getAllowedMethods')) {
             $response = $response->withHeader('Allow', implode(', ', $exception->getAllowedMethods()));
@@ -79,13 +87,18 @@ final class ProblemJsonErrorHandler implements ErrorHandlerInterface
     {
         return match (true) {
             $e instanceof RequeteInvalideException => [400, 'requete-invalide', 'Requête invalide'],
+            $e instanceof IdentifiantsInvalidesException => [401, 'identifiants-invalides', 'Identifiants invalides'],
+            $e instanceof EmailDejaUtiliseException => [409, 'email-deja-utilise', 'Adresse email déjà utilisée'],
             $e instanceof SoireeIntrouvableException,
-            $e instanceof SpectacleIntrouvableException => [404, 'introuvable', 'Ressource introuvable'],
+            $e instanceof SpectacleIntrouvableException,
+            $e instanceof UtilisateurIntrouvableException => [404, 'introuvable', 'Ressource introuvable'],
             $e instanceof PlacesInsuffisantesException => [409, 'places-insuffisantes', 'Places insuffisantes'],
             $e instanceof DonneeInvalideException => [422, 'validation', 'Données invalides'],
             $e instanceof NrvException => [409, 'conflit', 'Conflit'],
             $e instanceof HttpException => match ($e->getCode()) {
                 404 => [404, 'introuvable', 'Ressource introuvable'],
+                401 => [401, 'non-authentifie', 'Authentification requise'],
+                403 => [403, 'acces-refuse', 'Accès refusé'],
                 405 => [405, 'methode-non-autorisee', 'Méthode non autorisée'],
                 default => [$e->getCode(), 'erreur-http', $e->getTitle()],
             },

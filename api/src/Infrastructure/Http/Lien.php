@@ -25,4 +25,24 @@ final class Lien
 
         return ['href' => '/spectacles' . ($query !== '' ? '?' . $query : '')];
     }
+
+    public static function soirees(): array
+    {
+        return ['href' => '/soirees'];
+    }
+
+    public static function pass(): array
+    {
+        return ['href' => '/pass'];
+    }
+
+    public static function compte(): array
+    {
+        return ['href' => '/compte'];
+    }
+
+    public static function connexion(): array
+    {
+        return ['href' => '/auth/signin', 'method' => 'POST'];
+    }
 }

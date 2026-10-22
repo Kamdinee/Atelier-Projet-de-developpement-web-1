@@ -4,52 +4,26 @@ declare(strict_types=1);
 
 namespace Nrv\Infrastructure\Http\Middleware;
 
-use Nrv\Infrastructure\Token\JwtTokenService;
-use Psr\Http\Message\ResponseFactoryInterface;
+use Nrv\Domain\ValueObject\Role;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Exception\HttpForbiddenException;
 use Slim\Exception\HttpUnauthorizedException;
-use Throwable;
 
+// route reservee aux administrateurs (backoffice) ; se place apres AuthMiddleware :
+// $app->group('/admin', ...)->add(AdminMiddleware::class)->add(AuthMiddleware::class);
 final class AdminMiddleware implements MiddlewareInterface
 {
-    public function __construct(
-        private readonly JwtTokenService $jwt,
-        private readonly ResponseFactoryInterface $responseFactory,
-    ) {
-    }
-
-    public function process(
-        ServerRequestInterface $request,
-        RequestHandlerInterface $handler,
-    ): ResponseInterface {
-        $authorization = $request->getHeaderLine('Authorization');
-
-        if (!preg_match('/^Bearer\s+(\S+)$/i', $authorization, $matches)) {
-            throw new HttpUnauthorizedException(
-                $request,
-                'Token d’authentification manquant.'
-            );
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $porteur = $request->getAttribute(AuthMiddleware::ATTRIBUT);
+        if (!is_array($porteur)) {
+            throw new HttpUnauthorizedException($request, 'connexion requise');
         }
-
-        try {
-            $payload = $this->jwt->verify($matches[1]);
-        } catch (Throwable $e) {
-            throw new HttpUnauthorizedException(
-                $request,
-                'Token invalide ou expiré.',
-                $e
-            );
-        }
-
-        if (($payload['role'] ?? null) !== 'admin') {
-            throw new HttpForbiddenException(
-                $request,
-                'Accès réservé aux administrateurs.'
-            );
+        if ($porteur['role'] !== Role::Admin) {
+            throw new HttpForbiddenException($request, 'acces reserve aux administrateurs');
         }
 
         return $handler->handle($request);

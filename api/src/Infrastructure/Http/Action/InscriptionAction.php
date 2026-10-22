@@ -4,67 +4,38 @@ declare(strict_types=1);
 
 namespace Nrv\Infrastructure\Http\Action;
 
-use Nrv\Application\UseCase\InscrireUtilisateur;
+use Nrv\Application\Port\In\AuthentifierUtilisateurInterface;
+use Nrv\Application\Port\In\InscrireUtilisateurInterface;
 use Nrv\Infrastructure\Http\Json;
+use Nrv\Infrastructure\Http\Lien;
+use Nrv\Infrastructure\Http\Presenter\UtilisateurJson;
+use Nrv\Infrastructure\Http\Validation\CompteValidator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RuntimeException;
-use Slim\Exception\HttpBadRequestException;
-use Slim\Exception\HttpConflictException;
-use Slim\Exception\HttpUnprocessableEntityException;
 
+// POST /auth/register : cree un compte client et connecte directement l'utilisateur (201)
 final class InscriptionAction
 {
     public function __construct(
-        private readonly InscrireUtilisateur $inscrireUtilisateur,
+        private readonly InscrireUtilisateurInterface $inscrire,
+        private readonly AuthentifierUtilisateurInterface $authentifier,
+        private readonly CompteValidator $validator,
     ) {
     }
 
-    public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-    ): ResponseInterface {
-        $data = $request->getParsedBody();
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        $d = $this->validator->inscription($request->getParsedBody());
 
-        if (!is_array($data)) {
-            throw new HttpBadRequestException($request, 'Corps JSON invalide.');
-        }
-
-        $email = $data['email'] ?? null;
-        $nom = $data['nom'] ?? null;
-        $prenom = $data['prenom'] ?? null;
-        $motDePasse = $data['mot_de_passe'] ?? null;
-
-        if (
-            !is_string($email)
-            || !is_string($nom)
-            || !is_string($prenom)
-            || !is_string($motDePasse)
-        ) {
-            throw new HttpBadRequestException(
-                $request,
-                'Les champs email, nom, prenom et mot_de_passe sont obligatoires.',
-            );
-        }
-
-        try {
-            $utilisateur = $this->inscrireUtilisateur->executer(
-                $email,
-                $nom,
-                $prenom,
-                $motDePasse,
-            );
-        } catch (RuntimeException $e) {
-            if (str_contains($e->getMessage(), 'déjà utilisée')) {
-                throw new HttpConflictException($request, $e->getMessage());
-            }
-
-            throw new HttpUnprocessableEntityException($request, $e->getMessage());
-        }
+        $this->inscrire->executer($d['email'], $d['nom'], $d['prenom'], $d['mot_de_passe']);
+        $session = $this->authentifier->executer($d['email'], $d['mot_de_passe']);
 
         return Json::reponse($response, [
-            'message' => 'Compte créé avec succès.',
-            'utilisateur' => $utilisateur,
-        ], 201);
+            'type' => 'resource',
+            'token' => $session->jeton,
+            'expire_le' => $session->expireLe,
+            'utilisateur' => UtilisateurJson::compte($session->utilisateur),
+            'links' => ['compte' => Lien::compte()],
+        ], 201)->withHeader('Location', Lien::compte()['href']);
     }
 }

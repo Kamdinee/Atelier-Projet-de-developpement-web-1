@@ -215,11 +215,11 @@ foreach ($programme as $i => [$nom, $thematique, $lieuIndex, $heure, $stylesSoir
 // ---------- utilisateurs ----------
 
 $insUser = $pdo->prepare('INSERT INTO utilisateurs (email, nom, prenom, mot_de_passe, role) VALUES (?, ?, ?, ?, ?)');
-$insUser->execute(['admin@nrv.net', 'Billetterie', 'Sophie', password_hash('admin12345', PASSWORD_BCRYPT), 'ADMIN']);
-$insUser->execute(['client@nrv.net', 'Durand', 'Marc', password_hash('client12345', PASSWORD_BCRYPT), 'CLIENT']);
+$insUser->execute(['admin@nrv.net', 'Billetterie', 'Sophie', password_hash('admin12345', PASSWORD_BCRYPT, ['cost' => 12]), 'ADMIN']);
+$insUser->execute(['client@nrv.net', 'Durand', 'Marc', password_hash('client12345', PASSWORD_BCRYPT, ['cost' => 12]), 'CLIENT']);
 
 // clients fictifs, meme mot de passe pour tous
-$hash = password_hash('motdepasse1', PASSWORD_BCRYPT);
+$hash = password_hash('motdepasse1', PASSWORD_BCRYPT, ['cost' => 12]);
 $clients = [];
 for ($i = 0; $i < 40; $i++) {
     $prenom = $faker->firstName();
