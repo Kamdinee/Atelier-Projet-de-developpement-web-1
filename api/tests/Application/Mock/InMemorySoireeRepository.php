@@ -27,4 +27,12 @@ final class InMemorySoireeRepository implements SoireeRepositoryInterface
     {
         return $this->soirees[$id] ?? null;
     }
+
+    public function lister(): array
+    {
+        $soirees = array_values($this->soirees);
+        usort($soirees, static fn (Soiree $a, Soiree $b) => $a->debut() <=> $b->debut());
+
+        return $soirees;
+    }
 }

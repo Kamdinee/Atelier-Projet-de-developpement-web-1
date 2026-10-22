@@ -6,10 +6,13 @@ namespace Nrv\Tests\Fixtures;
 
 use DateTimeImmutable;
 use Nrv\Domain\Entity\Lieu;
+use Nrv\Domain\Entity\Pass;
 use Nrv\Domain\Entity\Soiree;
 use Nrv\Domain\Entity\Spectacle;
 use Nrv\Domain\Entity\Style;
+use Nrv\Domain\Entity\Utilisateur;
 use Nrv\Domain\ValueObject\Image;
+use Nrv\Domain\ValueObject\Role;
 use Nrv\Domain\ValueObject\Tarifs;
 
 // fabrique des objets du domaine pour les tests
@@ -68,5 +71,16 @@ final class Fabrique
                 self::spectacle(2, $id, '2027-06-11 21:30'),
             ],
         );
+    }
+
+    // mot de passe "client12345" (hache par FauxHacheur)
+    public static function utilisateur(int $id = 1, Role $role = Role::Client, string $email = 'client@nrv.net'): Utilisateur
+    {
+        return new Utilisateur($id, $email, 'Durand', 'Marc', 'hache:client12345', $role);
+    }
+
+    public static function pass(): Pass
+    {
+        return new Pass(1, 'Pass 3 jours', 3, new Tarifs(8730, 5820));
     }
 }
