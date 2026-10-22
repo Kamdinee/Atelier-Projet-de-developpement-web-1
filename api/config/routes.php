@@ -6,6 +6,7 @@ use Nrv\Infrastructure\Http\Action\AccueilAction;
 use Nrv\Infrastructure\Http\Action\GetBilletAction;
 use Nrv\Infrastructure\Http\Action\GetBilletsCommandeAction;
 use Nrv\Infrastructure\Http\Action\GetDatesAction;
+use Nrv\Infrastructure\Http\Action\GetJaugesAction;
 use Nrv\Infrastructure\Http\Action\GetMesBilletsAction;
 use Nrv\Infrastructure\Http\Action\GetMesCommandesAction;
 use Nrv\Infrastructure\Http\Action\GetSoireeDetailAction;
@@ -13,6 +14,7 @@ use Nrv\Infrastructure\Http\Action\GetSpectacleAction;
 use Nrv\Infrastructure\Http\Action\GetSpectaclesAction;
 use Nrv\Infrastructure\Http\Action\GetStylesAction;
 use Nrv\Infrastructure\Http\Middleware\AuthentificationMiddleware;
+use Nrv\Infrastructure\Http\Middleware\RoleAdminMiddleware;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -39,4 +41,8 @@ return static function (App $app): void {
         $groupe->get('/billets', GetMesBilletsAction::class);
     })->add(AuthentificationMiddleware::class);
 
+    // backoffice : connecte + role ADMIN (le dernier middleware ajoute s'execute en premier)
+    $app->group('/admin', function (RouteCollectorProxy $groupe): void {
+        $groupe->get('/jauges', GetJaugesAction::class);
+    })->add(RoleAdminMiddleware::class)->add(AuthentificationMiddleware::class);
 };
