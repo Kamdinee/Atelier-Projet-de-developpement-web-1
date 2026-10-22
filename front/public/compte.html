@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consultez votre compte NRV.net.">
+    <title>Mon compte — NRV.net</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body class="page-auth">
+
+    <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
+    <header class="site-header">
+        <div class="conteneur site-header__interieur">
+            <a class="site-header__logo" href="index.html">
+                NRV<span>.net</span>
+            </a>
+
+            <nav aria-label="Navigation principale">
+                <a href="index.html">Programme</a>
+                <a href="panier.html">Mon panier</a>
+                <a href="compte.html" aria-current="page">Mon compte</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="contenu" class="page-auth">
+        <div class="conteneur">
+            <div class="auth-grille--unique">
+                <section class="auth-carte" aria-labelledby="titre-compte">
+                    <h1 id="titre-compte">Mon compte</h1>
+
+                    <p>
+                        Retrouvez ici les informations de votre compte NRV.net.
+                    </p>
+
+                    <div
+                        id="message-compte"
+                        class="auth-message"
+                        role="status"
+                        aria-live="polite"
+                    ></div>
+
+                    <div id="compte-infos" hidden>
+                        <h2>Mes informations</h2>
+
+                        <p>
+                            <strong>Prénom :</strong>
+                            <span id="compte-prenom">Non renseigné</span>
+                        </p>
+
+                        <p>
+                            <strong>Nom :</strong>
+                            <span id="compte-nom">Non renseigné</span>
+                        </p>
+
+                        <p>
+                            <strong>Adresse e-mail :</strong>
+                            <span id="compte-email">Non renseigné</span>
+                        </p>
+                    </div>
+
+                    <a
+                        id="compte-lien-connexion"
+                        class="auth-retour"
+                        href="connexion.html"
+                        hidden
+                    >
+                        Se connecter
+                    </a>
+
+                    <button
+                        id="compte-deconnexion"
+                        class="auth-retour"
+                        type="button"
+                        hidden
+                    >
+                        Se déconnecter
+                    </button>
+
+                    <a class="auth-retour" href="index.html">
+                        Retour au programme
+                    </a>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/compte.js"></script>
+</body>
+</html>

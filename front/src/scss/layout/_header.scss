@@ -1,6 +1,5 @@
 @use '../abstracts' as *;
 
-// lien "aller au contenu" : visible seulement au clavier
 .lien-evitement {
     position: absolute;
     top: -10rem;
@@ -18,58 +17,107 @@
     }
 }
 
-// flex : logo | navigation | panier
 .site-header {
     position: sticky;
     top: 0;
-    z-index: 10;
-    background: rgba($noir, 0.95);
+    z-index: 100;
+    background: rgba($noir, 0.97);
     border-bottom: 2px solid $couleur-accent;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
 
-    &__inner {
+    &__inner,
+    &__interieur {
         @include conteneur;
-        @include flex(space-between, center, $espace-m, wrap);
-        padding-block: $espace-s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: $espace-l;
+        flex-wrap: wrap;
+        padding-block: $espace-m;
     }
 
     &__logo {
+        flex-shrink: 0;
         font-family: $police-titre;
-        font-size: 1.75rem;
+        font-size: 2rem;
+        line-height: 1;
         color: $blanc;
         text-decoration: none;
+        letter-spacing: 0.02em;
 
         span {
             color: $couleur-accent;
         }
-    }
-}
 
-// sur mobile la nav passe sous le logo, sur tablette elle se met en ligne
-.nav {
-    order: 3;
-    width: 100%;
-
-    @include mq(tablette) {
-        order: 0;
-        width: auto;
+        &:hover {
+            opacity: 0.85;
+        }
     }
 
-    &__liste {
-        @include flex(flex-start, center, $espace-m, wrap);
+    nav,
+    .nav {
+        display: flex;
+        align-items: center;
+        gap: $espace-s;
+        flex-wrap: wrap;
     }
 
-    &__lien {
+    nav a,
+    .nav__lien {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: $espace-s $espace-m;
+        border: 1px solid transparent;
+        border-radius: 7px;
         color: $couleur-texte;
+        font-size: 0.95rem;
+        font-weight: 600;
         text-decoration: none;
-        padding-block: $espace-xs;
-        border-bottom: 2px solid transparent;
-        @include focus-visible;
+        transition: background $transition, color $transition,
+                    border-color $transition;
 
         &:hover,
         &[aria-current='page'] {
+            border-color: rgba($couleur-accent, 0.45);
+            background: rgba($couleur-accent, 0.12);
             color: $blanc;
-            border-bottom-color: $couleur-accent;
         }
+
+        &:focus-visible {
+            outline: 2px solid $jaune;
+            outline-offset: 3px;
+        }
+    }
+
+    nav a[href='connexion.html'] {
+        border-color: $couleur-accent;
+        background: $couleur-accent;
+        color: $blanc;
+
+        &:hover {
+            background: $couleur-accent-hover;
+        }
+    }
+
+    nav a[href='inscription.html'] {
+        border-color: $jaune;
+        background: $jaune;
+        color: $noir;
+
+        &:hover {
+            background: #dfae00;
+        }
+    }
+}
+
+.nav {
+    &__liste {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: $espace-s;
     }
 }
 
@@ -86,5 +134,25 @@
         text-align: center;
         font-size: 0.85rem;
         font-weight: 700;
+    }
+}
+
+@media (max-width: 600px) {
+    .site-header {
+        &__inner,
+        &__interieur {
+            justify-content: center;
+            gap: $espace-m;
+        }
+
+        nav {
+            justify-content: center;
+            width: 100%;
+        }
+
+        nav a {
+            padding-inline: $espace-s;
+            font-size: 0.85rem;
+        }
     }
 }

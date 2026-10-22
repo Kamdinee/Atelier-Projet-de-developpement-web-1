@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Créer un compte NRV.net">
+    <title>Inscription — NRV.net</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="conteneur site-header__interieur">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav aria-label="Navigation principale">
+                <a href="index.html">Programme</a>
+                <a href="panier.html">Mon panier</a>
+                <a href="connexion.html">Connexion</a>
+                <a href="inscription.html">Inscription</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="conteneur page-auth">
+        <header class="page-auth__intro">
+            <p class="page-auth__surtitre">LE FESTIVAL NRV.NET</p>
+            <h1>REJOINS L'AVENTURE</h1>
+            <p>Crée ton compte et prépare ton expérience festival.</p>
+        </header>
+
+        <div class="auth-grille auth-grille--unique">
+            <section class="auth-carte auth-carte--inscription"
+                     aria-labelledby="titre-inscription">
+                <h2 id="titre-inscription">Créer mon compte</h2>
+                <p>Quelques informations suffisent pour commencer.</p>
+
+                <form id="form-inscription" class="formulaire">
+                    <div class="champ-groupe">
+                        <label class="champ">
+                            Prénom
+                            <input type="text" name="prenom"
+                                   autocomplete="given-name" maxlength="80" required>
+                        </label>
+
+                        <label class="champ">
+                            Nom
+                            <input type="text" name="nom"
+                                   autocomplete="family-name" maxlength="80" required>
+                        </label>
+                    </div>
+
+                    <label class="champ">
+                        Adresse email
+                        <input type="email" name="email"
+                               autocomplete="email" maxlength="180" required>
+                    </label>
+
+                    <label class="champ">
+                        Mot de passe
+                        <input type="password" name="mot_de_passe"
+                               autocomplete="new-password" minlength="8" required>
+                        <span class="formulaire__note">
+                            8 caractères minimum.
+                        </span>
+                    </label>
+
+                    <p id="message-inscription" class="auth-message"
+                       role="status" aria-live="polite"></p>
+
+                    <button class="btn" type="submit">Créer mon compte</button>
+                </form>
+
+                <div class="auth-lien">
+                    <span>Tu as déjà un compte ?</span>
+                    <a href="connexion.html">Se connecter</a>
+                </div>
+
+                <a class="btn btn--secondaire auth-retour" href="index.html">
+                    ← Retour au programme
+                </a>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="conteneur">
+            <p>NRV.net — Le festival, à ton rythme.</p>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script type="module" src="js/inscription.js"></script>
+<script src="js/menu-utilisateur.js"></script>
+</body>
+</html>

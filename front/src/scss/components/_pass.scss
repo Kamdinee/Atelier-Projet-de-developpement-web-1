@@ -1,0 +1,88 @@
+@use '../abstracts' as *;
+
+.pass-3-jours {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: $espace-l;
+    margin-block: $espace-xl;
+    padding: $espace-l;
+    border: 1px solid rgba(228, 50, 43, 0.55);
+    border-radius: $rayon;
+    background: linear-gradient(135deg, $couleur-surface, $noir);
+    color: $couleur-texte;
+}
+
+.pass-3-jours__surtitre {
+    margin: 0 0 $espace-s;
+    color: $couleur-accent;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.pass-3-jours h2 {
+    margin: 0 0 $espace-m;
+    font-family: $police-titre;
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
+    line-height: 1.1;
+}
+
+.pass-3-jours__texte {
+    max-width: 52ch;
+    margin: 0 0 $espace-l;
+    color: $couleur-texte-doux;
+    line-height: 1.7;
+}
+
+.pass-3-jours__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    text-decoration: none;
+}
+
+.pass-3-jours__visuel {
+    display: flex;
+    width: 8rem;
+    aspect-ratio: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid $couleur-accent;
+    border-radius: 50%;
+    background: rgba(228, 50, 43, 0.12);
+}
+
+.pass-3-jours__nombre {
+    color: $couleur-accent;
+    font-family: $police-titre;
+    font-size: 3.5rem;
+    line-height: 1;
+}
+
+.pass-3-jours__label {
+    margin-top: $espace-s;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+}
+
+@media (max-width: 600px) {
+    .pass-3-jours {
+        grid-template-columns: minmax(0, 1fr);
+        gap: $espace-m;
+        padding: $espace-m;
+    }
+
+    .pass-3-jours__visuel {
+        width: 5.5rem;
+        justify-self: end;
+    }
+
+    .pass-3-jours__nombre {
+        font-size: 2.5rem;
+    }
+}

@@ -1,0 +1,271 @@
+@use '../abstracts' as *;
+
+.page-auth {
+    padding-block: clamp(2rem, 5vw, 4rem);
+
+    &__intro {
+        margin: 0 auto $espace-xl;
+        text-align: center;
+    }
+
+    &__surtitre {
+        margin-bottom: $espace-s;
+        color: $couleur-accent;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+
+    h1 {
+        margin-bottom: $espace-m;
+        font-family: $police-titre;
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+        line-height: 1.1;
+        letter-spacing: 0.02em;
+    }
+
+    &__intro > p:last-child {
+        color: $couleur-texte-doux;
+    }
+}
+
+.auth-grille {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: $espace-l;
+    max-width: 1000px;
+    margin-inline: auto;
+}
+
+.auth-carte {
+    min-width: 0;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-top: 3px solid $couleur-accent;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #242027, $couleur-surface 70%);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    transition: transform 0.25s ease, border-color 0.25s ease,
+                box-shadow 0.25s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+        margin-bottom: $espace-s;
+        font-family: $police-titre;
+        font-size: 1.8rem;
+    }
+
+    > p {
+        margin-bottom: $espace-l;
+        color: $couleur-texte-doux;
+        line-height: 1.6;
+    }
+
+    .formulaire {
+        gap: $espace-m;
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .champ {
+        gap: $espace-s;
+    }
+
+    input {
+        min-height: 44px;
+        border-color: #49434e;
+        background: #151318;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+            border-color: #77707d;
+        }
+
+        &:focus {
+            border-color: $couleur-accent;
+            box-shadow: 0 0 0 3px rgba(228, 50, 43, 0.16);
+            outline: none;
+        }
+    }
+
+    .btn {
+        width: 100%;
+        min-height: 46px;
+        border-radius: 7px;
+        font-size: 0.95rem;
+        font-weight: 750;
+        letter-spacing: 0.01em;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.2s ease,
+                    box-shadow 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(228, 50, 43, 0.25);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+
+        &:focus-visible {
+            outline: 3px solid $jaune;
+            outline-offset: 3px;
+        }
+    }
+
+    &--inscription {
+        border-top-color: $jaune;
+
+        .btn {
+            border-color: $jaune;
+            background: $jaune;
+            color: $noir;
+
+            &:hover {
+                border-color: #dfae00;
+                background: #dfae00;
+                box-shadow: 0 6px 18px rgba(245, 197, 24, 0.2);
+            }
+        }
+    }
+}
+
+.auth-message {
+    min-height: 1.5rem;
+    margin: 0;
+    font-size: 0.9rem;
+
+    &:empty {
+        display: none;
+    }
+
+    &--succes {
+        color: $vert;
+    }
+
+    &--erreur {
+        color: #ff7771;
+    }
+}
+
+@media (max-width: 700px) {
+    .auth-grille {
+        grid-template-columns: 1fr;
+        gap: $espace-m;
+    }
+
+    .auth-carte:hover {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .auth-carte,
+    .auth-carte .btn,
+    .auth-carte input {
+        transition: none;
+    }
+
+    .auth-carte:hover,
+    .auth-carte .btn:hover {
+        transform: none;
+    }
+}
+
+// Grille des pages connexion et inscription
+.auth-grille--unique {
+    display: grid;
+    width: 100%;
+    max-width: 1000px;
+    grid-template-columns: minmax(0, 520px);
+    justify-content: center;
+    align-items: start;
+    margin-inline: auto;
+}
+
+// Carte centrée, avec une largeur adaptée
+.auth-carte {
+    width: 100%;
+    box-sizing: border-box;
+    align-self: start;
+
+    .formulaire {
+        display: flex;
+        flex-direction: column;
+        gap: $espace-m;
+    }
+}
+
+// Navigation entre les pages
+.auth-lien {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.35rem 0.5rem;
+    margin-top: $espace-l;
+    padding-top: $espace-m;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: $couleur-texte-doux;
+
+    a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.35rem 0.65rem;
+        border: 1px solid rgba(228, 50, 43, 0.5);
+        border-radius: 6px;
+        color: $couleur-accent;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background $transition, color $transition;
+
+        &:hover {
+            background: $couleur-accent;
+            color: $blanc;
+        }
+    }
+}
+
+// Bouton de retour distinct des actions principales
+.auth-retour {
+    display: flex;
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    margin: $espace-m auto 0;
+    border-color: #49434e;
+    background: transparent;
+    color: $couleur-texte;
+
+    &:hover {
+        border-color: $couleur-texte-doux;
+        background: rgba(255, 255, 255, 0.07);
+        color: $blanc;
+        box-shadow: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-auth {
+        padding-block: $espace-l;
+    }
+
+    .auth-grille--unique {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .auth-carte {
+        padding: $espace-m;
+    }
+}
