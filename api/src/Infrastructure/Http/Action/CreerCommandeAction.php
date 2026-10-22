@@ -12,9 +12,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Slim\Exception\HttpBadRequestException;
-use Slim\Exception\HttpConflictException;
+use Slim\Exception\HttpException;
 use Slim\Exception\HttpUnauthorizedException;
-use Slim\Exception\HttpUnprocessableEntityException;
+
 
 final class CreerCommandeAction
 {
@@ -49,10 +49,11 @@ final class CreerCommandeAction
         } catch (InvalidArgumentException $e) {
             throw new HttpBadRequestException($request, $e->getMessage());
         } catch (PlacesInsuffisantesException $e) {
-            throw new HttpConflictException($request, $e->getMessage());
+            $ex = new HttpException($request, $e->getMessage(), 409);
+            throw $ex;
         } catch (\Throwable $e) {
             error_log('[CreerCommande] ' . get_class($e) . ': ' . $e->getMessage() . "\n" . $e->getTraceAsString());
-            throw new HttpUnprocessableEntityException($request, $e->getMessage());
+            throw new HttpException($request, $e->getMessage(), 422);
         }
 
         return Json::reponse($response, [
