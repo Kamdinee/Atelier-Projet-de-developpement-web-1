@@ -53,6 +53,28 @@ La commande `docker compose exec php composer seed` remplit la base : 14 soirée
 | Admin | `admin@nrv.net` | `admin12345` |
 | Client | `client@nrv.net` | `client12345` |
 
+Le compte `client@nrv.net` a une commande payée (2 billets « Nuit métal » + 1 Pass 3 jours) pour tester « Mes billets » et l'impression des billets.
+
+## Billets et backoffice (étape 7)
+
+| Route | Accès | Rôle |
+| --- | --- | --- |
+| `GET /billets/{token}` | public (le jeton sert de clé) | un billet imprimable |
+| `GET /commandes`, `GET /commandes/{id}/billets`, `GET /billets` | connecté | mes commandes et mes billets |
+| `GET /admin/jauges` | admin | places vendues et recette par soirée |
+| `GET /admin/referentiels` | admin | lieux et styles des formulaires |
+| `POST /admin/soirees`, `POST /admin/soirees/{id}/spectacles` | admin | ajout d'une soirée (2 à 3 spectacles) ou d'un spectacle |
+
+Pages du site : `billet.html?token=…`, `mes-billets.html`, `admin.html` (jauges), `admin-programme.html` (ajout).
+
+Les routes protégées attendent l'en-tête `Authorization: Bearer <jwt>` (claims `sub` = id, `role` = `CLIENT` ou `ADMIN`). En attendant la page de connexion, un jeton de test s'obtient avec :
+
+```bash
+docker compose exec php composer jeton -- admin@nrv.net
+```
+
+puis, dans la console du navigateur sur le site : `localStorage.setItem('nrv-jeton', '<jeton>')`.
+
 ## Tests automatisés
 
 Pour lancer la suite de tests unitaires (PHPUnit) :
