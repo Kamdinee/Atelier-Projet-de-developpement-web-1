@@ -20,6 +20,10 @@
             <nav class="nav" aria-label="Principale">
                 <ul class="nav__liste">
                     <li><a class="nav__lien" href="index.html">Programme</a></li>
+                    <li data-auth="anonyme"><a class="nav__lien" href="connexion.html">Connexion</a></li>
+                    <li data-auth="anonyme"><a class="nav__lien" href="inscription.html">Inscription</a></li>
+                    <li data-auth="connecte" hidden><a class="nav__lien" href="compte.html">Mon compte</a></li>
+                    <li data-auth="connecte" hidden><button type="button" class="nav__lien nav__lien--deconnexion" id="nav-deconnexion">Déconnexion</button></li>
                 </ul>
             </nav>
             <a class="badge-panier" href="panier.html" aria-current="page">
@@ -34,6 +38,48 @@
         <div id="contenu-panier" aria-busy="true">
             <p class="message-vide">Chargement du panier…</p>
         </div>
+
+        <section class="pass-3-jours" aria-labelledby="titre-pass-3-jours">
+            <div class="pass-3-jours__contenu">
+                <p class="pass-3-jours__surtitre">Vivez le festival autrement</p>
+                <h2 id="titre-pass-3-jours">Composer un Pass 3 jours</h2>
+                <p class="pass-3-jours__texte">
+                    Choisissez trois dates différentes et le tarif qui vous correspond.
+                </p>
+
+                <form id="form-pass-3-jours" class="pass-3-jours__formulaire">
+                    <fieldset>
+                        <legend>Choisissez exactement trois dates</legend>
+                        <p id="pass-compteur" aria-live="polite">0 / 3 dates sélectionnées</p>
+                        <div id="pass-dates" class="pass-3-jours__dates">
+                            <p>Chargement des dates disponibles…</p>
+                        </div>
+                    </fieldset>
+
+                    <div class="pass-3-jours__tarif">
+                        <label for="pass-tarif">Type de tarif</label>
+                        <select id="pass-tarif" name="tarif">
+                            <option value="NORMAL">Tarif normal</option>
+                            <option value="REDUIT">Tarif réduit</option>
+                        </select>
+                    </div>
+
+                    <p>Prix du Pass : <strong id="pass-prix">—</strong></p>
+                    <p id="pass-message" class="pass-3-jours__message"
+                       role="status" aria-live="polite"></p>
+
+                    <button id="pass-ajouter" class="btn pass-3-jours__action"
+                            type="submit" disabled>
+                        Ajouter le Pass au panier
+                    </button>
+                </form>
+            </div>
+
+            <div class="pass-3-jours__visuel" aria-hidden="true">
+                <span class="pass-3-jours__nombre">3</span>
+                <span class="pass-3-jours__label">JOURS</span>
+            </div>
+        </section>
     </main>
 
     <footer class="site-footer">
@@ -47,6 +93,7 @@
 
     <script src="vendor/handlebars.min.js"></script>
     <script src="js/config.js"></script>
+    <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/panier-page.js"></script>
 </body>
 </html>
