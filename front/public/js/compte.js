@@ -4,73 +4,68 @@ import { majBadge } from './panier.js';
 document.addEventListener('DOMContentLoaded', () => {
     majBadge();
 
-    const message = document.querySelector('#message-compte');
-    const informations = document.querySelector('#compte-infos');
-    const lienConnexion = document.querySelector('#compte-lien-connexion');
-    const boutonDeconnexion = document.querySelector('#compte-deconnexion');
+    const messageEl        = document.getElementById('message-compte');
+    const infosEl          = document.getElementById('compte-infos');
+    const lienConnexionEl  = document.getElementById('compte-lien-connexion');
+    const btnDeconnexion   = document.getElementById('compte-deconnexion');
+    const heroNomEl        = document.getElementById('compte-hero-nom');
+    const heroEmailEl      = document.getElementById('compte-hero-email');
+    const initialesEl      = document.getElementById('compte-initiales');
+    const actionsEl        = document.querySelector('.compte-actions');
 
     const afficherMessage = (texte, type = '') => {
-        message.textContent = texte;
-        message.className = 'auth-message';
-
-        if (type) {
-            message.classList.add(`auth-message--${type}`);
-        }
+        messageEl.textContent = texte;
+        messageEl.className   = 'auth-message compte-status';
+        if (type) messageEl.classList.add(`auth-message--${type}`);
     };
 
-    // Vérifier si un token JWT est enregistré.
     const token = getToken();
 
     if (!token) {
-        afficherMessage(
-            'Vous devez vous connecter pour accéder à votre compte.',
-            'erreur'
-        );
-
-        informations.hidden = true;
-        informations.style.display = 'none';
-
-        lienConnexion.hidden = false;
-        lienConnexion.style.display = '';
-
-        boutonDeconnexion.hidden = true;
-        boutonDeconnexion.style.display = 'none';
-
+        afficherMessage('Vous devez vous connecter pour accéder à votre compte.', 'erreur');
+        if (infosEl)          { infosEl.hidden = true; }
+        if (lienConnexionEl)  { lienConnexionEl.hidden = false; }
+        if (btnDeconnexion)   { btnDeconnexion.hidden = true; }
+        if (actionsEl)        { actionsEl.hidden = true; }
+        if (heroNomEl)        { heroNomEl.textContent = 'Espace compte'; }
         return;
     }
 
-    // Un token existe : afficher les informations enregistrées à la connexion.
-    lienConnexion.hidden = true;
-    lienConnexion.style.display = 'none';
-
-    boutonDeconnexion.hidden = false;
-    boutonDeconnexion.style.display = '';
-
-    informations.hidden = false;
-    informations.style.display = '';
+    // Connecté
+    if (lienConnexionEl)  lienConnexionEl.hidden = true;
+    if (infosEl)          { infosEl.hidden = false; }
+    if (btnDeconnexion)   { btnDeconnexion.hidden = false; }
+    if (actionsEl)        { actionsEl.hidden = false; }
 
     const utilisateur = getUtilisateur();
 
     if (!utilisateur) {
-        afficherMessage(
-            'Vous êtes connecté, mais les informations du compte sont indisponibles.',
-            'erreur'
-        );
+        afficherMessage('Connecté, mais les informations du compte sont indisponibles.', 'erreur');
+        if (heroNomEl) heroNomEl.textContent = 'Mon compte';
     } else {
-        document.querySelector('#compte-prenom').textContent =
-            utilisateur.prenom ?? 'Non renseigné';
+        const prenom = utilisateur.prenom ?? '';
+        const nom    = utilisateur.nom    ?? '';
+        const email  = utilisateur.email  ?? '';
 
-        document.querySelector('#compte-nom').textContent =
-            utilisateur.nom ?? 'Non renseigné';
+        // Hero
+        if (heroNomEl)    heroNomEl.textContent  = prenom || nom ? `${prenom} ${nom}`.trim() : 'Mon compte';
+        if (heroEmailEl)  heroEmailEl.textContent = email;
 
-        document.querySelector('#compte-email').textContent =
-            utilisateur.email ?? 'Non renseigné';
+        // Avatar initiales
+        if (initialesEl) {
+            const init = [prenom[0], nom[0]].filter(Boolean).join('').toUpperCase();
+            initialesEl.textContent = init || '?';
+        }
+
+        // Infos
+        document.getElementById('compte-prenom').textContent = prenom || '—';
+        document.getElementById('compte-nom').textContent    = nom    || '—';
+        document.getElementById('compte-email').textContent  = email  || '—';
 
         afficherMessage('Vous êtes connecté à votre compte.', 'succes');
     }
 
-    // Supprimer les données de session lors de la déconnexion.
-    boutonDeconnexion.addEventListener('click', () => {
+    btnDeconnexion?.addEventListener('click', () => {
         deconnecter();
         window.location.href = 'index.html';
     });
