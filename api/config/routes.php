@@ -9,10 +9,13 @@ use Nrv\Infrastructure\Http\Action\GetDatesAction;
 use Nrv\Infrastructure\Http\Action\GetJaugesAction;
 use Nrv\Infrastructure\Http\Action\GetMesBilletsAction;
 use Nrv\Infrastructure\Http\Action\GetMesCommandesAction;
+use Nrv\Infrastructure\Http\Action\GetReferentielsAdminAction;
 use Nrv\Infrastructure\Http\Action\GetSoireeDetailAction;
 use Nrv\Infrastructure\Http\Action\GetSpectacleAction;
 use Nrv\Infrastructure\Http\Action\GetSpectaclesAction;
 use Nrv\Infrastructure\Http\Action\GetStylesAction;
+use Nrv\Infrastructure\Http\Action\PostSoireeAction;
+use Nrv\Infrastructure\Http\Action\PostSpectacleAction;
 use Nrv\Infrastructure\Http\Middleware\AuthentificationMiddleware;
 use Nrv\Infrastructure\Http\Middleware\RoleAdminMiddleware;
 use Slim\App;
@@ -44,5 +47,8 @@ return static function (App $app): void {
     // backoffice : connecte + role ADMIN (le dernier middleware ajoute s'execute en premier)
     $app->group('/admin', function (RouteCollectorProxy $groupe): void {
         $groupe->get('/jauges', GetJaugesAction::class);
+        $groupe->get('/referentiels', GetReferentielsAdminAction::class);
+        $groupe->post('/soirees', PostSoireeAction::class);
+        $groupe->post('/soirees/{id}/spectacles', PostSpectacleAction::class);
     })->add(RoleAdminMiddleware::class)->add(AuthentificationMiddleware::class);
 };
