@@ -16,7 +16,8 @@ final class ProgrammeAdminValidator
     public const ARTISTES_MAX = 5;
     private const HEURE = '/^([01]\d|2[0-3]):[0-5]\d$/';
     private const VIDEO = '#^https://www\.youtube(-nocookie)?\.com/embed/[A-Za-z0-9_-]{11}$#';
-    private const IMAGE = '#^(https://[^\s"<>]{1,240}|img/[A-Za-z0-9/._-]{1,200})$#';
+    // image servie par le site : la politique de securite (csp) bloque les images exterieures
+    private const IMAGE = '#^img/[A-Za-z0-9_-]+(/[A-Za-z0-9_-]+){0,4}\.(webp|jpe?g|png|svg)$#';
 
     /** @var array<string, string> */
     private array $erreurs = [];
@@ -105,7 +106,7 @@ final class ProgrammeAdminValidator
         }
 
         $video = $this->facultatif($s, 'video', self::VIDEO, 'lien youtube embed attendu (https://www.youtube.com/embed/...)', $prefixe);
-        $image = $this->facultatif($s, 'image', self::IMAGE, 'url https ou chemin img/... attendu', $prefixe);
+        $image = $this->facultatif($s, 'image', self::IMAGE, 'chemin d\'une image du site attendu (img/...)', $prefixe);
 
         return new NouveauSpectacleDto(
             (string) $titre,

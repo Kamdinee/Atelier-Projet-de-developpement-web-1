@@ -85,12 +85,15 @@ final class ProgrammeAdminValidatorTest extends TestCase
         $this->assertArrayHasKey('spectacles', $this->erreurs(fn () => $v->soiree($this->soiree(['spectacles' => [$this->spectacle()]]))));
     }
 
-    public function testUneImageDoitEtreHttpsOuLocale(): void
+    public function testUneImageDoitEtreUneImageDuSite(): void
     {
         $v = new ProgrammeAdminValidator();
 
         $this->assertSame('img/spectacles/metal-1.webp', $v->spectacle($this->spectacle(['image' => 'img/spectacles/metal-1.webp']))->image);
-        $this->assertArrayHasKey('image', $this->erreurs(fn () => $v->spectacle($this->spectacle(['image' => 'http://pirate.example/x.png']))));
+        // image exterieure (bloquee par la csp), remontee de dossier, script deguise
+        foreach (['http://pirate.example/x.png', 'https://exemple.org/x.webp', 'img/../../etc/passwd', 'img/x.webp"onerror="alert(1)', 'img/script.js'] as $image) {
+            $this->assertArrayHasKey('image', $this->erreurs(fn () => $v->spectacle($this->spectacle(['image' => $image]))), $image);
+        }
     }
 
     public function testUnCorpsQuiNestPasUnObjetEstRefuse(): void
