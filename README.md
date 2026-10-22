@@ -55,6 +55,17 @@ La commande `docker compose exec php composer seed` remplit la base : 14 soirée
 
 Le compte `client@nrv.net` a une commande payée (2 billets « Nuit métal » + 1 Pass 3 jours) pour tester « Mes billets » et l'impression des billets.
 
+## Commande et paiement (étape 6)
+
+| Route | Accès | Rôle |
+| --- | --- | --- |
+| `POST /auth/register`, `POST /auth/signin` | public | inscription, connexion (jeton JWT) |
+| `POST /commandes` | connecté | le panier devient une commande « en attente », prix recalculés par le serveur |
+| `GET /commandes/{id}` | connecté (propriétaire) | récapitulatif avant paiement |
+| `POST /commandes/{id}/paiement` | connecté (propriétaire) | paiement simulé : places vérifiées et réservées dans une transaction, billets émis |
+
+Paiement simulé : la carte `4242 4242 4242 4242` est acceptée, `4000 0000 0000 0002` est refusée par la banque (402). Seuls les 4 derniers chiffres sont enregistrés.
+
 ## Billets et backoffice (étape 7)
 
 | Route | Accès | Rôle |
