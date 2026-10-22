@@ -65,6 +65,49 @@ final class PDOSoireeRepository implements SoireeRepositoryInterface
         return array_map(fn (array $l): Soiree => $this->construire($l, $parSoiree[(int) $l['id']] ?? []), $lignes);
     }
 
+    public function verrouiller(array $ids): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+        // toujours dans le meme ordre (par id) : deux paiements simultanes ne se bloquent pas mutuellement
+        $ids = array_values(array_unique(array_map('intval', $ids)));
+        sort($ids);
+        $marqueurs = implode(', ', array_fill(0, count($ids), '?'));
+
+        $requete = $this->pdo->prepare(self::SELECT . " WHERE s.id IN ({$marqueurs}) ORDER BY s.id FOR UPDATE");
+        $spectacles = $this->pdo->prepare(
+            SpectacleHydrator::SELECT . " WHERE sp.soiree_id IN ({$marqueurs}) ORDER BY sp.horaire_previsionnel"
+        );
+        foreach ($ids as $i => $id) {
+            $requete->bindValue($i + 1, $id, PDO::PARAM_INT);
+            $spectacles->bindValue($i + 1, $id, PDO::PARAM_INT);
+        }
+        $requete->execute();
+        $lignes = $requete->fetchAll(PDO::FETCH_ASSOC);
+        $spectacles->execute();
+
+        $parSoiree = [];
+        foreach ($this->hydrator->hydrater($spectacles->fetchAll(PDO::FETCH_ASSOC)) as $spectacle) {
+            $parSoiree[$spectacle->soireeId()][] = $spectacle;
+        }
+
+        $soirees = [];
+        foreach ($lignes as $l) {
+            $soirees[(int) $l['id']] = $this->construire($l, $parSoiree[(int) $l['id']] ?? []);
+        }
+
+        return $soirees;
+    }
+
+    public function enregistrerPlacesVendues(Soiree $soiree): void
+    {
+        $requete = $this->pdo->prepare('UPDATE soirees SET places_vendues = :vendues WHERE id = :id');
+        $requete->bindValue('vendues', $soiree->placesVendues(), PDO::PARAM_INT);
+        $requete->bindValue('id', $soiree->id(), PDO::PARAM_INT);
+        $requete->execute();
+    }
+
     private function construire(array $l, array $spectacles): Soiree
     {
         return new Soiree(

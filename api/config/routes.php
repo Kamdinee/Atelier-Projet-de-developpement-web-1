@@ -6,6 +6,7 @@ use Nrv\Infrastructure\Http\Action\AccueilAction;
 use Nrv\Infrastructure\Http\Action\ConnexionAction;
 use Nrv\Infrastructure\Http\Action\GetBilletAction;
 use Nrv\Infrastructure\Http\Action\GetBilletsCommandeAction;
+use Nrv\Infrastructure\Http\Action\GetCommandeAction;
 use Nrv\Infrastructure\Http\Action\GetCompteAction;
 use Nrv\Infrastructure\Http\Action\GetDatesAction;
 use Nrv\Infrastructure\Http\Action\GetJaugesAction;
@@ -19,6 +20,8 @@ use Nrv\Infrastructure\Http\Action\GetSpectacleAction;
 use Nrv\Infrastructure\Http\Action\GetSpectaclesAction;
 use Nrv\Infrastructure\Http\Action\GetStylesAction;
 use Nrv\Infrastructure\Http\Action\InscriptionAction;
+use Nrv\Infrastructure\Http\Action\PayerCommandeAction;
+use Nrv\Infrastructure\Http\Action\PostCommandeAction;
 use Nrv\Infrastructure\Http\Action\PostSoireeAction;
 use Nrv\Infrastructure\Http\Action\PostSpectacleAction;
 use Nrv\Infrastructure\Http\Middleware\AdminMiddleware;
@@ -53,7 +56,10 @@ return static function (App $app): void {
     // espace client : utilisateur connecte (jeton jwt)
     $app->group('', function (RouteCollectorProxy $groupe): void {
         $groupe->get('/compte', GetCompteAction::class);
+        $groupe->post('/commandes', PostCommandeAction::class);
         $groupe->get('/commandes', GetMesCommandesAction::class);
+        $groupe->get('/commandes/{id}', GetCommandeAction::class);
+        $groupe->post('/commandes/{id}/paiement', PayerCommandeAction::class);
         $groupe->get('/commandes/{id}/billets', GetBilletsCommandeAction::class);
         $groupe->get('/billets', GetMesBilletsAction::class);
     })->add(AuthMiddleware::class);

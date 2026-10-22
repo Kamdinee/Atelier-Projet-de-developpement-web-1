@@ -11,4 +11,6 @@ interface PassRepositoryInterface
 {
     /** @return list<Pass> */
     public function lister(): array;
+
+    public function trouverParId(int $id): ?Pass;
 }

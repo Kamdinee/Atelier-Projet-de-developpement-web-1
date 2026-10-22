@@ -15,4 +15,13 @@ interface SoireeRepositoryInterface
     // toutes les soirees, dans l'ordre des dates
     /** @return list<Soiree> */
     public function lister(): array;
+
+    // soirees lues et verrouillees jusqu'a la fin de la transaction (pas de survente)
+    /**
+     * @param list<int> $ids
+     * @return array<int, Soiree> id => soiree
+     */
+    public function verrouiller(array $ids): array;
+
+    public function enregistrerPlacesVendues(Soiree $soiree): void;
 }

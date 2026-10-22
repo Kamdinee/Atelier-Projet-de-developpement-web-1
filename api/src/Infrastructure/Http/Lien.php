@@ -55,4 +55,14 @@ final class Lien
     {
         return ['href' => "/commandes/{$commandeId}/billets"];
     }
+
+    public static function commande(string $id): array
+    {
+        return ['href' => "/commandes/{$id}"];
+    }
+
+    public static function paiement(string $id): array
+    {
+        return ['href' => "/commandes/{$id}/paiement", 'method' => 'POST'];
+    }
 }

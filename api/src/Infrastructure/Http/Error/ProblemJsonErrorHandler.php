@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Nrv\Infrastructure\Http\Error;
 
 use Nrv\Domain\Exception\BilletIntrouvableException;
+use Nrv\Domain\Exception\CommandeDejaPayeeException;
 use Nrv\Domain\Exception\CommandeIntrouvableException;
 use Nrv\Domain\Exception\DonneeInvalideException;
 use Nrv\Domain\Exception\EmailDejaUtiliseException;
 use Nrv\Domain\Exception\IdentifiantsInvalidesException;
 use Nrv\Domain\Exception\NrvException;
+use Nrv\Domain\Exception\PaiementRefuseException;
 use Nrv\Domain\Exception\PlacesInsuffisantesException;
 use Nrv\Domain\Exception\SoireeIntrouvableException;
 use Nrv\Domain\Exception\SpectacleIntrouvableException;
@@ -95,6 +97,8 @@ final class ProblemJsonErrorHandler implements ErrorHandlerInterface
             $e instanceof NonAuthentifieException => [401, 'non-authentifie', 'Connexion requise'],
             $e instanceof AccesInterditException => [403, 'acces-interdit', 'Accès interdit'],
             $e instanceof EmailDejaUtiliseException => [409, 'email-deja-utilise', 'Adresse email déjà utilisée'],
+            $e instanceof PaiementRefuseException => [402, 'paiement-refuse', 'Paiement refusé'],
+            $e instanceof CommandeDejaPayeeException => [409, 'commande-deja-payee', 'Commande déjà payée'],
             $e instanceof SoireeIntrouvableException,
             $e instanceof SpectacleIntrouvableException,
             $e instanceof UtilisateurIntrouvableException,

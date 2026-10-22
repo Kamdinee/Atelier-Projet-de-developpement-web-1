@@ -23,6 +23,8 @@ final class AccueilAction
                 'inscription' => ['href' => '/auth/register', 'method' => 'POST'],
                 'connexion' => ['href' => '/auth/signin', 'method' => 'POST'],
                 'compte' => ['href' => '/compte'],
+                'commandes' => ['href' => '/commandes'],
+                'billets' => ['href' => '/billets'],
             ],
         ];
 
