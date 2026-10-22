@@ -45,7 +45,7 @@ final class AdminMiddleware implements MiddlewareInterface
             );
         }
 
-        if (($payload['role'] ?? null) !== 'admin') {
+        if (strtoupper((string) ($payload['role'] ?? '')) !== 'ADMIN') {
             throw new HttpForbiddenException(
                 $request,
                 'Accès réservé aux administrateurs.'

@@ -61,4 +61,5 @@ export const api = {
     soiree: (id, options) => getJson(`/soirees/${encodeURIComponent(id)}`, options),
     styles: (options) => getJson('/styles', options),
     dates: (options) => getJson('/dates', options),
+    pass: (options) => getJson('/pass', options),
 };

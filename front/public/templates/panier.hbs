@@ -1,28 +1,58 @@
-{{!-- contenu du panier (F7) : lignes modifiables (E2) et total --}}
+{{!-- Lignes du panier et récapitulatif --}}
 {{#if lignes.length}}
 <ul class="panier">
     {{#each lignes}}
     <li class="panier__ligne">
         <div class="panier__libelle">
             <strong>{{nom}} · Tarif {{#if (eq categorie "REDUIT")}}réduit{{else}}normal{{/if}}</strong>
-            <span class="panier__soirees-pass"><time datetime="{{date}}T{{heure}}">{{dateCourte date}} · {{heure}}</time> · {{prix prixUnitaire}} l'unité</span>
+
+            {{#if estPass}}
+            <span class="panier__soirees-pass">
+                Dates :
+                {{#each dates}}
+                <time datetime="{{this}}">{{dateCourte this}}</time>{{#unless @last}}, {{/unless}}
+                {{/each}}
+                · {{prix prixUnitaire}} le Pass
+            </span>
+            {{else}}
+            <span class="panier__soirees-pass">
+                <time datetime="{{date}}T{{heure}}">{{dateCourte date}} · {{heure}}</time>
+                · {{prix prixUnitaire}} l'unité
+            </span>
+            {{/if}}
+
             {{#if limite}}<span class="panier__limite">{{limite}}</span>{{/if}}
         </div>
+
         <div class="quantite">
-            <button class="btn btn--secondaire" type="button" data-action="moins" data-index="{{@index}}" aria-label="Retirer un billet {{nom}}">−</button>
+            <button class="btn btn--secondaire" type="button"
+                data-action="moins" data-index="{{@index}}"
+                aria-label="Retirer une unité de {{nom}}">−</button>
             <output class="quantite__valeur" aria-live="polite">{{quantite}}</output>
-            <button class="btn btn--secondaire" type="button" data-action="plus" data-index="{{@index}}" aria-label="Ajouter un billet {{nom}}"{{#if complet}} disabled{{/if}}>+</button>
+            <button class="btn btn--secondaire" type="button"
+                data-action="plus" data-index="{{@index}}"
+                aria-label="Ajouter une unité de {{nom}}"{{#if complet}} disabled{{/if}}>+</button>
         </div>
+
         <p class="panier__prix">{{prix montant}}</p>
-        <button class="panier__supprimer" type="button" data-action="supprimer" data-index="{{@index}}" aria-label="Supprimer {{nom}} du panier">✕</button>
+
+        <button class="panier__supprimer" type="button"
+            data-action="supprimer" data-index="{{@index}}"
+            aria-label="Supprimer {{nom}} du panier">✕</button>
     </li>
     {{/each}}
 </ul>
 
 <section class="recap" aria-label="Total de la commande">
-    <p class="recap__ligne"><span>{{nombreBillets}} {{pluriel nombreBillets "billet"}}</span><span>{{prix total}}</span></p>
+    <p class="recap__ligne">
+        <span>{{nombreBillets}} {{pluriel nombreBillets "billet"}}</span>
+        <span>{{prix total}}</span>
+    </p>
     <p class="recap__total"><span>Total</span><span>{{prix total}}</span></p>
-    <p class="recap__note">Les places sont vérifiées et réservées au moment du paiement. La commande en ligne ouvre prochainement.</p>
+    <p class="recap__note">
+        Les places sont vérifiées et réservées au moment du paiement.
+        La commande en ligne ouvre prochainement.
+    </p>
     <div class="recap__actions">
         <button class="btn" type="button" disabled>Valider la commande</button>
         <button class="btn btn--secondaire" type="button" data-action="vider">Vider le panier</button>
@@ -34,23 +64,3 @@
     <p><a class="btn btn--secondaire" href="index.html">Voir le programme</a></p>
 </div>
 {{/if}}
-
-
-<section class="pass-3-jours" aria-labelledby="titre-pass-3-jours">
-    <div class="pass-3-jours__contenu">
-        <p class="pass-3-jours__surtitre">Vivez le festival autrement</p>
-        <h2 id="titre-pass-3-jours">Composer un Pass 3 jours</h2>
-        <p class="pass-3-jours__texte">
-            Envie de profiter du festival sur plusieurs journées ?
-            Découvrez le programme et préparez vos sorties.
-        </p>
-        <a class="btn pass-3-jours__action" href="index.html">
-            Choisir mes journées
-        </a>
-    </div>
-
-    <div class="pass-3-jours__visuel" aria-hidden="true">
-        <span class="pass-3-jours__nombre">3</span>
-        <span class="pass-3-jours__label">JOURS</span>
-    </div>
-</section>
