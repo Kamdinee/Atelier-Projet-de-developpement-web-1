@@ -11,4 +11,7 @@ interface SoireeRepositoryInterface
 {
     // soiree complete avec son lieu et ses 2 a 3 spectacles, null si inconnue
     public function trouverParId(int $id): ?Soiree;
+
+    // soiree par date (YYYY-MM-DD), null si inconnue
+    public function trouverParDate(string $date): ?Soiree;
 }

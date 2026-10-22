@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Commande & Paiement — Nancy Rock Vibration 2027</title>
+    <meta name="description" content="Paiement sécurisé et confirmation de vos billets Nancy Rock Vibration">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/print.css" media="print">
+</head>
+<body>
+    <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste">
+                    <li><a class="nav__lien" href="index.html">Programme</a></li>
+                    <li data-auth="anonyme" hidden><a class="nav__lien" href="connexion.html">Connexion</a></li>
+                    <li data-auth="anonyme" hidden><a class="nav__lien" href="inscription.html">Inscription</a></li>
+                    <li data-auth="connecte"><a class="nav__lien" href="compte.html">Mon compte</a></li>
+                    <li data-auth="connecte"><button type="button" class="nav__lien nav__lien--deconnexion" id="nav-deconnexion">Déconnexion</button></li>
+                </ul>
+            </nav>
+            <a class="badge-panier" href="panier.html">
+                Panier <span class="badge-panier__nombre" id="panier-nombre">0</span>
+            </a>
+        </div>
+    </header>
+
+    <main id="contenu">
+        <div class="commande-page">
+
+            <!-- État de chargement initial -->
+            <div id="commande-chargement" class="message-vide" aria-live="polite">
+                <p>Chargement de votre commande…</p>
+            </div>
+
+            <!-- Message d'erreur global -->
+            <div id="commande-erreur" class="auth-message auth-message--erreur" role="alert" hidden></div>
+
+            <!-- Tunnel de Paiement (Commande EN_ATTENTE) -->
+            <section id="section-paiement" class="commande-tunnel" hidden>
+                <div class="commande-tunnel__header">
+                    <p class="commande-tunnel__surtitre">Étape 2 / 2 · Finalisation</p>
+                    <h1>Paiement sécurisé</h1>
+                    <p class="commande-tunnel__ref">Commande n° <code id="paiement-ref-commande">—</code></p>
+                </div>
+
+                <div class="commande-grille">
+                    <!-- Récapitulatif commande -->
+                    <div class="commande-carte commande-recap">
+                        <h2>Récapitulatif des billets</h2>
+                        <ul id="paiement-liste-lignes" class="commande-lignes"></ul>
+
+                        <div class="commande-total-bloc">
+                            <div class="commande-total-ligne">
+                                <span>Total à régler</span>
+                                <strong id="paiement-total" class="commande-total-montant">—</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulaire de paiement carte bancaire -->
+                    <div class="commande-carte commande-cb">
+                        <div class="commande-cb__header">
+                            <h2>Carte bancaire</h2>
+                            <span class="commande-cb__badges">Visa / Mastercard</span>
+                        </div>
+
+                        <form id="form-paiement" class="formulaire" novalidate>
+                            <div class="champ">
+                                <label for="cb-nom">Nom complet sur la carte</label>
+                                <input
+                                    type="text"
+                                    id="cb-nom"
+                                    name="nom_carte"
+                                    required
+                                    placeholder="ex. Jean Dupont"
+                                    autocomplete="cc-name"
+                                >
+                            </div>
+
+                            <div class="champ">
+                                <label for="cb-numero">Numéro de carte</label>
+                                <input
+                                    type="text"
+                                    id="cb-numero"
+                                    name="numero_carte"
+                                    required
+                                    inputmode="numeric"
+                                    placeholder="4970 0000 0000 0000"
+                                    maxlength="19"
+                                    autocomplete="cc-number"
+                                >
+                            </div>
+
+                            <div class="commande-cb__duo">
+                                <div class="champ">
+                                    <label for="cb-expiration">Expiration</label>
+                                    <input
+                                        type="text"
+                                        id="cb-expiration"
+                                        name="date_expiration"
+                                        required
+                                        placeholder="MM/AA"
+                                        maxlength="5"
+                                        autocomplete="cc-exp"
+                                    >
+                                </div>
+                                <div class="champ">
+                                    <label for="cb-cvv">Cryptogramme (CVV)</label>
+                                    <input
+                                        type="text"
+                                        id="cb-cvv"
+                                        name="cvv"
+                                        required
+                                        inputmode="numeric"
+                                        placeholder="123"
+                                        maxlength="4"
+                                        autocomplete="cc-csc"
+                                    >
+                                </div>
+                            </div>
+
+                            <div id="paiement-message" class="auth-message" role="status" aria-live="polite"></div>
+
+                            <button id="btn-payer" type="submit" class="btn btn--payer">
+                                Régler la commande
+                            </button>
+
+                            <p class="commande-cb__securite">
+                                Paiement simulé pour l'Atelier Web Nancy Rock Vibration. Aucun débit réel n'est effectué.
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Écran de confirmation (Commande PAYEE) -->
+            <section id="section-confirmation" class="commande-confirmation" hidden>
+                <div class="confirmation-banniere">
+                    <div class="confirmation-banniere__icone" aria-hidden="true">✓</div>
+                    <p class="confirmation-banniere__surtitre">Félicitations</p>
+                    <h1>Paiement confirmé !</h1>
+                    <p class="confirmation-banniere__texte">
+                        Votre commande est validée et vos billets sont désormais prêts.
+                    </p>
+                </div>
+
+                <div class="confirmation-details">
+                    <div class="confirmation-detail-carte">
+                        <span class="detail-label">Numéro de commande</span>
+                        <strong id="confirm-id" class="detail-valeur">—</strong>
+                    </div>
+                    <div class="confirmation-detail-carte">
+                        <span class="detail-label">Date du paiement</span>
+                        <strong id="confirm-date" class="detail-valeur">—</strong>
+                    </div>
+                    <div class="confirmation-detail-carte">
+                        <span class="detail-label">Montant réglé</span>
+                        <strong id="confirm-total" class="detail-valeur detail-valeur--prix">—</strong>
+                    </div>
+                    <div class="confirmation-detail-carte">
+                        <span class="detail-label">Carte utilisée</span>
+                        <strong id="confirm-carte" class="detail-valeur">—</strong>
+                    </div>
+                </div>
+
+                <!-- Billets émis -->
+                <div class="confirmation-billets">
+                    <h2>Vos billets électroniques</h2>
+                    <p class="confirmation-billets__note">
+                        Présentez ces références ou imprimez cette page à l'entrée du festival.
+                    </p>
+                    <div id="confirm-liste-billets" class="grille-billets"></div>
+                </div>
+
+                <!-- Actions de fin -->
+                <div class="confirmation-actions">
+                    <button type="button" class="btn" onclick="window.print()">
+                        Imprimer mes billets
+                    </button>
+                    <a href="index.html" class="btn btn--secondaire">
+                        Retour au programme
+                    </a>
+                    <a href="compte.html" class="btn btn--secondaire">
+                        Voir mon compte
+                    </a>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+
+    <div class="toast" role="status" aria-live="polite" hidden></div>
+
+    <script src="vendor/handlebars.min.js"></script>
+    <script src="js/config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/commande.js"></script>
+</body>
+</html>

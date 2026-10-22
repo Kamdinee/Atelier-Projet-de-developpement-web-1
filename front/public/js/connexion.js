@@ -1,8 +1,9 @@
 import { estConnecte, enregistrerSession } from './auth.js';
 
-// Si déjà connecté, rediriger directement vers la page Mon compte
+// Si déjà connecté, rediriger
 if (estConnecte()) {
-    window.location.replace('compte.html');
+    const redirection = new URLSearchParams(window.location.search).get('redirect') || 'compte.html';
+    window.location.replace(redirection);
 }
 
 const API_URL = window.NRV_CONFIG.apiUrl;
@@ -47,8 +48,13 @@ formulaire.addEventListener('submit', async (event) => {
         message.textContent = 'Connexion réussie ! Redirection...';
         message.className = 'auth-message auth-message--succes';
 
+        const redirection = new URLSearchParams(window.location.search).get('redirect')
+            || sessionStorage.getItem('nrv_redirect')
+            || 'compte.html';
+        sessionStorage.removeItem('nrv_redirect');
+
         window.setTimeout(() => {
-            window.location.href = 'compte.html';
+            window.location.href = redirection;
         }, 500);
     } catch (erreur) {
         message.textContent = erreur.message || 'Connexion impossible.';

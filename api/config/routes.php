@@ -64,4 +64,12 @@ $app->post('/auth', AuthAction::class);
         $groupe->post('/soirees', PostSoireeAction::class);
         $groupe->post('/soirees/{id}/spectacles', PostSpectacleAction::class);
     })->add(RoleAdminMiddleware::class)->add(AuthentificationMiddleware::class);
+
+    // Commandes & Tunnel d'achat (authentification requise)
+    $app->post('/commandes', \Nrv\Infrastructure\Http\Action\CreerCommandeAction::class)
+        ->add(\Nrv\Infrastructure\Http\Middleware\AuthMiddleware::class);
+    $app->get('/commandes/{id}', \Nrv\Infrastructure\Http\Action\ConsulterCommandeAction::class)
+        ->add(\Nrv\Infrastructure\Http\Middleware\AuthMiddleware::class);
+    $app->post('/commandes/{id}/paiement', \Nrv\Infrastructure\Http\Action\PayerCommandeAction::class)
+        ->add(\Nrv\Infrastructure\Http\Middleware\AuthMiddleware::class);
 };

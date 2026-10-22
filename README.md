@@ -99,7 +99,12 @@ DB_PORT_HOTE=25003
 CORS_ORIGINS=http://docketu.iutnc.univ-lorraine.fr:25001
 ```
 
-Si `API_PORT` change, reporter la même valeur dans `front/public/js/config.js` (`const API_PORT = 25000;`).
+> **Attention - Points importants sur docketu :**
+> 1. Si `API_PORT` est modifié dans `.env`, reporter la même valeur dans `front/public/js/config.js` (`const API_PORT = <VOTRE_API_PORT>;`).
+> 2. **Correctif IPv6 Adminer :** Si le conteneur Adminer redémarre en boucle avec une erreur `Failed to listen on [::]:8080`, forcer l'écoute en IPv4 dans `docker-compose.yml` sous le service `adminer` :
+>    ```yaml
+>    entrypoint: ["php", "-S", "0.0.0.0:8080", "-t", "/var/www/html"]
+>    ```
 
 ## Commandes utiles
 

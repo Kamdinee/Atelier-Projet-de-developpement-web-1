@@ -94,7 +94,6 @@ return [
 
 AdminMiddleware::class => autowire(AdminMiddleware::class),
 
- 
     AuthentifierUtilisateur::class => autowire(AuthentifierUtilisateur::class),
     InscrireUtilisateur::class => autowire(InscrireUtilisateur::class),
     PassRepositoryInterface::class => autowire(PDOPassRepository::class),
@@ -112,4 +111,10 @@ AdminMiddleware::class => autowire(AdminMiddleware::class),
     // lit l'utilisateur du jeton emis par /auth (JwtTokenService)
     JwtDecodeur::class => autowire(JwtDecodeur::class),
 
+    // Commandes & Paiement
+    \Nrv\Application\Port\Out\CommandeRepositoryInterface::class => autowire(\Nrv\Infrastructure\Persistence\Pdo\PDOCommandeRepository::class),
+    \Nrv\Infrastructure\Http\Middleware\AuthMiddleware::class => autowire(\Nrv\Infrastructure\Http\Middleware\AuthMiddleware::class),
+    \Nrv\Application\UseCase\CreerCommande::class => autowire(\Nrv\Application\UseCase\CreerCommande::class),
+    \Nrv\Application\UseCase\PayerCommande::class => autowire(\Nrv\Application\UseCase\PayerCommande::class),
+    \Nrv\Application\UseCase\ConsulterCommande::class => autowire(\Nrv\Application\UseCase\ConsulterCommande::class),
 ];

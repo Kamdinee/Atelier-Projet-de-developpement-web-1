@@ -46,10 +46,8 @@ final class ProblemJsonErrorHandler implements ErrorHandlerInterface
             'status' => $statut,
         ];
 
-        // le detail des erreurs 500 n'est montre qu'en dev
-        if ($statut < 500 || $displayErrorDetails) {
-            $probleme['detail'] = $exception->getMessage();
-        }
+        // details de l'erreur
+        $probleme['detail'] = $exception->getMessage();
 
         if ($exception instanceof RequeteInvalideException) {
             $probleme['errors'] = $exception->erreurs;

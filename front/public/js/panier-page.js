@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { getToken, majNavigation } from './auth.js';
 import { dateCourte, nombre, pluriel, prix } from './format.js';
 import * as panier from './panier.js';
 import { afficher } from './templates.js';
@@ -91,7 +92,7 @@ contenu.addEventListener('click', async (e) => {
     const index = Number(bouton.dataset.index);
     const ligne = panier.lire()[index];
 
-    if (bouton.dataset.action !== 'vider' && !ligne) {
+    if (!['vider', 'valider'].includes(bouton.dataset.action) && !ligne) {
         return;
     }
 
@@ -109,6 +110,48 @@ contenu.addEventListener('click', async (e) => {
         case 'vider':
             panier.vider();
             break;
+        case 'valider': {
+            console.log('[Panier] Clic sur Valider la commande');
+            const lignes = panier.lire();
+            if (!lignes.length) {
+                toast('Votre panier est vide.');
+                return;
+            }
+
+            const token = getToken();
+            if (!token) {
+                sessionStorage.setItem('nrv_redirect', 'panier.html');
+                toast('Veuillez vous connecter pour valider votre commande.');
+                window.location.href = 'connexion.html?redirect=panier.html';
+                return;
+            }
+
+            bouton.disabled = true;
+            bouton.textContent = 'Création de la commande…';
+
+            try {
+                const payloadLignes = lignes.map((l) => ({
+                    type: l.type,
+                    soiree_id: l.soireeId ?? null,
+                    pass_id: l.passId ?? null,
+                    categorie: l.categorie,
+                    quantite: l.quantite,
+                    dates: l.dates ?? [],
+                }));
+
+                const res = await api.creerCommande(payloadLignes);
+                const commandeId = res.commande.id;
+
+                toast('Commande enregistrée ! Accès au paiement…');
+                window.location.href = `commande.html?id=${encodeURIComponent(commandeId)}`;
+            } catch (err) {
+                console.error('Erreur création commande:', err);
+                alert('Erreur lors de la validation du panier : ' + (err.message || 'Impossible de créer la commande.'));
+                bouton.disabled = false;
+                bouton.textContent = 'Valider la commande';
+            }
+            return;
+        }
         default:
             return;
     }
@@ -250,6 +293,7 @@ formulairePass?.addEventListener('submit', async (e) => {
 });
 
 async function demarrer() {
+    majNavigation();
     panier.majBadge();
     await chargerPlaces();
     await rafraichir();

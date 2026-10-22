@@ -15,18 +15,23 @@ export class ErreurApi extends Error {
 }
 
 // appel generique : GET par defaut, corps json pour POST, jeton de connexion si auth = true
-async function requete(chemin, { methode = 'GET', corps, auth = false, signal } = {}) {
+async function requete(chemin, { methode = 'GET', corps, auth = false, signal, headers = {} } = {}) {
     const url = chemin.startsWith('http') ? chemin : API_URL + chemin;
-    const entetes = { Accept: 'application/json' };
+    const entetes = { Accept: 'application/json', ...headers };
     if (corps !== undefined) {
         entetes['Content-Type'] = 'application/json';
     }
     if (auth) {
-        const jeton = session.jeton();
+        const jeton = session.jeton() || localStorage.getItem('nrv_token') || sessionStorage.getItem('nrv_token');
         if (!jeton) {
             throw new ErreurApi(401, 'Connexion requise');
         }
         entetes.Authorization = `Bearer ${jeton}`;
+    } else {
+        const jeton = localStorage.getItem('nrv_token') || sessionStorage.getItem('nrv_token');
+        if (jeton) {
+            entetes.Authorization = `Bearer ${jeton}`;
+        }
     }
 
     let reponse;
@@ -38,7 +43,6 @@ async function requete(chemin, { methode = 'GET', corps, auth = false, signal } 
             signal,
         });
     } catch (e) {
-        // requete annulee volontairement : on laisse remonter tel quel
         if (e.name === 'AbortError') {
             throw e;
         }
@@ -54,7 +58,7 @@ async function requete(chemin, { methode = 'GET', corps, auth = false, signal } 
         }
         throw new ErreurApi(
             reponse.status,
-            data?.title ?? `Erreur ${reponse.status}`,
+            data?.detail ?? data?.message ?? data?.title ?? `Erreur ${reponse.status}`,
             data?.errors ?? data?.detail ?? null,
         );
     }
@@ -67,6 +71,7 @@ export function getJson(chemin, options = {}) {
     return requete(chemin, options);
 }
 
+// POST <chemin> avec un corps JSON et renvoie le json
 export function postJson(chemin, corps, options = {}) {
     return requete(chemin, { ...options, methode: 'POST', corps });
 }
@@ -108,4 +113,10 @@ export const api = {
     ajouterSoiree: (soiree) => postJson('/admin/soirees', soiree, { auth: true }),
     ajouterSpectacle: (soireeId, spectacle) =>
         postJson(`/admin/soirees/${encodeURIComponent(soireeId)}/spectacles`, spectacle, { auth: true }),
+
+    // Commandes & Tunnel d'achat
+    creerCommande: (lignes, options) => postJson('/commandes', { lignes }, { ...options, auth: true }),
+    commande: (id, options) => getJson(`/commandes/${encodeURIComponent(id)}`, { ...options, auth: true }),
+    payerCommande: (id, donneesPaiement, options) =>
+        postJson(`/commandes/${encodeURIComponent(id)}/paiement`, donneesPaiement, { ...options, auth: true }),
 };
