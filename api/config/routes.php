@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Nrv\Infrastructure\Http\Action\AccueilAction;
+use Nrv\Infrastructure\Http\Action\GetBilletAction;
 use Nrv\Infrastructure\Http\Action\GetDatesAction;
 use Nrv\Infrastructure\Http\Action\GetSoireeDetailAction;
 use Nrv\Infrastructure\Http\Action\GetSpectacleAction;
@@ -24,6 +25,7 @@ return static function (App $app): void {
     $app->get('/dates', GetDatesAction::class);
 
     // un billet par son jeton : public, le jeton aleatoire sert de cle (F10)
+    $app->get('/billets/{token}', GetBilletAction::class);
 
     // espace client : utilisateur connecte (jeton jwt)
 

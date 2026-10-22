@@ -25,4 +25,9 @@ final class Lien
 
         return ['href' => '/spectacles' . ($query !== '' ? '?' . $query : '')];
     }
+
+    public static function billet(string $jeton): array
+    {
+        return ['href' => "/billets/{$jeton}"];
+    }
 }

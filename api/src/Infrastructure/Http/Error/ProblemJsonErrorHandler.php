@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nrv\Infrastructure\Http\Error;
 
+use Nrv\Domain\Exception\BilletIntrouvableException;
 use Nrv\Domain\Exception\DonneeInvalideException;
 use Nrv\Domain\Exception\NrvException;
 use Nrv\Domain\Exception\PlacesInsuffisantesException;
@@ -89,7 +90,8 @@ final class ProblemJsonErrorHandler implements ErrorHandlerInterface
             $e instanceof NonAuthentifieException => [401, 'non-authentifie', 'Connexion requise'],
             $e instanceof AccesInterditException => [403, 'acces-interdit', 'Accès interdit'],
             $e instanceof SoireeIntrouvableException,
-            $e instanceof SpectacleIntrouvableException => [404, 'introuvable', 'Ressource introuvable'],
+            $e instanceof SpectacleIntrouvableException,
+            $e instanceof BilletIntrouvableException => [404, 'introuvable', 'Ressource introuvable'],
             $e instanceof PlacesInsuffisantesException => [409, 'places-insuffisantes', 'Places insuffisantes'],
             $e instanceof DonneeInvalideException => [422, 'validation', 'Données invalides'],
             $e instanceof NrvException => [409, 'conflit', 'Conflit'],

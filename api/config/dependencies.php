@@ -2,16 +2,20 @@
 
 declare(strict_types=1);
 
+use Nrv\Application\Port\In\ConsulterBilletInterface;
 use Nrv\Application\Port\In\ConsulterSoireeInterface;
 use Nrv\Application\Port\In\ConsulterSpectacleInterface;
 use Nrv\Application\Port\In\ListerFiltresProgrammeInterface;
 use Nrv\Application\Port\In\ListerSpectaclesInterface;
+use Nrv\Application\Port\Out\BilletRepositoryInterface;
 use Nrv\Application\Port\Out\SoireeRepositoryInterface;
 use Nrv\Application\Port\Out\SpectacleRepositoryInterface;
+use Nrv\Application\UseCase\ConsulterBillet;
 use Nrv\Application\UseCase\ConsulterSoiree;
 use Nrv\Application\UseCase\ConsulterSpectacle;
 use Nrv\Application\UseCase\ListerFiltresProgramme;
 use Nrv\Application\UseCase\ListerSpectacles;
+use Nrv\Infrastructure\Persistence\Pdo\PDOBilletRepository;
 use Nrv\Infrastructure\Persistence\Pdo\PDOSoireeRepository;
 use Nrv\Infrastructure\Persistence\Pdo\PDOSpectacleRepository;
 use Nrv\Infrastructure\Security\JwtDecodeur;
@@ -38,12 +42,14 @@ return [
     // ports de sortie (domaine) -> adaptateurs pdo
     SpectacleRepositoryInterface::class => autowire(PDOSpectacleRepository::class),
     SoireeRepositoryInterface::class => autowire(PDOSoireeRepository::class),
+    BilletRepositoryInterface::class => autowire(PDOBilletRepository::class),
 
     // ports d'entree (application) -> cas d'usage
     ListerSpectaclesInterface::class => autowire(ListerSpectacles::class),
     ConsulterSpectacleInterface::class => autowire(ConsulterSpectacle::class),
     ConsulterSoireeInterface::class => autowire(ConsulterSoiree::class),
     ListerFiltresProgrammeInterface::class => autowire(ListerFiltresProgramme::class),
+    ConsulterBilletInterface::class => autowire(ConsulterBillet::class),
 
     // verification des jetons jwt (secret JWT_SECRET du .env)
     JwtDecodeur::class => static fn (ContainerInterface $c): JwtDecodeur => new JwtDecodeur($c->get('settings')['jwt']['secret']),
