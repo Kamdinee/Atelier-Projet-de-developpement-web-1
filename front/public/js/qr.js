@@ -1,5 +1,5 @@
 // qr code d'un billet en svg (bibliotheque qrcode-generator, licence mit, dans vendor/)
-import qrcode from '../vendor/qrcode.mjs';
+import qrcode from '../vendor/qrcode.js';
 
 // renvoie le code svg d'un qr code qui encode le texte (l'url du billet)
 export function svgQr(texte, libelle = 'QR code du billet') {
