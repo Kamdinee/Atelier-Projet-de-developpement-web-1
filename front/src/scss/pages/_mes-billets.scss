@@ -1,0 +1,103 @@
+@use '../abstracts' as *;
+
+// espace client : une carte depliable (details/summary) par commande
+.commandes {
+    display: flex;
+    flex-direction: column;
+    gap: $espace-m;
+    margin-top: $espace-l;
+    padding: 0;
+    list-style: none;
+}
+
+.commande {
+    border-radius: $rayon;
+    background: $couleur-surface;
+
+    // flex : date + reference | statut | total
+    &__resume {
+        @include flex(space-between, center, $espace-s $espace-m, wrap);
+        padding: $espace-m $espace-l;
+        cursor: pointer;
+        list-style: none;
+        @include focus-visible;
+
+        .etiquette {
+            align-self: center;
+        }
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+
+        // fleche qui tourne a l'ouverture
+        &::after {
+            content: '▾';
+            color: $couleur-texte-doux;
+            transition: transform $transition;
+        }
+    }
+
+    &[open] &__resume::after {
+        transform: rotate(180deg);
+    }
+
+    &__titre {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 12rem;
+
+        strong {
+            color: $blanc;
+        }
+
+        small {
+            color: $couleur-texte-doux;
+            font-family: monospace;
+        }
+    }
+
+    &__total {
+        color: $blanc;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+
+    &__corps {
+        display: flex;
+        flex-direction: column;
+        gap: $espace-s;
+        padding: 0 $espace-l $espace-l;
+    }
+
+    &__billets {
+        display: flex;
+        flex-direction: column;
+        gap: $espace-s;
+        padding: 0;
+        list-style: none;
+    }
+
+    // flex : libelle du billet | lien
+    &__billet {
+        @include flex(space-between, center, $espace-s $espace-m, wrap);
+        padding: $espace-s $espace-m;
+        border: 1px solid rgba($blanc, 0.08);
+        border-radius: $rayon;
+
+        span {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 14rem;
+        }
+
+        small {
+            color: $couleur-texte-doux;
+        }
+    }
+
+    &__actions {
+        @include flex(flex-start, center, $espace-s, wrap);
+        margin-top: $espace-s;
+    }
+}
