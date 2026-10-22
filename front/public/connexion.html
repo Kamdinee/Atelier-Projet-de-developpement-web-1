@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Connexion à ton compte NRV.net">
+    <title>Connexion — NRV.net</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste">
+                    <li><a class="nav__lien" href="index.html">Programme</a></li>
+                    <li data-auth="anonyme"><a class="nav__lien" href="connexion.html" aria-current="page">Connexion</a></li>
+                    <li data-auth="anonyme"><a class="nav__lien" href="inscription.html">Inscription</a></li>
+                    <li data-auth="connecte" hidden><a class="nav__lien" href="mes-billets.html">Mes billets</a></li>
+                    <li data-auth="connecte" hidden><a class="nav__lien" href="compte.html">Mon compte</a></li>
+                    <li data-auth="connecte" hidden><button type="button" class="nav__lien nav__lien--deconnexion" id="nav-deconnexion">Déconnexion</button></li>
+                </ul>
+            </nav>
+            <a class="badge-panier" href="panier.html">
+                Panier <span class="badge-panier__nombre" id="panier-nombre">0</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="conteneur page-auth">
+        <header class="page-auth__intro">
+            <p class="page-auth__surtitre">LE FESTIVAL NRV.NET</p>
+            <h1>HEUREUX DE TE REVOIR</h1>
+            <p>Connecte-toi pour retrouver ton espace festivalier.</p>
+        </header>
+
+        <div class="auth-grille auth-grille--unique">
+            <section class="auth-carte" aria-labelledby="titre-connexion">
+                <h2 id="titre-connexion">Connexion</h2>
+                <p>Entre tes identifiants pour accéder à ton compte.</p>
+
+                <form id="form-connexion" class="formulaire">
+                    <label class="champ">
+                        Adresse email
+                        <input type="email" name="email"
+                               autocomplete="email" required>
+                    </label>
+
+                    <label class="champ">
+                        Mot de passe
+                        <input type="password" name="mot_de_passe"
+                               autocomplete="current-password" required>
+                    </label>
+
+                    <p id="message-connexion" class="auth-message"
+                       role="status" aria-live="polite"></p>
+
+                    <button class="btn" type="submit">Se connecter</button>
+                </form>
+
+                <div class="auth-lien">
+                    <span>Tu n'as pas encore de compte ?</span>
+                    <a href="inscription.html">Créer un compte</a>
+                </div>
+
+                <a class="btn btn--secondaire auth-retour" href="index.html">
+                    ← Retour au programme
+                </a>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/connexion.js"></script>
+    <script type="module">
+        import { majBadge } from './js/panier.js';
+        majBadge();
+    </script>
+    <script type="module" src="js/entete.js"></script>
+</body>
+</html>

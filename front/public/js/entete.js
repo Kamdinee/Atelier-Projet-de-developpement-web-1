@@ -17,6 +17,8 @@ if (estAdmin()) {
             lien.setAttribute('aria-current', 'page');
         }
         element.append(lien);
-        liste.append(element);
+        // avant « Mon compte » s'il est la, sinon en fin de menu
+        const compte = liste.querySelector('a[href="compte.html"]')?.closest('li');
+        liste.insertBefore(element, compte ?? null);
     }
 }

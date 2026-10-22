@@ -48,7 +48,7 @@ async function charger() {
     } catch (erreur) {
         if (erreur.statut === 401) {
             await afficherErreur(zone, { ...erreur, message: 'Connectez-vous avec un compte administrateur.', details: null },
-                () => { window.location.href = 'compte.html'; }, 'Se connecter');
+                () => { window.location.href = 'connexion.html'; }, 'Se connecter');
         } else if (erreur.statut === 403) {
             await afficherErreur(zone, { ...erreur, message: 'Cette page est réservée aux administrateurs du festival.', details: null },
                 () => { window.location.href = 'index.html'; }, 'Retour au programme');

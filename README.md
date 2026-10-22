@@ -67,13 +67,11 @@ Le compte `client@nrv.net` a une commande payée (2 billets « Nuit métal » + 
 
 Pages du site : `billet.html?token=…`, `mes-billets.html`, `admin.html` (jauges), `admin-programme.html` (ajout).
 
-Les routes protégées attendent l'en-tête `Authorization: Bearer <jwt>` (claims `sub` = id, `role` = `CLIENT` ou `ADMIN`). En attendant la page de connexion, un jeton de test s'obtient avec :
+Les routes protégées attendent l'en-tête `Authorization: Bearer <jwt>`, le jeton renvoyé par `POST /auth` (page `connexion.html`). Pour tester avec curl sans passer par le site :
 
 ```bash
 docker compose exec php composer jeton -- admin@nrv.net
 ```
-
-puis, dans la console du navigateur sur le site : `localStorage.setItem('nrv-jeton', '<jeton>')`.
 
 ## Tests automatisés
 

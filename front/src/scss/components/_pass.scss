@@ -1,0 +1,166 @@
+@use '../abstracts' as *;
+
+.pass-3-jours {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: $espace-l;
+    margin-block: $espace-xl;
+    padding: $espace-l;
+    border: 1px solid rgba(228, 50, 43, 0.55);
+    border-radius: $rayon;
+    background: linear-gradient(135deg, $couleur-surface, $noir);
+    color: $couleur-texte;
+}
+
+.pass-3-jours__surtitre {
+    margin: 0 0 $espace-s;
+    color: $couleur-accent;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.pass-3-jours h2 {
+    margin: 0 0 $espace-m;
+    font-family: $police-titre;
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
+    line-height: 1.1;
+}
+
+.pass-3-jours__texte {
+    max-width: 52ch;
+    margin: 0 0 $espace-l;
+    color: $couleur-texte-doux;
+    line-height: 1.7;
+}
+
+.pass-3-jours__formulaire {
+    display: grid;
+    gap: $espace-m;
+    margin-top: $espace-l;
+}
+
+.pass-3-jours__formulaire fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: $espace-m;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: $rayon;
+}
+
+.pass-3-jours__formulaire legend {
+    padding-inline: $espace-s;
+    font-weight: 700;
+}
+
+.pass-3-jours__dates {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+    gap: $espace-s;
+}
+
+.pass-date {
+    display: flex;
+    align-items: center;
+    gap: $espace-s;
+    min-height: 44px;
+    padding: $espace-s;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.035);
+    cursor: pointer;
+}
+
+.pass-date:has(input:checked) {
+    border-color: $couleur-accent;
+    background: rgba(228, 50, 43, 0.12);
+}
+
+.pass-date input[type="checkbox"] {
+    width: auto;
+    flex: 0 0 auto;
+    accent-color: $couleur-accent;
+}
+
+.pass-date:has(input:disabled) {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.pass-3-jours__tarif {
+    display: grid;
+    gap: $espace-s;
+    max-width: 360px;
+}
+
+.pass-3-jours__message {
+    min-height: 1.4em;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.pass-3-jours__message--erreur {
+    color: $rouge;
+}
+
+.pass-3-jours__message--succes {
+    color: $vert;
+}
+
+.pass-3-jours__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    text-decoration: none;
+}
+
+.pass-3-jours__action:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.pass-3-jours__visuel {
+    display: flex;
+    width: 8rem;
+    aspect-ratio: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid $couleur-accent;
+    border-radius: 50%;
+    background: rgba(228, 50, 43, 0.12);
+}
+
+.pass-3-jours__nombre {
+    color: $couleur-accent;
+    font-family: $police-titre;
+    font-size: 3.5rem;
+    line-height: 1;
+}
+
+.pass-3-jours__label {
+    margin-top: $espace-s;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+}
+
+@media (max-width: 600px) {
+    .pass-3-jours {
+        grid-template-columns: minmax(0, 1fr);
+        gap: $espace-m;
+        padding: $espace-m;
+    }
+
+    .pass-3-jours__visuel {
+        width: 5.5rem;
+        justify-self: end;
+    }
+
+    .pass-3-jours__nombre {
+        font-size: 2.5rem;
+    }
+}

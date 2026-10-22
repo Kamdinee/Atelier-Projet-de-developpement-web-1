@@ -249,7 +249,7 @@ async function bloquer(erreur) {
         ? 'Connectez-vous avec un compte administrateur.'
         : 'Cette page est réservée aux administrateurs du festival.';
     await afficherErreur(etat, { ...erreur, message, details: null },
-        () => { window.location.href = erreur.statut === 401 ? 'compte.html' : 'index.html'; },
+        () => { window.location.href = erreur.statut === 401 ? 'connexion.html' : 'index.html'; },
         erreur.statut === 401 ? 'Se connecter' : 'Retour au programme');
 }
 

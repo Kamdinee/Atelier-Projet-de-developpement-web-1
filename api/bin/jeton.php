@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 // outil de dev : affiche un jeton jwt pour un compte du jeu de test
 // usage : docker compose exec php composer jeton -- admin@nrv.net
-// sert a tester les routes protegees tant que la connexion (/auth/signin) n'est pas branchee
+// pratique pour tester les routes protegees avec curl sans passer par la page de connexion
 
-use Firebase\JWT\JWT;
-use Nrv\Infrastructure\Security\JwtDecodeur;
+use Nrv\Infrastructure\Token\JwtTokenService;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -34,12 +33,5 @@ if ($utilisateur === false) {
     exit(1);
 }
 
-$maintenant = time();
-echo JWT::encode([
-    'iss' => 'nrv.net',
-    'sub' => (string) $utilisateur['id'],
-    'email' => $utilisateur['email'],
-    'role' => $utilisateur['role'],
-    'iat' => $maintenant,
-    'exp' => $maintenant + $settings['jwt']['ttl'],
-], $settings['jwt']['secret'], JwtDecodeur::ALGORITHME), PHP_EOL;
+echo (new JwtTokenService($settings['jwt']['secret'], $settings['jwt']['ttl']))
+    ->generate((int) $utilisateur['id'], (string) $utilisateur['role']), PHP_EOL;

@@ -13,7 +13,7 @@ use Nrv\Domain\Exception\SoireeCompleteException;
 use Nrv\Domain\ValueObject\CategorieTarif;
 use Nrv\Domain\ValueObject\Tarifs;
 
-// une soiree du festival : date, lieu, tarifs, jauge et 2 a 3 spectacles
+
 final class Soiree
 {
     public const MIN_SPECTACLES = 2;

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consultez votre compte NRV.net.">
+    <title>Mon compte — NRV.net</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste">
+                    <li><a class="nav__lien" href="index.html">Programme</a></li>
+                    <li data-auth="anonyme" hidden><a class="nav__lien" href="connexion.html">Connexion</a></li>
+                    <li data-auth="anonyme" hidden><a class="nav__lien" href="inscription.html">Inscription</a></li>
+                    <li data-auth="connecte"><a class="nav__lien" href="mes-billets.html">Mes billets</a></li>
+                    <li data-auth="connecte"><a class="nav__lien" href="compte.html" aria-current="page">Mon compte</a></li>
+                    <li data-auth="connecte"><button type="button" class="nav__lien nav__lien--deconnexion" id="nav-deconnexion">Déconnexion</button></li>
+                </ul>
+            </nav>
+            <a class="badge-panier" href="panier.html">
+                Panier <span class="badge-panier__nombre" id="panier-nombre">0</span>
+            </a>
+        </div>
+    </header>
+
+    <main id="contenu">
+        <div class="compte-page">
+
+            <!-- En-tête de page -->
+            <header class="compte-hero">
+                <div class="compte-hero__inner">
+                    <div class="compte-avatar" aria-hidden="true">
+                        <span id="compte-initiales">?</span>
+                    </div>
+                    <div class="compte-hero__texte">
+                        <p class="compte-hero__surtitre">Mon espace festival</p>
+                        <h1 id="compte-hero-nom">Mon compte</h1>
+                        <p id="compte-hero-email" class="compte-hero__email"></p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Message d'état -->
+            <div
+                id="message-compte"
+                class="auth-message compte-status"
+                role="status"
+                aria-live="polite"
+            ></div>
+
+            <!-- Carte infos -->
+            <section id="compte-infos" class="compte-carte" hidden aria-labelledby="titre-infos">
+                <div class="compte-carte__header">
+                    <span class="compte-carte__icone" aria-hidden="true">👤</span>
+                    <h2 id="titre-infos">Mes informations</h2>
+                </div>
+
+                <dl class="compte-infos-liste">
+                    <div class="compte-info-ligne">
+                        <dt>Prénom</dt>
+                        <dd id="compte-prenom">—</dd>
+                    </div>
+                    <div class="compte-info-ligne">
+                        <dt>Nom</dt>
+                        <dd id="compte-nom">—</dd>
+                    </div>
+                    <div class="compte-info-ligne">
+                        <dt>Adresse e-mail</dt>
+                        <dd id="compte-email">—</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <!-- Actions -->
+            <div class="compte-actions">
+                <a href="panier.html" class="btn">
+                    🎟 Mon panier
+                </a>
+                <a href="mes-billets.html" class="btn btn--secondaire">
+                    Mes billets
+                </a>
+                <a href="index.html" class="btn btn--secondaire">
+                    ← Retour au programme
+                </a>
+                <button
+                    id="compte-deconnexion"
+                    class="btn btn--danger"
+                    type="button"
+                    hidden
+                >
+                    Se déconnecter
+                </button>
+            </div>
+
+            <!-- Lien connexion si pas connecté -->
+            <div id="compte-lien-connexion" class="compte-non-connecte" hidden>
+                <p>Vous devez être connecté pour accéder à votre espace.</p>
+                <a href="connexion.html" class="btn">Se connecter</a>
+                <a href="inscription.html" class="btn btn--secondaire">Créer un compte</a>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/compte.js"></script>
+    <script type="module" src="js/entete.js"></script>
+</body>
+</html>

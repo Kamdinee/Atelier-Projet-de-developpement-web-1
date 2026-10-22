@@ -56,7 +56,7 @@ async function charger() {
         document.title = 'Billet introuvable - Nancy Rock Vibration 2027';
         if (erreur.statut === 401) {
             await afficherErreur(contenu, { ...erreur, message: 'Connectez-vous pour voir les billets de cette commande.' },
-                () => { window.location.href = 'compte.html'; }, 'Se connecter');
+                () => { window.location.href = 'connexion.html'; }, 'Se connecter');
         } else if (erreur.statut === 404 || erreur.statut === 400) {
             await afficherErreur(contenu, { ...erreur, statut: 404, message: 'Ce billet est introuvable : vérifiez le lien reçu après le paiement.', details: null },
                 () => { window.location.href = 'mes-billets.html'; }, 'Mes billets');

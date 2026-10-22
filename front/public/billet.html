@@ -20,7 +20,11 @@
             <nav class="nav" aria-label="Principale">
                 <ul class="nav__liste">
                     <li><a class="nav__lien" href="index.html">Programme</a></li>
-                    <li><a class="nav__lien" href="mes-billets.html">Mes billets</a></li>
+                    <li data-auth="anonyme"><a class="nav__lien" href="connexion.html">Connexion</a></li>
+                    <li data-auth="anonyme"><a class="nav__lien" href="inscription.html">Inscription</a></li>
+                    <li data-auth="connecte" hidden><a class="nav__lien" href="mes-billets.html">Mes billets</a></li>
+                    <li data-auth="connecte" hidden><a class="nav__lien" href="compte.html">Mon compte</a></li>
+                    <li data-auth="connecte" hidden><button type="button" class="nav__lien nav__lien--deconnexion" id="nav-deconnexion">Déconnexion</button></li>
                 </ul>
             </nav>
             <a class="badge-panier" href="panier.html">
@@ -45,6 +49,7 @@
 
     <script src="vendor/handlebars.min.js"></script>
     <script src="js/config.js"></script>
+    <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/billet.js"></script>
     <script type="module" src="js/entete.js"></script>
 </body>

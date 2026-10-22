@@ -58,7 +58,7 @@ async function charger() {
     } catch (erreur) {
         if (erreur.statut === 401) {
             await afficherErreur(zone, { ...erreur, message: 'Connectez-vous pour retrouver vos commandes et vos billets.', details: null },
-                () => { window.location.href = 'compte.html'; }, 'Se connecter');
+                () => { window.location.href = 'connexion.html'; }, 'Se connecter');
         } else {
             await afficherErreur(zone, erreur, charger);
         }

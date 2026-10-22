@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace Nrv\Infrastructure\Security;
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+use Nrv\Infrastructure\Token\JwtTokenService;
 use Throwable;
 
-// verifie un jeton jwt (HS256, secret JWT_SECRET) et renvoie l'utilisateur qu'il porte
-// claims attendus : sub = id de l'utilisateur, role = CLIENT | ADMIN, email (facultatif)
-// a aligner sur le jeton emis par /auth/signin (etape 5) a la fusion
+// lit l'utilisateur porte par un jeton jwt emis a la connexion (POST /auth)
+// claims utilises : sub = id de l'utilisateur, role = CLIENT | ADMIN
 final class JwtDecodeur
 {
-    public const ALGORITHME = 'HS256';
-
-    public function __construct(private readonly string $secret)
+    public function __construct(private readonly JwtTokenService $jwt)
     {
     }
 
@@ -23,13 +19,13 @@ final class JwtDecodeur
     public function decoder(string $jeton): ?UtilisateurConnecte
     {
         try {
-            $claims = (array) JWT::decode($jeton, new Key($this->secret, self::ALGORITHME));
+            $claims = $this->jwt->verify($jeton);
         } catch (Throwable) {
             return null;
         }
 
         $id = filter_var($claims['sub'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        $role = $claims['role'] ?? null;
+        $role = strtoupper((string) ($claims['role'] ?? ''));
         if ($id === false || !in_array($role, ['CLIENT', 'ADMIN'], true)) {
             return null;
         }
