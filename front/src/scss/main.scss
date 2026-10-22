@@ -16,11 +16,11 @@
 @use 'components/formulaires';
 @use 'components/messages';
 @use 'components/etats';
+@use 'components/pass';
 
 // pages
 @use 'pages/soiree';
 @use 'pages/panier';
 @use 'pages/billet';
 @use 'pages/admin';
-@use 'pages/auth';
-@use 'components/pass';
+@use 'pages/compte';

@@ -1,88 +1,156 @@
 @use '../abstracts' as *;
 
-.pass-3-jours {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: $espace-l;
-    margin-block: $espace-xl;
+// composer un pass 3 jours (page panier)
+.pass {
+    margin-top: $espace-xl;
     padding: $espace-l;
-    border: 1px solid rgba(228, 50, 43, 0.55);
+    border: 1px solid rgba($couleur-accent, 0.5);
     border-radius: $rayon;
-    background: linear-gradient(135deg, $couleur-surface, $noir);
-    color: $couleur-texte;
-}
+    background: $couleur-surface;
 
-.pass-3-jours__surtitre {
-    margin: 0 0 $espace-s;
-    color: $couleur-accent;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-}
-
-.pass-3-jours h2 {
-    margin: 0 0 $espace-m;
-    font-family: $police-titre;
-    font-size: clamp(1.7rem, 3vw, 2.5rem);
-    line-height: 1.1;
-}
-
-.pass-3-jours__texte {
-    max-width: 52ch;
-    margin: 0 0 $espace-l;
-    color: $couleur-texte-doux;
-    line-height: 1.7;
-}
-
-.pass-3-jours__action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    text-decoration: none;
-}
-
-.pass-3-jours__visuel {
-    display: flex;
-    width: 8rem;
-    aspect-ratio: 1;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid $couleur-accent;
-    border-radius: 50%;
-    background: rgba(228, 50, 43, 0.12);
-}
-
-.pass-3-jours__nombre {
-    color: $couleur-accent;
-    font-family: $police-titre;
-    font-size: 3.5rem;
-    line-height: 1;
-}
-
-.pass-3-jours__label {
-    margin-top: $espace-s;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-}
-
-@media (max-width: 600px) {
-    .pass-3-jours {
-        grid-template-columns: minmax(0, 1fr);
-        gap: $espace-m;
-        padding: $espace-m;
+    &__intro {
+        max-width: 48rem;
+        margin-block: $espace-s $espace-l;
+        color: $couleur-texte-doux;
     }
 
-    .pass-3-jours__visuel {
-        width: 5.5rem;
-        justify-self: end;
+    // grid : les soirees prennent toute la largeur, puis tarif | total sur bureau
+    &__form {
+        display: grid;
+        gap: $espace-l;
+
+        @include mq(bureau) {
+            grid-template-columns: 1fr 1fr;
+            align-items: end;
+        }
     }
 
-    .pass-3-jours__nombre {
-        font-size: 2.5rem;
+    fieldset {
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+
+    legend {
+        @include flex(flex-start, baseline, $espace-s);
+        margin-bottom: $espace-s;
+        font-weight: 700;
+        color: $blanc;
+    }
+
+    &__soirees {
+        grid-column: 1 / -1;
+    }
+
+    &__compteur {
+        color: $couleur-accent;
+    }
+
+    // grid auto-fill : 1 colonne sur telephone, 2 sur tablette, 4 sur bureau
+    &__liste {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+        gap: $espace-s;
+        padding: 0;
+        list-style: none;
+    }
+
+    // carte cochable : date | nom, et la thematique dessous
+    &__soiree {
+        display: grid;
+        grid-template-columns: auto auto 1fr;
+        align-items: baseline;
+        gap: $espace-xs $espace-s;
+        height: 100%;
+        padding: $espace-s $espace-m;
+        border: 1px solid rgba($blanc, 0.12);
+        border-radius: $rayon;
+        background: $noir;
+        font-weight: 400;
+        cursor: pointer;
+        transition: border-color $transition, background $transition;
+
+        &:hover {
+            border-color: rgba($couleur-accent, 0.6);
+        }
+
+        // soiree choisie : le style suit l'etat de la case (pas de classe a gerer en js)
+        &:has(input:checked) {
+            border-color: $couleur-accent;
+            background: rgba($couleur-accent, 0.12);
+        }
+
+        &:has(input:disabled) {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        &:has(input:focus-visible) {
+            outline: 3px solid $couleur-alerte;
+            outline-offset: 2px;
+        }
+
+        input {
+            width: auto;
+            accent-color: $couleur-accent;
+        }
+    }
+
+    &__date {
+        font-weight: 700;
+        color: $blanc;
+        white-space: nowrap;
+    }
+
+    &__nom {
+        overflow-wrap: anywhere;
+    }
+
+    &__places {
+        grid-column: 2 / -1;
+        color: $couleur-texte-doux;
+        font-size: 0.8rem;
+    }
+
+    &__tarifs {
+        display: flex;
+        flex-direction: column;
+        gap: $espace-s;
+    }
+
+    &__tarif {
+        @include flex(flex-start, baseline, $espace-s, wrap);
+        font-weight: 400;
+        cursor: pointer;
+
+        input {
+            width: auto;
+            accent-color: $couleur-accent;
+        }
+
+        small {
+            flex-basis: 100%;
+            padding-left: $espace-l;
+            color: $couleur-texte-doux;
+            font-size: 0.8rem;
+        }
+    }
+
+    // flex : total | bouton, l'aide passe dessous
+    &__validation {
+        @include flex(space-between, center, $espace-s $espace-m, wrap);
+    }
+
+    &__total strong {
+        margin-left: $espace-s;
+        font-size: 1.25rem;
+        color: $blanc;
+    }
+
+    &__aide {
+        flex-basis: 100%;
+        color: $couleur-texte-doux;
+        font-size: 0.85rem;
     }
 }

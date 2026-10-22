@@ -1,0 +1,15 @@
+{{!-- compte de l'utilisateur connecte (GET /compte) --}}
+<section class="fiche-compte" aria-labelledby="titre-infos">
+    <h2 id="titre-infos">Bonjour {{prenom}}</h2>
+    <dl class="fiche-compte__infos">
+        <div><dt>Prénom</dt><dd>{{prenom}}</dd></div>
+        <div><dt>Nom</dt><dd>{{nom}}</dd></div>
+        <div><dt>Adresse email</dt><dd>{{email}}</dd></div>
+        <div><dt>Compte</dt><dd>{{#if admin}}Administrateur{{else}}Client{{/if}}</dd></div>
+    </dl>
+    <p class="fiche-compte__note">Vos commandes et vos billets apparaîtront ici après votre premier achat.</p>
+    <div class="fiche-compte__actions">
+        <a class="btn" href="panier.html">Voir mon panier</a>
+        <button class="btn btn--secondaire" type="button" data-action="deconnexion">Se déconnecter</button>
+    </div>
+</section>

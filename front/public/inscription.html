@@ -1,94 +1,78 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Créer un compte NRV.net">
-    <title>Inscription — NRV.net</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Créer un compte - Nancy Rock Vibration 2027</title>
+    <meta name="description" content="Création d'un compte NRV.net pour commander des billets">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;600;700&amp;display=swap">
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+    <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
     <header class="site-header">
-        <div class="conteneur site-header__interieur">
+        <div class="site-header__inner">
             <a class="site-header__logo" href="index.html">NRV<span>.net</span></a>
-            <nav aria-label="Navigation principale">
-                <a href="index.html">Programme</a>
-                <a href="panier.html">Mon panier</a>
-                <a href="connexion.html">Connexion</a>
-                <a href="inscription.html">Inscription</a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste">
+                    <li><a class="nav__lien" href="index.html">Programme</a></li>
+                    <li><a class="nav__lien" id="lien-compte" href="connexion.html">Connexion</a></li>
+                </ul>
             </nav>
+            <a class="badge-panier" href="panier.html">
+                Panier <span class="badge-panier__nombre" id="panier-nombre">0</span>
+            </a>
         </div>
     </header>
 
-    <main class="conteneur page-auth">
-        <header class="page-auth__intro">
-            <p class="page-auth__surtitre">LE FESTIVAL NRV.NET</p>
-            <h1>REJOINS L'AVENTURE</h1>
-            <p>Crée ton compte et prépare ton expérience festival.</p>
-        </header>
+    <main id="contenu" class="page-compte">
+        <h1>Créer un compte</h1>
+        <p class="page-compte__intro">Un compte suffit pour commander des billets et des Pass 3 jours.</p>
 
-        <div class="auth-grille auth-grille--unique">
-            <section class="auth-carte auth-carte--inscription"
-                     aria-labelledby="titre-inscription">
-                <h2 id="titre-inscription">Créer mon compte</h2>
-                <p>Quelques informations suffisent pour commencer.</p>
-
-                <form id="form-inscription" class="formulaire">
-                    <div class="champ-groupe">
-                        <label class="champ">
-                            Prénom
-                            <input type="text" name="prenom"
-                                   autocomplete="given-name" maxlength="80" required>
-                        </label>
-
-                        <label class="champ">
-                            Nom
-                            <input type="text" name="nom"
-                                   autocomplete="family-name" maxlength="80" required>
-                        </label>
-                    </div>
-
-                    <label class="champ">
-                        Adresse email
-                        <input type="email" name="email"
-                               autocomplete="email" maxlength="180" required>
-                    </label>
-
-                    <label class="champ">
-                        Mot de passe
-                        <input type="password" name="mot_de_passe"
-                               autocomplete="new-password" minlength="8" required>
-                        <span class="formulaire__note">
-                            8 caractères minimum.
-                        </span>
-                    </label>
-
-                    <p id="message-inscription" class="auth-message"
-                       role="status" aria-live="polite"></p>
-
-                    <button class="btn" type="submit">Créer mon compte</button>
-                </form>
-
-                <div class="auth-lien">
-                    <span>Tu as déjà un compte ?</span>
-                    <a href="connexion.html">Se connecter</a>
+        <form class="formulaire" id="form-compte" action="#" method="post">
+            <div class="champ-groupe">
+                <div class="champ">
+                    <label for="prenom">Prénom</label>
+                    <input id="prenom" name="prenom" type="text" autocomplete="given-name" maxlength="80" required aria-describedby="prenom-erreur">
+                    <p class="champ-erreur" id="prenom-erreur" hidden></p>
                 </div>
+                <div class="champ">
+                    <label for="nom">Nom</label>
+                    <input id="nom" name="nom" type="text" autocomplete="family-name" maxlength="80" required aria-describedby="nom-erreur">
+                    <p class="champ-erreur" id="nom-erreur" hidden></p>
+                </div>
+            </div>
+            <div class="champ">
+                <label for="email">Adresse email</label>
+                <input id="email" name="email" type="email" autocomplete="email" maxlength="180" required aria-describedby="email-erreur">
+                <p class="champ-erreur" id="email-erreur" hidden></p>
+            </div>
+            <div class="champ">
+                <label for="mot_de_passe">Mot de passe</label>
+                <input id="mot_de_passe" name="mot_de_passe" type="password" autocomplete="new-password" minlength="8" maxlength="72" required aria-describedby="mot_de_passe-aide mot_de_passe-erreur">
+                <p class="formulaire__note" id="mot_de_passe-aide">8 caractères minimum.</p>
+                <p class="champ-erreur" id="mot_de_passe-erreur" hidden></p>
+            </div>
+            <p class="formulaire__message" id="message-formulaire" role="alert" hidden></p>
+            <button class="btn" type="submit">Créer mon compte</button>
+        </form>
 
-                <a class="btn btn--secondaire auth-retour" href="index.html">
-                    ← Retour au programme
-                </a>
-            </section>
-        </div>
+        <p class="page-compte__lien">Déjà un compte ? <a id="lien-autre" href="connexion.html">Se connecter</a></p>
     </main>
 
     <footer class="site-footer">
-        <div class="conteneur">
-            <p>NRV.net — Le festival, à ton rythme.</p>
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
         </div>
     </footer>
 
+    <div class="toast" role="status" aria-live="polite" hidden></div>
+
     <script src="js/config.js"></script>
     <script type="module" src="js/inscription.js"></script>
-<script src="js/menu-utilisateur.js"></script>
 </body>
 </html>

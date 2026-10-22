@@ -5,16 +5,33 @@ const CLE = 'nrv-panier';
 const MAX_PAR_LIGNE = 10;
 
 // une ligne modifiee a la main dans le navigateur est ignoree
+const entier = (n, min, max) => Number.isInteger(n) && n >= min && n <= max;
+
+function soireePassValide(soiree) {
+    return soiree !== null && typeof soiree === 'object'
+        && entier(soiree.id, 1, 999999999)
+        && typeof soiree.nom === 'string'
+        && typeof soiree.date === 'string';
+}
+
 function ligneValide(ligne) {
-    const entier = (n, min, max) => Number.isInteger(n) && n >= min && n <= max;
-    return ligne !== null
-        && typeof ligne === 'object'
-        && ligne.type === 'SOIREE'
-        && ['NORMAL', 'REDUIT'].includes(ligne.categorie)
-        && entier(ligne.soireeId, 1, 999999999)
-        && entier(ligne.quantite, 1, MAX_PAR_LIGNE)
-        && entier(ligne.prixUnitaire, 0, 1000000)
-        && typeof ligne.nom === 'string';
+    if (ligne === null || typeof ligne !== 'object'
+        || !['NORMAL', 'REDUIT'].includes(ligne.categorie)
+        || !entier(ligne.quantite, 1, MAX_PAR_LIGNE)
+        || !entier(ligne.prixUnitaire, 0, 1000000)
+        || typeof ligne.nom !== 'string') {
+        return false;
+    }
+    if (ligne.type === 'SOIREE') {
+        return entier(ligne.soireeId, 1, 999999999);
+    }
+    // pass 3 jours : 3 soirees distinctes
+    return ligne.type === 'PASS'
+        && entier(ligne.passId, 1, 999999999)
+        && Array.isArray(ligne.soirees)
+        && ligne.soirees.length === 3
+        && ligne.soirees.every(soireePassValide)
+        && new Set(ligne.soirees.map((s) => s.id)).size === 3;
 }
 
 export function lire() {
@@ -38,17 +55,18 @@ export function nombreBillets() {
     return lire().reduce((total, ligne) => total + ligne.quantite, 0);
 }
 
-// billets deja dans le panier pour une soiree (pour ne pas depasser les places restantes)
+// places deja prises dans le panier pour une soiree (billets + pass qui la contiennent)
 export function billetsPourSoiree(soireeId) {
     return lire()
-        .filter((ligne) => ligne.type === 'SOIREE' && ligne.soireeId === soireeId)
+        .filter((ligne) => (ligne.type === 'SOIREE' && ligne.soireeId === soireeId)
+            || (ligne.type === 'PASS' && ligne.soirees.some((s) => s.id === soireeId)))
         .reduce((total, ligne) => total + ligne.quantite, 0);
 }
 
 // billets deja dans la ligne d'une soiree et d'une categorie (10 au maximum par ligne)
 export function billetsPourLigne(soireeId, categorie) {
     return lire()
-        .filter((ligne) => ligne.soireeId === soireeId && ligne.categorie === categorie)
+        .filter((ligne) => ligne.type === 'SOIREE' && ligne.soireeId === soireeId && ligne.categorie === categorie)
         .reduce((total, ligne) => total + ligne.quantite, 0);
 }
 
@@ -73,6 +91,32 @@ export function ajouterBillets(soiree, categorie, quantite, prixUnitaire) {
             categorie,
             quantite: Math.min(MAX_PAR_LIGNE, quantite),
             prixUnitaire,
+        });
+    }
+    ecrire(lignes);
+}
+
+// ajoute un pass sur 3 soirees ; meme pass, memes soirees, meme tarif = meme ligne
+export function ajouterPass(pass, soirees, categorie) {
+    const choisies = [...soirees]
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map(({ id, nom, date }) => ({ id, nom, date }));
+    const cle = choisies.map((s) => s.id).join('-');
+    const lignes = lire();
+    const existante = lignes.find((ligne) => ligne.type === 'PASS' && ligne.passId === pass.id
+        && ligne.categorie === categorie && ligne.soirees.map((s) => s.id).join('-') === cle);
+
+    if (existante) {
+        existante.quantite = Math.min(MAX_PAR_LIGNE, existante.quantite + 1);
+    } else {
+        lignes.push({
+            type: 'PASS',
+            passId: pass.id,
+            nom: pass.libelle,
+            soirees: choisies,
+            categorie,
+            quantite: 1,
+            prixUnitaire: categorie === 'REDUIT' ? pass.tarifs.reduit : pass.tarifs.normal,
         });
     }
     ecrire(lignes);

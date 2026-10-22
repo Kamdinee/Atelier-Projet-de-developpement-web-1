@@ -1,73 +1,42 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const message = document.querySelector('#message-compte');
-    const informations = document.querySelector('#compte-infos');
-    const lienConnexion = document.querySelector('#compte-lien-connexion');
-    const boutonDeconnexion = document.querySelector('#compte-deconnexion');
+// page mon compte : GET /compte avec le jeton ; sans session valide, on renvoie vers la connexion
 
-    const afficherMessage = (texte, type = '') => {
-        message.textContent = texte;
-        message.className = 'auth-message';
+import { api } from './api.js';
+import { majBadge } from './panier.js';
+import * as session from './session.js';
+import { afficher } from './templates.js';
+import { afficherErreur } from './ui.js';
 
-        if (type) {
-            message.classList.add(`auth-message--${type}`);
-        }
-    };
+const contenu = document.getElementById('contenu-compte');
+const VERS_CONNEXION = 'connexion.html?retour=compte.html';
 
-    // Vérifier si un token JWT est enregistré.
-    const token = sessionStorage.getItem('nrv_token');
-
-    if (!token) {
-        afficherMessage(
-            'Vous devez vous connecter pour accéder à votre compte.',
-            'erreur'
-        );
-
-        informations.hidden = true;
-        lienConnexion.hidden = false;
-        boutonDeconnexion.hidden = true;
-
+async function charger() {
+    const jeton = session.jeton();
+    if (!jeton) {
+        window.location.replace(VERS_CONNEXION);
         return;
     }
 
-    // Un token existe : afficher les informations enregistrées à la connexion.
-    lienConnexion.hidden = true;
-    boutonDeconnexion.hidden = false;
-    informations.hidden = false;
-
-    const utilisateurBrut = sessionStorage.getItem('nrv_utilisateur');
-
-    if (!utilisateurBrut) {
-        afficherMessage(
-            'Vous êtes connecté, mais les informations du compte sont indisponibles.',
-            'erreur'
-        );
-    } else {
-        try {
-            const utilisateur = JSON.parse(utilisateurBrut);
-
-            document.querySelector('#compte-prenom').textContent =
-                utilisateur.prenom ?? 'Non renseigné';
-
-            document.querySelector('#compte-nom').textContent =
-                utilisateur.nom ?? 'Non renseigné';
-
-            document.querySelector('#compte-email').textContent =
-                utilisateur.email ?? 'Non renseigné';
-
-            afficherMessage('Vous êtes connecté à votre compte.', 'succes');
-        } catch (erreur) {
-            afficherMessage(
-                'Les informations du compte sont illisibles. Déconnectez-vous puis reconnectez-vous.',
-                'erreur'
-            );
+    try {
+        const { utilisateur } = await api.compte(jeton);
+        await afficher(contenu, 'compte', { ...utilisateur, admin: utilisateur.role === 'ADMIN' });
+    } catch (erreur) {
+        // jeton refuse par l'api (expire, compte supprime) : on se reconnecte
+        if (erreur.statut === 401 || erreur.statut === 404) {
+            session.fermer();
+            window.location.replace(VERS_CONNEXION);
+            return;
         }
+        await afficherErreur(contenu, erreur, charger);
     }
+    contenu.setAttribute('aria-busy', 'false');
+}
 
-    // Supprimer les données de session lors de la déconnexion.
-    boutonDeconnexion.addEventListener('click', () => {
-        sessionStorage.removeItem('nrv_token');
-        sessionStorage.removeItem('nrv_utilisateur');
-
+contenu.addEventListener('click', (e) => {
+    if (e.target.closest('[data-action="deconnexion"]')) {
+        session.fermer();
         window.location.href = 'index.html';
-    });
+    }
 });
+
+majBadge();
+charger();

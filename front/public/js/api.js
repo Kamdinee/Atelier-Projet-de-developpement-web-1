@@ -12,13 +12,26 @@ export class ErreurApi extends Error {
     }
 }
 
-// GET <chemin> et renvoie le json ; accepte un chemin (/soirees/8) ou un lien hateoas complet
-export async function getJson(chemin, { signal } = {}) {
+// appel de l'api : accepte un chemin (/soirees/8) ou un lien hateoas complet
+// corps : objet envoye en json (POST) ; jeton : jwt de l'utilisateur connecte
+async function requete(chemin, { methode = 'GET', corps, jeton, signal } = {}) {
     const url = chemin.startsWith('http') ? chemin : API_URL + chemin;
+    const headers = { Accept: 'application/json' };
+    if (corps !== undefined) {
+        headers['Content-Type'] = 'application/json';
+    }
+    if (jeton) {
+        headers.Authorization = `Bearer ${jeton}`;
+    }
 
     let reponse;
     try {
-        reponse = await fetch(url, { headers: { Accept: 'application/json' }, signal });
+        reponse = await fetch(url, {
+            method: methode,
+            headers,
+            body: corps === undefined ? undefined : JSON.stringify(corps),
+            signal,
+        });
     } catch (e) {
         // requete annulee volontairement : on laisse remonter tel quel
         if (e.name === 'AbortError') {
@@ -40,6 +53,14 @@ export async function getJson(chemin, { signal } = {}) {
     return data;
 }
 
+export function getJson(chemin, options = {}) {
+    return requete(chemin, options);
+}
+
+export function postJson(chemin, corps, options = {}) {
+    return requete(chemin, { ...options, methode: 'POST', corps });
+}
+
 // id a la fin d'un lien hateoas : { href: "/soirees/4" } -> 4
 export function idDepuisLien(lien) {
     const morceaux = (lien?.href ?? '').split('?')[0].split('/');
@@ -59,6 +80,13 @@ export const api = {
         return getJson('/spectacles' + (qs ? '?' + qs : ''), options);
     },
     soiree: (id, options) => getJson(`/soirees/${encodeURIComponent(id)}`, options),
+    soirees: (options) => getJson('/soirees', options),
     styles: (options) => getJson('/styles', options),
     dates: (options) => getJson('/dates', options),
+    pass: (options) => getJson('/pass', options),
+
+    // comptes
+    inscription: (donnees) => postJson('/auth/register', donnees),
+    connexion: (donnees) => postJson('/auth/signin', donnees),
+    compte: (jeton) => getJson('/compte', { jeton }),
 };

@@ -1,0 +1,73 @@
+@use '../abstracts' as *;
+
+// pages connexion, inscription et mon compte : une colonne centree et etroite
+.page-compte {
+    max-width: 32rem;
+
+    &__intro {
+        margin-bottom: $espace-l;
+        color: $couleur-texte-doux;
+    }
+
+    &__lien {
+        margin-top: $espace-l;
+        text-align: center;
+        color: $couleur-texte-doux;
+    }
+
+    .formulaire .btn {
+        align-self: stretch;
+    }
+}
+
+// message general d'un formulaire (identifiants refuses, api injoignable)
+.formulaire__message {
+    padding: $espace-s $espace-m;
+    border-left: 3px solid $couleur-accent;
+    border-radius: $rayon;
+    background: rgba($couleur-accent, 0.1);
+    color: $blanc;
+}
+
+.fiche-compte {
+    padding: $espace-l;
+    border-radius: $rayon;
+    background: $couleur-surface;
+
+    // grid : intitule | valeur, l'un sous l'autre sur telephone
+    &__infos {
+        display: grid;
+        gap: $espace-m;
+        margin-block: $espace-m $espace-l;
+
+        div {
+            display: grid;
+            gap: $espace-xs;
+
+            @include mq(tablette) {
+                grid-template-columns: 9rem 1fr;
+            }
+        }
+    }
+
+    dt {
+        color: $couleur-texte-doux;
+        font-size: 0.9rem;
+    }
+
+    dd {
+        margin: 0;
+        color: $blanc;
+        overflow-wrap: anywhere;
+    }
+
+    &__note {
+        color: $couleur-texte-doux;
+        font-size: 0.9rem;
+    }
+
+    &__actions {
+        @include flex(flex-start, center, $espace-m, wrap);
+        margin-top: $espace-l;
+    }
+}

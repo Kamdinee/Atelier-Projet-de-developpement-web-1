@@ -20,6 +20,7 @@
             <nav class="nav" aria-label="Principale">
                 <ul class="nav__liste">
                     <li><a class="nav__lien" href="index.html">Programme</a></li>
+                    <li><a class="nav__lien" id="lien-compte" href="connexion.html">Connexion</a></li>
                 </ul>
             </nav>
             <a class="badge-panier" href="panier.html" aria-current="page">
@@ -29,11 +30,13 @@
     </header>
 
     <main id="contenu">
-        <h1>Mon panier</h1>
+        <h1 id="titre-panier" tabindex="-1">Mon panier</h1>
         <!-- rempli par js/panier-page.js a partir du panier du navigateur -->
         <div id="contenu-panier" aria-busy="true">
             <p class="message-vide">Chargement du panier…</p>
         </div>
+        <!-- choix des 3 soirees d'un pass (GET /soirees et GET /pass) -->
+        <div id="composer-pass"></div>
     </main>
 
     <footer class="site-footer">

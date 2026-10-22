@@ -5,7 +5,12 @@
     <li class="panier__ligne">
         <div class="panier__libelle">
             <strong>{{nom}} · Tarif {{#if (eq categorie "REDUIT")}}réduit{{else}}normal{{/if}}</strong>
+            {{#if pass}}
+            <span class="panier__soirees-pass">{{#each soirees}}<time datetime="{{date}}">{{dateCourte date}}</time> {{nom}}{{#unless @last}} · {{/unless}}{{/each}}</span>
+            <span class="panier__soirees-pass">{{prix prixUnitaire}} le pass</span>
+            {{else}}
             <span class="panier__soirees-pass"><time datetime="{{date}}T{{heure}}">{{dateCourte date}} · {{heure}}</time> · {{prix prixUnitaire}} l'unité</span>
+            {{/if}}
             {{#if limite}}<span class="panier__limite">{{limite}}</span>{{/if}}
         </div>
         <div class="quantite">
@@ -35,22 +40,3 @@
 </div>
 {{/if}}
 
-
-<section class="pass-3-jours" aria-labelledby="titre-pass-3-jours">
-    <div class="pass-3-jours__contenu">
-        <p class="pass-3-jours__surtitre">Vivez le festival autrement</p>
-        <h2 id="titre-pass-3-jours">Composer un Pass 3 jours</h2>
-        <p class="pass-3-jours__texte">
-            Envie de profiter du festival sur plusieurs journées ?
-            Découvrez le programme et préparez vos sorties.
-        </p>
-        <a class="btn pass-3-jours__action" href="index.html">
-            Choisir mes journées
-        </a>
-    </div>
-
-    <div class="pass-3-jours__visuel" aria-hidden="true">
-        <span class="pass-3-jours__nombre">3</span>
-        <span class="pass-3-jours__label">JOURS</span>
-    </div>
-</section>

@@ -1,0 +1,35 @@
+{{!-- composer un Pass 3 jours : 3 soirees distinctes et un tarif (E2, F6) --}}
+<section class="pass" aria-labelledby="titre-pass">
+    <h2 id="titre-pass">Composer un {{libelle}}</h2>
+    <p class="pass__intro">Choisissez {{nb_soirees}} soirées différentes. Le pass coûte {{prix tarifs.normal}} au lieu de {{prix separes}} pour {{nb_soirees}} billets séparés.</p>
+
+    <form class="pass__form" id="form-pass" action="#" method="post">
+        <fieldset class="pass__soirees">
+            <legend>Soirées <span class="pass__compteur" id="pass-compteur">0 / {{nb_soirees}}</span></legend>
+            <ul class="pass__liste">
+                {{#each soirees}}
+                <li>
+                    <label class="pass__soiree">
+                        <input type="checkbox" name="soiree" value="{{id}}"{{#if choisie}} checked{{/if}}{{#unless disponible}} disabled{{/unless}}>
+                        <span class="pass__date"><time datetime="{{date}}">{{dateCourte date}}</time></span>
+                        <span class="pass__nom">{{nom}}</span>
+                        <span class="pass__places">{{#if disponible}}{{thematique}}{{else}}Complet{{/if}}</span>
+                    </label>
+                </li>
+                {{/each}}
+            </ul>
+        </fieldset>
+
+        <fieldset class="pass__tarifs">
+            <legend>Tarif</legend>
+            <label class="pass__tarif"><input type="radio" name="categorie" value="NORMAL" checked> Normal · {{prix tarifs.normal}}</label>
+            <label class="pass__tarif"><input type="radio" name="categorie" value="REDUIT"> Réduit · {{prix tarifs.reduit}} <small>étudiants, demandeurs d'emploi, situation de handicap</small></label>
+        </fieldset>
+
+        <div class="pass__validation">
+            <p class="pass__total">Total <strong id="pass-total">{{prix tarifs.normal}}</strong></p>
+            <button class="btn" id="pass-ajouter" type="submit" disabled>Ajouter le pass au panier</button>
+            <p class="pass__aide" id="pass-aide" aria-live="polite">Choisissez encore {{nb_soirees}} soirées.</p>
+        </div>
+    </form>
+</section>

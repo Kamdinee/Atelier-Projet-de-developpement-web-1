@@ -1,60 +1,24 @@
-const API_URL = window.NRV_CONFIG.apiUrl;
-const formulaire = document.querySelector('#form-connexion');
-const message = document.querySelector('#message-connexion');
+// page connexion : POST /auth/signin, puis retour a la page d'origine (?retour=...)
 
-formulaire.addEventListener('submit', async (event) => {
-    event.preventDefault();
+import { api } from './api.js';
+import { brancher } from './formulaire.js';
+import { majBadge } from './panier.js';
+import * as session from './session.js';
 
-    const bouton = formulaire.querySelector('button[type="submit"]');
-    bouton.disabled = true;
-    bouton.textContent = 'Connexion en cours...';
-    message.textContent = '';
+const retour = session.pageDeRetour();
 
-    try {
-        const donnees = Object.fromEntries(new FormData(formulaire));
+// deja connecte : rien a faire ici
+if (session.lire()) {
+    window.location.replace(retour);
+}
 
-        const reponse = await fetch(`${API_URL}/auth`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify(donnees),
-        });
+majBadge();
+session.majNavigation();
+document.getElementById('lien-autre').href = `inscription.html${window.location.search}`;
 
-        const resultat = await reponse.json().catch(() => ({}));
-
-        if (!reponse.ok) {
-            throw new Error(
-                resultat.detail ??
-                resultat.message ??
-                resultat.title ??
-                `Erreur ${reponse.status}.`
-            );
-        }
-
-        if (resultat.token) {
-            sessionStorage.setItem('nrv_token', resultat.token);
-        }
-
-        if (resultat.utilisateur) {
-            sessionStorage.setItem(
-                'nrv_utilisateur',
-                JSON.stringify(resultat.utilisateur)
-            );
-        }
-
-        message.textContent = 'Connexion réussie ! Redirection...';
-        message.className = 'auth-message auth-message--succes';
-
-        window.setTimeout(() => {
-            window.location.href = 'compte.html';
-        }, 800);
-    } catch (erreur) {
-        message.textContent = erreur.message || 'Connexion impossible.';
-        message.className = 'auth-message auth-message--erreur';
-    } finally {
-        bouton.disabled = false;
-        bouton.textContent = 'Se connecter';
-    }
+brancher(document.getElementById('form-compte'), async (donnees) => {
+    session.ouvrir(await api.connexion(donnees));
+    return retour;
+}, {
+    401: 'Adresse email ou mot de passe incorrect.',
 });
