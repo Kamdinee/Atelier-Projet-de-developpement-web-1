@@ -12,11 +12,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Slim\Exception\HttpBadRequestException;
-use Slim\Exception\HttpConflictException;
+use Slim\Exception\HttpException;
 use Slim\Exception\HttpForbiddenException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Exception\HttpUnauthorizedException;
-use Slim\Exception\HttpUnprocessableEntityException;
 
 final class PayerCommandeAction
 {
@@ -53,7 +52,7 @@ final class PayerCommandeAction
         } catch (InvalidArgumentException $e) {
             throw new HttpBadRequestException($request, $e->getMessage());
         } catch (PlacesInsuffisantesException $e) {
-            throw new HttpConflictException($request, $e->getMessage());
+            throw new HttpException($request, $e->getMessage(), 409);
         } catch (RuntimeException $e) {
             if (str_contains($e->getMessage(), "n'existe pas")) {
                 throw new HttpNotFoundException($request, $e->getMessage());
@@ -61,7 +60,7 @@ final class PayerCommandeAction
             if (str_contains($e->getMessage(), 'autorisé')) {
                 throw new HttpForbiddenException($request, $e->getMessage());
             }
-            throw new HttpUnprocessableEntityException($request, $e->getMessage());
+            throw new HttpException($request, $e->getMessage(), 422);
         }
 
         return Json::reponse($response, [
