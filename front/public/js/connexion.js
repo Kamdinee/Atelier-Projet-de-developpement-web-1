@@ -1,3 +1,10 @@
+import { estConnecte, enregistrerSession } from './auth.js';
+
+// Si déjà connecté, rediriger directement vers la page Mon compte
+if (estConnecte()) {
+    window.location.replace('compte.html');
+}
+
 const API_URL = window.NRV_CONFIG.apiUrl;
 const formulaire = document.querySelector('#form-connexion');
 const message = document.querySelector('#message-connexion');
@@ -33,15 +40,8 @@ formulaire.addEventListener('submit', async (event) => {
             );
         }
 
-        if (resultat.token) {
-            sessionStorage.setItem('nrv_token', resultat.token);
-        }
-
-        if (resultat.utilisateur) {
-            sessionStorage.setItem(
-                'nrv_utilisateur',
-                JSON.stringify(resultat.utilisateur)
-            );
+        if (resultat.token || resultat.utilisateur) {
+            enregistrerSession(resultat.token, resultat.utilisateur);
         }
 
         message.textContent = 'Connexion réussie ! Redirection...';
@@ -49,7 +49,7 @@ formulaire.addEventListener('submit', async (event) => {
 
         window.setTimeout(() => {
             window.location.href = 'compte.html';
-        }, 800);
+        }, 500);
     } catch (erreur) {
         message.textContent = erreur.message || 'Connexion impossible.';
         message.className = 'auth-message auth-message--erreur';

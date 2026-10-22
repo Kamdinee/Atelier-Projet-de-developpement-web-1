@@ -1,114 +1,106 @@
-const API_URL = window.NRV_CONFIG?.apiUrl
-    ?? `${window.location.protocol}//${window.location.hostname}:8080`;
+// Module d'authentification et de gestion de session pour le festival NRV.net
 
-const formulaireConnexion = document.querySelector('#form-connexion');
-const formulaireInscription = document.querySelector('#form-inscription');
+const CLE_TOKEN = 'nrv_token';
+const CLE_USER = 'nrv_utilisateur';
 
-function afficherMessage(elementId, message, type = 'erreur') {
-    const element = document.getElementById(elementId);
-    element.textContent = message;
-    element.className = `auth-message auth-message--${type}`;
+export function getToken() {
+    return localStorage.getItem(CLE_TOKEN) || sessionStorage.getItem(CLE_TOKEN);
 }
 
-async function envoyerRequete(chemin, donnees) {
-    const reponse = await fetch(`${API_URL}${chemin}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify(donnees),
+export function getUtilisateur() {
+    const brut = localStorage.getItem(CLE_USER) || sessionStorage.getItem(CLE_USER);
+    if (!brut) return null;
+    try {
+        return JSON.parse(brut);
+    } catch {
+        return null;
+    }
+}
+
+export function estConnecte() {
+    return Boolean(getToken());
+}
+
+export function enregistrerSession(token, utilisateur) {
+    if (token) {
+        localStorage.setItem(CLE_TOKEN, token);
+        sessionStorage.setItem(CLE_TOKEN, token);
+    }
+    if (utilisateur) {
+        const chaine = typeof utilisateur === 'string' ? utilisateur : JSON.stringify(utilisateur);
+        localStorage.setItem(CLE_USER, chaine);
+        sessionStorage.setItem(CLE_USER, chaine);
+    }
+    majNavigation();
+}
+
+export function deconnecter() {
+    localStorage.removeItem(CLE_TOKEN);
+    localStorage.removeItem(CLE_USER);
+    sessionStorage.removeItem(CLE_TOKEN);
+    sessionStorage.removeItem(CLE_USER);
+    majNavigation();
+}
+
+export function majNavigation() {
+    const connecte = estConnecte();
+    const utilisateur = getUtilisateur();
+
+    document.querySelectorAll('[data-auth="anonyme"]').forEach((element) => {
+        element.hidden = connecte;
+        element.style.display = connecte ? 'none' : '';
     });
 
-    const resultat = await reponse.json().catch(() => ({}));
+    document.querySelectorAll('[data-auth="connecte"]').forEach((element) => {
+        element.hidden = !connecte;
+        element.style.display = !connecte ? 'none' : '';
+    });
 
-    if (!reponse.ok) {
-        throw new Error(
-            resultat.detail
-            ?? resultat.message
-            ?? resultat.title
-            ?? `Une erreur est survenue (${reponse.status}).`
-        );
-    }
+    // Mise à jour de l'intitulé du compte avec le prénom si connecté
+    const liensCompte = document.querySelectorAll('a[href="compte.html"]');
+    liensCompte.forEach((lien) => {
+        if (connecte && utilisateur?.prenom) {
+            lien.textContent = `Mon compte (${utilisateur.prenom})`;
+        } else {
+            lien.textContent = 'Mon compte';
+        }
+    });
 
-    return resultat;
+    // Attacher la déconnexion sur tous les boutons de déconnexion de la page
+    const btnsDeconnexion = document.querySelectorAll('#nav-deconnexion, .btn-deconnexion-nav');
+    btnsDeconnexion.forEach((btn) => {
+        if (!btn.dataset.listener) {
+            btn.dataset.listener = 'true';
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                deconnecter();
+                window.location.href = 'index.html';
+            });
+        }
+    });
 }
 
-// Connexion
-formulaireConnexion.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const bouton = formulaireConnexion.querySelector('button[type="submit"]');
-    const donnees = Object.fromEntries(new FormData(formulaireConnexion));
-
-    bouton.disabled = true;
-    bouton.textContent = 'Connexion...';
-
-    try {
-        const resultat = await envoyerRequete('/auth', donnees);
-
-        if (resultat.token) {
-            sessionStorage.setItem('nrv_token', resultat.token);
+// Synchronisation multi-onglets
+if (typeof window !== 'undefined') {
+    window.addEventListener('storage', (e) => {
+        if (e.key === CLE_TOKEN || e.key === CLE_USER) {
+            majNavigation();
         }
+    });
 
-        if (resultat.utilisateur) {
-            sessionStorage.setItem(
-                'nrv_utilisateur',
-                JSON.stringify(resultat.utilisateur)
-            );
-        }
-
-        afficherMessage(
-            'message-connexion',
-            'Connexion réussie ! Redirection...',
-            'succes'
-        );
-
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1000);
-    } catch (erreur) {
-        afficherMessage(
-            'message-connexion',
-            erreur.message || "Impossible de se connecter."
-        );
-    } finally {
-        bouton.disabled = false;
-        bouton.textContent = 'Se connecter';
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', majNavigation);
+    } else {
+        majNavigation();
     }
-});
 
-// Inscription
-formulaireInscription.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const bouton = formulaireInscription.querySelector('button[type="submit"]');
-    const donnees = Object.fromEntries(new FormData(formulaireInscription));
-
-    bouton.disabled = true;
-    bouton.textContent = 'Création du compte...';
-
-    try {
-        await envoyerRequete('/inscription', donnees);
-
-        afficherMessage(
-            'message-inscription',
-            'Compte créé avec succès ! Tu peux maintenant te connecter.',
-            'succes'
-        );
-
-        formulaireInscription.reset();
-
-        // Préremplit l'email du formulaire de connexion.
-        formulaireConnexion.elements.email.value = donnees.email;
-        formulaireConnexion.elements.mot_de_passe.focus();
-    } catch (erreur) {
-        afficherMessage(
-            'message-inscription',
-            erreur.message || "Impossible de créer le compte."
-        );
-    } finally {
-        bouton.disabled = false;
-        bouton.textContent = 'Créer mon compte';
-    }
-});
+    // Expose sur window pour accès direct depuis d'autres scripts
+    window.NRV_AUTH = {
+        getToken,
+        getUtilisateur,
+        estConnecte,
+        enregistrerSession,
+        deconnecter,
+        majNavigation,
+    };
+}

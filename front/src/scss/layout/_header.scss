@@ -91,6 +91,13 @@
         }
     }
 
+    button.nav__lien,
+    .nav__lien--deconnexion {
+        background: transparent;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
     nav a[href='connexion.html'] {
         border-color: $couleur-accent;
         background: $couleur-accent;

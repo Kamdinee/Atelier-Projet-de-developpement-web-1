@@ -254,6 +254,10 @@
         color: $blanc;
         box-shadow: none;
     }
+
+    &[hidden] {
+        display: none !important;
+    }
 }
 
 @media (max-width: 600px) {

@@ -12,16 +12,24 @@
     <a class="lien-evitement" href="#contenu">Aller au contenu</a>
 
     <header class="site-header">
-        <div class="conteneur site-header__interieur">
+        <div class="site-header__inner">
             <a class="site-header__logo" href="index.html">
                 NRV<span>.net</span>
             </a>
 
-            <nav aria-label="Navigation principale">
-                <a href="index.html">Programme</a>
-                <a href="panier.html">Mon panier</a>
-                <a href="compte.html" aria-current="page">Mon compte</a>
+            <nav class="nav" aria-label="Principale">
+                <ul class="nav__liste">
+                    <li><a class="nav__lien" href="index.html">Programme</a></li>
+                    <li data-auth="anonyme" hidden><a class="nav__lien" href="connexion.html">Connexion</a></li>
+                    <li data-auth="anonyme" hidden><a class="nav__lien" href="inscription.html">Inscription</a></li>
+                    <li data-auth="connecte"><a class="nav__lien" href="compte.html" aria-current="page">Mon compte</a></li>
+                    <li data-auth="connecte"><button type="button" class="nav__lien nav__lien--deconnexion" id="nav-deconnexion">Déconnexion</button></li>
+                </ul>
             </nav>
+
+            <a class="badge-panier" href="panier.html">
+                Panier <span class="badge-panier__nombre" id="panier-nombre">0</span>
+            </a>
         </div>
     </header>
 
@@ -80,13 +88,22 @@
                     </button>
 
                     <a class="auth-retour" href="index.html">
-                        Retour au programme
+                        ← Retour au programme
                     </a>
                 </section>
             </div>
         </div>
     </main>
 
-    <script src="js/compte.js"></script>
+    <footer class="site-footer">
+        <div class="site-footer__inner">
+            <p>Nancy Rock Vibration · 4 au 17 juin 2027 · Nancy</p>
+            <p>Atelier BUT 3 informatique - IUT Nancy-Charlemagne</p>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/compte.js"></script>
 </body>
 </html>

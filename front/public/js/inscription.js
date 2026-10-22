@@ -1,3 +1,10 @@
+import { estConnecte } from './auth.js';
+
+// Si déjà connecté, rediriger vers la page Mon compte
+if (estConnecte()) {
+    window.location.replace('compte.html');
+}
+
 const API_URL = window.NRV_CONFIG.apiUrl;
 const formulaire = document.querySelector('#form-inscription');
 const message = document.querySelector('#message-inscription');
@@ -41,7 +48,7 @@ formulaire.addEventListener('submit', async (event) => {
 
         window.setTimeout(() => {
             window.location.href = 'connexion.html';
-        }, 1500);
+        }, 1200);
     } catch (erreur) {
         message.textContent = erreur.message || 'Inscription impossible.';
         message.className = 'auth-message auth-message--erreur';
