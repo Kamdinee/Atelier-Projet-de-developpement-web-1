@@ -1,5 +1,5 @@
 import { api } from './api.js';
-import { getToken } from './auth.js';
+import { getToken, majNavigation } from './auth.js';
 import { dateCourte, nombre, pluriel, prix } from './format.js';
 import * as panier from './panier.js';
 import { afficher } from './templates.js';
@@ -148,7 +148,8 @@ contenu.addEventListener('click', async (e) => {
                     window.location.href = `commande.html?id=${encodeURIComponent(commandeId)}`;
                 }, 350);
             } catch (err) {
-                toast(err.message || 'Impossible de créer la commande.', 'erreur');
+                console.error('Erreur création commande:', err);
+                toast(err.message || 'Impossible de créer la commande.', { erreur: true });
                 bouton.disabled = false;
                 bouton.textContent = 'Valider la commande';
             }
@@ -295,6 +296,7 @@ formulairePass?.addEventListener('submit', async (e) => {
 });
 
 async function demarrer() {
+    majNavigation();
     panier.majBadge();
     await chargerPlaces();
     await rafraichir();

@@ -42,7 +42,11 @@ final class CorsMiddleware implements MiddlewareInterface
 
     private function estAutorisee(string $origine): bool
     {
-        return in_array('*', $this->originesAutorisees, true)
-            || in_array($origine, $this->originesAutorisees, true);
+        if (in_array('*', $this->originesAutorisees, true) || in_array($origine, $this->originesAutorisees, true)) {
+            return true;
+        }
+
+        // Autoriser docketu et localhost quel que soit le port
+        return (bool) preg_match('#^https?://(localhost|127\.0\.0\.1|docketu|docketu\.iutnc\.univ-lorraine\.fr)(:\d+)?$#i', $origine);
     }
 }

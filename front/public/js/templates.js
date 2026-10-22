@@ -24,7 +24,7 @@ Handlebars.registerHelper('petite', (url) => (PHOTO.test(url ?? '') ? url.replac
 Handlebars.registerHelper('srcset', (url) => (PHOTO.test(url ?? '') ? `${url.replace(PHOTO, '-640.webp')} 640w, ${url} 1200w` : ''));
 
 async function chargerSource(nom) {
-    const reponse = await fetch(`templates/${nom}.hbs`);
+    const reponse = await fetch(`templates/${nom}.hbs?_=${Date.now()}`);
     if (!reponse.ok) {
         throw new Error(`template introuvable : ${nom}`);
     }
