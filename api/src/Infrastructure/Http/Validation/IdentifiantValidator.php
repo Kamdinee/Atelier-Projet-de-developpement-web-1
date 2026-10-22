@@ -18,4 +18,14 @@ final class IdentifiantValidator
 
         return (int) $valeur;
     }
+
+    // identifiant de commande (uuid)
+    public function uuid(mixed $valeur, string $nom = 'id'): string
+    {
+        if (!is_string($valeur) || preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $valeur) !== 1) {
+            throw new RequeteInvalideException([$nom => 'identifiant uuid attendu']);
+        }
+
+        return strtolower($valeur);
+    }
 }
