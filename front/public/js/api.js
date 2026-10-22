@@ -48,7 +48,7 @@ export async function getJson(chemin, options = {}) {
     if (!reponse.ok) {
         throw new ErreurApi(
             reponse.status,
-            data?.title ?? data?.message ?? `Erreur ${reponse.status}`,
+            data?.detail ?? data?.message ?? data?.title ?? `Erreur ${reponse.status}`,
             data?.errors ?? data?.detail ?? null,
         );
     }
@@ -83,7 +83,7 @@ export async function postJson(chemin, body, options = {}) {
     if (!reponse.ok) {
         throw new ErreurApi(
             reponse.status,
-            data?.title ?? data?.message ?? `Erreur ${reponse.status}`,
+            data?.detail ?? data?.message ?? data?.title ?? `Erreur ${reponse.status}`,
             data?.errors ?? data?.detail ?? null,
         );
     }

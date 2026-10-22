@@ -50,7 +50,8 @@ final class CreerCommandeAction
             throw new HttpBadRequestException($request, $e->getMessage());
         } catch (PlacesInsuffisantesException $e) {
             throw new HttpConflictException($request, $e->getMessage());
-        } catch (RuntimeException $e) {
+        } catch (\Throwable $e) {
+            error_log('[CreerCommande] ' . get_class($e) . ': ' . $e->getMessage() . "\n" . $e->getTraceAsString());
             throw new HttpUnprocessableEntityException($request, $e->getMessage());
         }
 
