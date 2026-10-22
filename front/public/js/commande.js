@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('paiement-total').textContent = prix(commande.total);
 
         const btnPayer = document.getElementById('btn-payer');
-        btnPayer.textContent = `🔒 Régler ${prix(commande.total)}`;
+        btnPayer.textContent = `Régler ${prix(commande.total)}`;
 
         // Pré-remplir le nom avec le profil si disponible
         const user = getUtilisateur();
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 messagePaiement.textContent = err.message || 'Paiement refusé.';
                 messagePaiement.className = 'auth-message auth-message--erreur';
                 btnPayer.disabled = false;
-                btnPayer.textContent = `🔒 Régler ${prix(commande.total)}`;
+                btnPayer.textContent = `Régler ${prix(commande.total)}`;
             }
         });
     }
