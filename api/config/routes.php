@@ -35,4 +35,12 @@ $app->post('/auth', AuthAction::class);
 
     // Backoffice : liste des pass réservée aux administrateurs
     $app->get('/admin/pass', GetPassAction::class)->add(AdminMiddleware::class);
+
+    // Commandes & Tunnel d'achat (authentification requise)
+    $app->post('/commandes', \Nrv\Infrastructure\Http\Action\CreerCommandeAction::class)
+        ->add(\Nrv\Infrastructure\Http\Middleware\AuthMiddleware::class);
+    $app->get('/commandes/{id}', \Nrv\Infrastructure\Http\Action\ConsulterCommandeAction::class)
+        ->add(\Nrv\Infrastructure\Http\Middleware\AuthMiddleware::class);
+    $app->post('/commandes/{id}/paiement', \Nrv\Infrastructure\Http\Action\PayerCommandeAction::class)
+        ->add(\Nrv\Infrastructure\Http\Middleware\AuthMiddleware::class);
 };

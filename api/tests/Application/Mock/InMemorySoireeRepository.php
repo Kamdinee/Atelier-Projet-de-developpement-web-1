@@ -27,4 +27,14 @@ final class InMemorySoireeRepository implements SoireeRepositoryInterface
     {
         return $this->soirees[$id] ?? null;
     }
+
+    public function trouverParDate(string $date): ?Soiree
+    {
+        foreach ($this->soirees as $soiree) {
+            if ($soiree->debut()->format('Y-m-d') === $date) {
+                return $soiree;
+            }
+        }
+        return null;
+    }
 }

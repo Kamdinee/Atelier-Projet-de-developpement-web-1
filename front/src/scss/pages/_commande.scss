@@ -1,0 +1,427 @@
+@use '../abstracts' as *;
+
+.commande-page {
+    width: 100%;
+    max-width: 1040px;
+    margin-inline: auto;
+    padding: $espace-xl $espace-m;
+}
+
+// En-tête tunnel
+.commande-tunnel {
+    &__header {
+        margin-bottom: $espace-xl;
+        text-align: center;
+    }
+
+    &__surtitre {
+        color: $couleur-accent;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: $espace-xs;
+    }
+
+    h1 {
+        margin: 0 0 $espace-s;
+        font-family: $police-titre;
+        font-size: clamp(2.2rem, 5vw, 3.2rem);
+        color: $blanc;
+        line-height: 1.1;
+    }
+
+    &__ref {
+        color: $couleur-texte-doux;
+        font-size: 0.9rem;
+
+        code {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            color: $blanc;
+            font-size: 0.85rem;
+        }
+    }
+}
+
+// Grille 2 colonnes : Récapitulatif + Paiement
+.commande-grille {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: $espace-xl;
+    align-items: start;
+
+    @media (max-width: 840px) {
+        grid-template-columns: 1fr;
+        gap: $espace-l;
+    }
+}
+
+// Cartes de la commande
+.commande-carte {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(145deg, #242027, $couleur-surface 70%);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+
+    h2 {
+        margin: 0 0 $espace-m;
+        font-family: $police-titre;
+        font-size: 1.6rem;
+        color: $blanc;
+    }
+}
+
+// Récapitulatif des lignes
+.commande-lignes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $espace-m;
+}
+
+.commande-ligne-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: $espace-m;
+    padding-bottom: $espace-m;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        strong {
+            color: $blanc;
+            font-size: 0.95rem;
+        }
+    }
+
+    &__sub {
+        color: $couleur-texte-doux;
+        font-size: 0.85rem;
+    }
+
+    &__montant {
+        color: $jaune;
+        font-weight: 700;
+        font-size: 1.05rem;
+        white-space: nowrap;
+    }
+}
+
+// Bloc total
+.commande-total-bloc {
+    margin-top: $espace-l;
+    padding-top: $espace-m;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.commande-total-ligne {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.1rem;
+    color: $blanc;
+
+    strong {
+        font-family: $police-titre;
+        font-size: 1.9rem;
+        color: $couleur-accent;
+        letter-spacing: 0.02em;
+    }
+}
+
+// Carte formulaire bancaire
+.commande-cb {
+    border-top: 3px solid $couleur-accent;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: $espace-s;
+        margin-bottom: $espace-m;
+
+        h2 {
+            margin: 0;
+        }
+    }
+
+    &__badges {
+        font-size: 0.85rem;
+        color: $couleur-texte-doux;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+    }
+
+    .formulaire {
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+        gap: $espace-m;
+    }
+
+    &__duo {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $espace-m;
+    }
+
+    &__securite {
+        margin: $espace-s 0 0;
+        color: $couleur-texte-doux;
+        font-size: 0.8rem;
+        line-height: 1.4;
+        text-align: center;
+    }
+}
+
+.btn--payer {
+    width: 100%;
+    min-height: 48px;
+    font-size: 1.05rem;
+    font-weight: 750;
+    margin-top: $espace-s;
+    background: $couleur-accent;
+    color: $blanc;
+    border-color: $couleur-accent;
+
+    &:hover {
+        background: $rouge-fonce;
+        box-shadow: 0 6px 20px rgba(228, 50, 43, 0.4);
+    }
+}
+
+// ==========================================
+// ÉCRAN DE CONFIRMATION
+// ==========================================
+
+.commande-confirmation {
+    display: flex;
+    flex-direction: column;
+    gap: $espace-xl;
+}
+
+.confirmation-banniere {
+    text-align: center;
+    padding: $espace-xl $espace-l;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(46, 157, 91, 0.15) 0%, rgba(30, 27, 34, 0.95) 70%);
+    border: 1px solid rgba(46, 157, 91, 0.35);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+    &__icone {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        background: $couleur-succes;
+        color: $blanc;
+        font-size: 2rem;
+        font-weight: 900;
+        margin-bottom: $espace-m;
+        box-shadow: 0 4px 18px rgba(46, 157, 91, 0.45);
+    }
+
+    &__surtitre {
+        color: $couleur-succes;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-bottom: $espace-xs;
+    }
+
+    h1 {
+        margin: 0 0 $espace-s;
+        font-family: $police-titre;
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+        color: $blanc;
+    }
+
+    &__texte {
+        color: $couleur-texte-doux;
+        max-width: 50ch;
+        margin-inline: auto;
+    }
+}
+
+// Détails sous forme de KPI
+.confirmation-details {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $espace-m;
+
+    @media (max-width: 800px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.confirmation-detail-carte {
+    padding: $espace-m;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: $couleur-surface;
+    display: flex;
+    flex-direction: column;
+    gap: $espace-xs;
+
+    .detail-label {
+        color: $couleur-texte-doux;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .detail-valeur {
+        color: $blanc;
+        font-size: 0.95rem;
+        word-break: break-all;
+
+        &--prix {
+            color: $jaune;
+            font-size: 1.25rem;
+        }
+    }
+}
+
+// Billets
+.confirmation-billets {
+    h2 {
+        margin: 0 0 $espace-xs;
+        font-family: $police-titre;
+        font-size: 1.8rem;
+        color: $blanc;
+    }
+
+    &__note {
+        color: $couleur-texte-doux;
+        font-size: 0.9rem;
+        margin-bottom: $espace-l;
+    }
+}
+
+.grille-billets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: $espace-l;
+}
+
+.billet-carte {
+    border-radius: 12px;
+    background: linear-gradient(145deg, #1f1b24, #151318);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: $espace-s $espace-m;
+        background: rgba(255, 255, 255, 0.04);
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+    }
+
+    &__ref {
+        font-family: monospace;
+        font-size: 0.95rem;
+        color: $couleur-accent;
+        letter-spacing: 0.05em;
+    }
+
+    &__badge {
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+
+        &--soiree {
+            background: rgba(228, 50, 43, 0.2);
+            color: #ff7771;
+        }
+
+        &--pass {
+            background: rgba(245, 197, 24, 0.2);
+            color: $jaune;
+        }
+    }
+
+    &__corps {
+        padding: $espace-m;
+        display: flex;
+        flex-direction: column;
+        gap: $espace-s;
+
+        h3 {
+            margin: 0;
+            font-family: $police-titre;
+            font-size: 1.4rem;
+            color: $blanc;
+            line-height: 1.2;
+        }
+    }
+
+    &__details {
+        margin: 0;
+        color: $couleur-texte-doux;
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+
+    &__pied {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: $espace-s;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.8rem;
+    }
+
+    &__acheteur {
+        color: $couleur-texte-doux;
+    }
+
+    &__prix {
+        color: $blanc;
+        font-weight: 700;
+    }
+}
+
+.confirmation-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $espace-m;
+    margin-top: $espace-m;
+
+    .btn {
+        min-width: 180px;
+    }
+}

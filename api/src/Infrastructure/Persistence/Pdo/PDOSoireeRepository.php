@@ -58,4 +58,17 @@ final class PDOSoireeRepository implements SoireeRepositoryInterface
             $this->hydrator->hydrater($spectacles->fetchAll(PDO::FETCH_ASSOC)),
         );
     }
+
+    public function trouverParDate(string $date): ?Soiree
+    {
+        $requete = $this->pdo->prepare('SELECT id FROM soirees WHERE date_soiree = :date LIMIT 1');
+        $requete->execute(['date' => $date]);
+        $id = $requete->fetchColumn();
+
+        if ($id === false) {
+            return null;
+        }
+
+        return $this->trouverParId((int) $id);
+    }
 }

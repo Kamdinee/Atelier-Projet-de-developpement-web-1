@@ -12,15 +12,31 @@ export class ErreurApi extends Error {
     }
 }
 
+function construireHeaders(options = {}) {
+    const headers = {
+        Accept: 'application/json',
+        ...(options.headers || {}),
+    };
+
+    const token = options.token || localStorage.getItem('nrv_token') || sessionStorage.getItem('nrv_token');
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+
+    return headers;
+}
+
 // GET <chemin> et renvoie le json ; accepte un chemin (/soirees/8) ou un lien hateoas complet
-export async function getJson(chemin, { signal } = {}) {
+export async function getJson(chemin, options = {}) {
     const url = chemin.startsWith('http') ? chemin : API_URL + chemin;
 
     let reponse;
     try {
-        reponse = await fetch(url, { headers: { Accept: 'application/json' }, signal });
+        reponse = await fetch(url, {
+            headers: construireHeaders(options),
+            signal: options.signal,
+        });
     } catch (e) {
-        // requete annulee volontairement : on laisse remonter tel quel
         if (e.name === 'AbortError') {
             throw e;
         }
@@ -32,7 +48,42 @@ export async function getJson(chemin, { signal } = {}) {
     if (!reponse.ok) {
         throw new ErreurApi(
             reponse.status,
-            data?.title ?? `Erreur ${reponse.status}`,
+            data?.title ?? data?.message ?? `Erreur ${reponse.status}`,
+            data?.errors ?? data?.detail ?? null,
+        );
+    }
+
+    return data;
+}
+
+// POST <chemin> avec un corps JSON et renvoie le json
+export async function postJson(chemin, body, options = {}) {
+    const url = chemin.startsWith('http') ? chemin : API_URL + chemin;
+
+    const headers = construireHeaders(options);
+    headers['Content-Type'] = 'application/json';
+
+    let reponse;
+    try {
+        reponse = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(body),
+            signal: options.signal,
+        });
+    } catch (e) {
+        if (e.name === 'AbortError') {
+            throw e;
+        }
+        throw new ErreurApi(0, "L'API ne répond pas. Vérifiez votre connexion puis réessayez.");
+    }
+
+    const data = await reponse.json().catch(() => null);
+
+    if (!reponse.ok) {
+        throw new ErreurApi(
+            reponse.status,
+            data?.title ?? data?.message ?? `Erreur ${reponse.status}`,
             data?.errors ?? data?.detail ?? null,
         );
     }
@@ -62,4 +113,10 @@ export const api = {
     styles: (options) => getJson('/styles', options),
     dates: (options) => getJson('/dates', options),
     pass: (options) => getJson('/pass', options),
+
+    // Commandes & Tunnel d'achat
+    creerCommande: (lignes, options) => postJson('/commandes', { lignes }, options),
+    commande: (id, options) => getJson(`/commandes/${encodeURIComponent(id)}`, options),
+    payerCommande: (id, donneesPaiement, options) =>
+        postJson(`/commandes/${encodeURIComponent(id)}/paiement`, donneesPaiement, options),
 };

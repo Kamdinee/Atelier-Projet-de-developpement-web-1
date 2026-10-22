@@ -34,4 +34,27 @@ final class PDOPassRepository implements PassRepositoryInterface
             $requete->fetchAll(PDO::FETCH_ASSOC),
         );
     }
+
+    public function trouverParId(int $id): ?array
+    {
+        $requete = $this->pdo->prepare(
+            'SELECT id, libelle, nb_soirees, tarif_normal, tarif_reduit
+             FROM pass
+             WHERE id = :id'
+        );
+        $requete->execute(['id' => $id]);
+        $ligne = $requete->fetch(PDO::FETCH_ASSOC);
+
+        if (!$ligne) {
+            return null;
+        }
+
+        return [
+            'id' => (int) $ligne['id'],
+            'libelle' => (string) $ligne['libelle'],
+            'nb_soirees' => (int) $ligne['nb_soirees'],
+            'tarif_normal' => (int) $ligne['tarif_normal'],
+            'tarif_reduit' => (int) $ligne['tarif_reduit'],
+        ];
+    }
 }
