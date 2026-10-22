@@ -10,8 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Slim\Exception\HttpBadRequestException;
-use Slim\Exception\HttpConflictException;
-use Slim\Exception\HttpUnprocessableEntityException;
+use Slim\Exception\HttpException;
 
 final class InscriptionAction
 {
@@ -56,10 +55,10 @@ final class InscriptionAction
             );
         } catch (RuntimeException $e) {
             if (str_contains($e->getMessage(), 'déjà utilisée')) {
-                throw new HttpConflictException($request, $e->getMessage());
+                throw new HttpException($request, $e->getMessage(), 409);
             }
 
-            throw new HttpUnprocessableEntityException($request, $e->getMessage());
+            throw new HttpException($request, $e->getMessage(), 422);
         }
 
         return Json::reponse($response, [
