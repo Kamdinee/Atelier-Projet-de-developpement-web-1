@@ -50,6 +50,13 @@ final class BilletTest extends TestCase
         Fabrique::billet(TypeBillet::Soiree, [Fabrique::soireeBillet(8), Fabrique::soireeBillet(9)]);
     }
 
+    public function testUnBilletSansReferenceEstRefuse(): void
+    {
+        $this->expectException(DonneeInvalideException::class);
+
+        Fabrique::billet(reference: '  ');
+    }
+
     public function testUnJetonMalFormeEstRefuse(): void
     {
         $this->expectException(DonneeInvalideException::class);

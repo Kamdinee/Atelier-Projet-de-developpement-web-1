@@ -10,6 +10,7 @@ use Nrv\Application\UseCase\CreerCommande;
 use Nrv\Application\UseCase\PayerCommande;
 use Nrv\Domain\Exception\CommandeDejaPayeeException;
 use Nrv\Domain\Exception\CommandeIntrouvableException;
+use Nrv\Domain\Exception\DonneeInvalideException;
 use Nrv\Domain\Exception\PaiementRefuseException;
 use Nrv\Domain\Exception\PlacesInsuffisantesException;
 use Nrv\Domain\Exception\SoireeIntrouvableException;
@@ -154,6 +155,25 @@ final class CommanderEtPayerTest extends TestCase
         $this->expectException(CommandeDejaPayeeException::class);
 
         $this->payer()->executer(2, $id, $this->carte());
+    }
+
+    public function testLeClientRetrouveSaCommandePayeeAvecLaFinDeSaCarte(): void
+    {
+        $id = $this->creer->executer(2, $this->panier())->id;
+        $this->payer()->executer(2, $id, $this->carte());
+
+        $commande = (new ConsulterCommande($this->commandes))->executer(2, $id);
+
+        $this->assertSame('PAYEE', $commande->statut);
+        $this->assertSame('4242', $commande->carteFin);
+        $this->assertSame(2, $commande->nombreBillets);
+    }
+
+    public function testUneCategorieDeTarifInconnueEstRefusee(): void
+    {
+        $this->expectException(DonneeInvalideException::class);
+
+        $this->creer->executer(2, [new LigneDemandeeDto('SOIREE', [8], null, 'VIP', 1)]);
     }
 
     public function testOnNePeutPasPayerNiVoirLaCommandeDUnAutreClient(): void
