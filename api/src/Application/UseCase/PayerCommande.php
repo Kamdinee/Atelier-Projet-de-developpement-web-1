@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nrv\Application\UseCase;
 
 use Nrv\Application\Dto\BilletDto;
+use Nrv\Application\Dto\CarteDto;
 use Nrv\Application\Dto\CommandeDetailDto;
 use Nrv\Application\Dto\PaiementDto;
 use Nrv\Application\Port\In\PayerCommandeInterface;
@@ -39,8 +40,11 @@ final class PayerCommande implements PayerCommandeInterface
     ) {
     }
 
-    public function executer(int $utilisateurId, string $commandeId, CarteBancaire $carte): PaiementDto
+    public function executer(int $utilisateurId, string $commandeId, CarteDto $saisie): PaiementDto
     {
+        // numero (luhn) et coherence verifies par le domaine : 422 si la carte n'existe pas
+        $carte = new CarteBancaire($saisie->numero, $saisie->moisExpiration, $saisie->anneeExpiration, $saisie->cryptogramme);
+
         $commande = $this->transaction->executer(function () use ($utilisateurId, $commandeId, $carte): Commande {
             // 1. la commande, verrouillee : un double clic attend puis voit qu'elle est deja payee
             $commande = $this->commandes->trouverPourPaiement($commandeId);

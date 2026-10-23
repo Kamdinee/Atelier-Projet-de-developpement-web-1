@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nrv\Tests\Application\UseCase;
 
+use Nrv\Application\Dto\CarteDto;
 use Nrv\Application\Dto\LigneDemandeeDto;
 use Nrv\Application\UseCase\ConsulterCommande;
 use Nrv\Application\UseCase\CreerCommande;
@@ -14,7 +15,6 @@ use Nrv\Domain\Exception\DonneeInvalideException;
 use Nrv\Domain\Exception\PaiementRefuseException;
 use Nrv\Domain\Exception\PlacesInsuffisantesException;
 use Nrv\Domain\Exception\SoireeIntrouvableException;
-use Nrv\Domain\ValueObject\CarteBancaire;
 use Nrv\Domain\ValueObject\StatutCommande;
 use Nrv\Tests\Application\Mock\FausseBanque;
 use Nrv\Tests\Application\Mock\FausseTransaction;
@@ -63,9 +63,9 @@ final class CommanderEtPayerTest extends TestCase
         );
     }
 
-    private function carte(string $numero = '4242424242424242'): CarteBancaire
+    private function carte(string $numero = '4242424242424242'): CarteDto
     {
-        return new CarteBancaire($numero, 12, 2028, '123');
+        return new CarteDto($numero, 12, 2028, '123');
     }
 
     /** @return list<LigneDemandeeDto> */
@@ -167,6 +167,20 @@ final class CommanderEtPayerTest extends TestCase
         $this->assertSame('PAYEE', $commande->statut);
         $this->assertSame('4242', $commande->carteFin);
         $this->assertSame(2, $commande->nombreBillets);
+    }
+
+    public function testUnNumeroDeCarteFauxEstRefuseSansRienEnregistrer(): void
+    {
+        $id = $this->creer->executer(2, $this->panier())->id;
+
+        try {
+            $this->payer()->executer(2, $id, $this->carte('4242424242424241'));
+            $this->fail('carte invalide attendue');
+        } catch (DonneeInvalideException) {
+        }
+
+        $this->assertSame([], $this->banque->debits);
+        $this->assertSame(StatutCommande::EnAttente, $this->commandes->commandes[$id]->statut());
     }
 
     public function testUneCategorieDeTarifInconnueEstRefusee(): void

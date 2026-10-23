@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Nrv\Infrastructure\Http\Validation;
 
+use Nrv\Application\Dto\CarteDto;
 use Nrv\Application\Dto\LigneDemandeeDto;
 use Nrv\Domain\Entity\Commande;
-use Nrv\Domain\ValueObject\CarteBancaire;
 use Nrv\Domain\ValueObject\LigneCommande;
 use Nrv\Infrastructure\Http\Exception\RequeteInvalideException;
 
@@ -69,7 +69,7 @@ final class CommandeValidator
     }
 
     // { "numero": "4242 4242 4242 4242", "expiration": "12/28", "cryptogramme": "123" }
-    public function carte(mixed $corps): CarteBancaire
+    public function carte(mixed $corps): CarteDto
     {
         $d = is_array($corps) ? $corps : [];
         $erreurs = [];
@@ -90,7 +90,7 @@ final class CommandeValidator
             throw new RequeteInvalideException($erreurs);
         }
 
-        // luhn et coherence verifies par l'objet du domaine (422 si le numero n'existe pas)
-        return new CarteBancaire($numero, (int) $date[1], 2000 + (int) $date[2], $cryptogramme);
+        // seulement le format ici : le numero lui-meme est verifie par le domaine
+        return new CarteDto($numero, (int) $date[1], 2000 + (int) $date[2], $cryptogramme);
     }
 }
