@@ -5,7 +5,7 @@ SAE « Atelier-projet de développement web 1 » - BUT 3 informatique, IUT Nancy
 Programme du festival, achat de billets (soirée ou Pass 3 jours) et suivi des jauges.  
 Backend PHP 8 / Slim 4 en architecture hexagonale, front HTML / Sass / Handlebars, le tout sous Docker.
 
-Le détail de la conception et du travail réalisé est dans le dossier de rendu : [docs/NRV-dossier-iteration-1.pdf](docs/NRV-dossier-iteration-1.pdf).
+Le détail de la conception et du travail réalisé est dans le dossier de rendu final : [docs/NRV-dossier-final.pdf](docs/NRV-dossier-final.pdf) (le dossier de l'itération 1 reste dans [docs/NRV-dossier-iteration-1.pdf](docs/NRV-dossier-iteration-1.pdf)).
 
 ## Version en ligne
 
