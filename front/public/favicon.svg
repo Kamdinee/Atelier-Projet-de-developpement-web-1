@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="14" fill="#121014"/>
+    <text x="32" y="44" font-family="'Bebas Neue', Impact, 'Arial Black', sans-serif" font-size="32" font-weight="900" fill="#e4322b" text-anchor="middle" letter-spacing="1">NRV</text>
+    <circle cx="51" cy="42" r="3.5" fill="#f5c518"/>
+</svg>
