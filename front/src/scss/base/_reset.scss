@@ -38,3 +38,9 @@ ol[class] {
 [hidden] {
     display: none !important;
 }
+
+// zones qui recoivent le focus par le js (titre apres un changement de page) : pas de contour,
+// le lecteur d'ecran les annonce quand meme
+[tabindex='-1']:focus {
+    outline: none;
+}
