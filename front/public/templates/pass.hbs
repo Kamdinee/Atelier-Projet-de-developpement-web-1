@@ -10,10 +10,12 @@
                 {{#each soirees}}
                 <li>
                     <label class="pass__soiree">
-                        <input type="checkbox" name="soiree" value="{{id}}"{{#if choisie}} checked{{/if}}{{#unless disponible}} disabled{{/unless}}>
-                        <span class="pass__date"><time datetime="{{date}}">{{dateCourte date}}</time></span>
-                        <span class="pass__nom">{{nom}}</span>
-                        <span class="pass__places">{{#if disponible}}{{thematique}}{{else}}Complet{{/if}}</span>
+                        <input class="pass__case" type="checkbox" name="soiree" value="{{id}}"{{#if choisie}} checked{{/if}}{{#unless disponible}} disabled{{/unless}}>
+                        <span class="pass__carte">
+                            <span class="pass__date"><time datetime="{{date}}">{{dateCourte date}}</time></span>
+                            <span class="pass__nom">{{nom}}</span>
+                            <span class="pass__places">{{#if disponible}}{{thematique}}{{else}}Complet{{/if}}</span>
+                        </span>
                     </label>
                 </li>
                 {{/each}}

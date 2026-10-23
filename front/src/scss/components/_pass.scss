@@ -56,8 +56,22 @@
         list-style: none;
     }
 
-    // carte cochable : date | nom, et la thematique dessous
+    // carte cochable : case | date | nom, et la thematique dessous
     &__soiree {
+        position: relative;
+        display: block;
+        height: 100%;
+        font-weight: 400;
+        cursor: pointer;
+    }
+
+    // la vraie case reste utilisable au clavier et au lecteur d'ecran, mais cachee a l'oeil :
+    // la carte qui la suit (selecteur +) affiche son etat, sans classe a gerer en js
+    &__case {
+        @include visuellement-cache;
+    }
+
+    &__carte {
         display: grid;
         grid-template-columns: auto auto 1fr;
         align-items: baseline;
@@ -67,34 +81,42 @@
         border: 1px solid rgba($blanc, 0.12);
         border-radius: $rayon;
         background: $noir;
-        font-weight: 400;
-        cursor: pointer;
         transition: border-color $transition, background $transition;
 
-        &:hover {
-            border-color: rgba($couleur-accent, 0.6);
+        // case dessinee
+        &::before {
+            content: '';
+            align-self: center;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba($blanc, 0.5);
+            border-radius: 3px;
         }
+    }
 
-        // soiree choisie : le style suit l'etat de la case (pas de classe a gerer en js)
-        &:has(input:checked) {
+    &__soiree:hover &__carte {
+        border-color: rgba($couleur-accent, 0.6);
+    }
+
+    &__case:checked + &__carte {
+        border-color: $couleur-accent;
+        background: rgba($couleur-accent, 0.12);
+
+        &::before {
             border-color: $couleur-accent;
-            background: rgba($couleur-accent, 0.12);
+            background: $couleur-accent;
+            box-shadow: inset 0 0 0 2px $noir;
         }
+    }
 
-        &:has(input:disabled) {
-            opacity: 0.45;
-            cursor: not-allowed;
-        }
+    &__case:disabled + &__carte {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
 
-        &:has(input:focus-visible) {
-            outline: 3px solid $couleur-alerte;
-            outline-offset: 2px;
-        }
-
-        input {
-            width: auto;
-            accent-color: $couleur-accent;
-        }
+    &__case:focus-visible + &__carte {
+        outline: 3px solid $couleur-alerte;
+        outline-offset: 2px;
     }
 
     &__date {
